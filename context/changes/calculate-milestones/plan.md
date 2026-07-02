@@ -405,21 +405,21 @@ The onCalculate handler:
 
 #### Automated
 
-- [x] 3.1 Type checking passes: `npm run typecheck`
-- [x] 3.2 Linting passes: `npm run lint`
-- [x] 3.3 Build succeeds: `npm run build`
-- [x] 3.4 Dev server starts without errors: `npm run dev`
+- [x] 3.1 Type checking passes: `npm run typecheck` — f55600e
+- [x] 3.2 Linting passes: `npm run lint` — f55600e
+- [x] 3.3 Build succeeds: `npm run build` — f55600e
+- [x] 3.4 Dev server starts without errors: `npm run dev` — f55600e
 
 #### Manual
 
-- [x] 3.5 App loads showing header and date/time input form with current date/time as defaults
-- [x] 3.6 Input date "2020-06-15" and time "14:30", click Calculate
-- [x] 3.7 Milestone results appear grouped by proximity with second/minute/hour milestones
-- [x] 3.8 Input date "2020-06-15" without time, click Calculate, see only day/week/month milestones
-- [x] 3.9 Verify a few milestone calculations manually (e.g., 1,000 days from June 15, 2020 should be March 12, 2023)
-- [x] 3.10 Past milestones show with "Already Passed" badge
-- [x] 3.11 Future date validation prevents calculation
-- [x] 3.12 "Set to Now" and "Reset" buttons work correctly
-- [x] 3.13 Results update correctly when calculating multiple times with different inputs
-- [x] 3.14 Browser timezone is used (verify by checking results against system clock)
-- [x] 3.15 Dates display according to browser locale (test with en-US and en-GB if possible)
+- [x] 3.5 App loads showing header and date/time input form with current date/time as defaults — f55600e
+- [x] 3.6 Input date "2020-06-15" and time "14:30", click Calculate — f55600e
+- [x] 3.7 Milestone results appear grouped by proximity with second/minute/hour milestones — f55600e
+- [x] 3.8 Input date "2020-06-15" without time, click Calculate, see only day/week/month milestones — f55600e
+- [x] 3.9 Verify a few milestone calculations manually (e.g., 1,000 days from June 15, 2020 should be March 12, 2023) — f55600e
+- [x] 3.10 Past milestones show with "Already Passed" badge — f55600e
+- [x] 3.11 Future date validation prevents calculation — f55600e
+- [x] 3.12 "Set to Now" and "Reset" buttons work correctly — f55600e
+- [x] 3.13 Results update correctly when calculating multiple times with different inputs — f55600e
+- [x] 3.14 Browser timezone is used (verify by checking results against system clock) — f55600e
+- [x] 3.15 Dates display according to browser locale (test with en-US and en-GB if possible) — f55600e
