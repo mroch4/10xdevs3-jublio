@@ -366,40 +366,40 @@ The onCalculate handler:
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `npm run typecheck`
-- [x] 1.2 Linting passes: `npm run lint`
-- [x] 1.3 Build succeeds: `npm run build`
-- [x] 1.4 Component renders without errors: `npm run dev` and navigate to localhost
+- [x] 1.1 Type checking passes: `npm run typecheck` — 85a4619
+- [x] 1.2 Linting passes: `npm run lint` — 85a4619
+- [x] 1.3 Build succeeds: `npm run build` — 85a4619
+- [x] 1.4 Component renders without errors: `npm run dev` and navigate to localhost — 85a4619
 
 #### Manual
 
-- [x] 1.5 Date input renders as HTML5 date picker with current date as default
-- [x] 1.6 Time input renders as HTML5 time picker with current time as default
-- [x] 1.7 Both inputs are visible by default
-- [x] 1.8 Empty date input shows validation error: "Date is required"
-- [x] 1.9 Future date shows validation error: "Please enter a past or present date"
-- [x] 1.10 "Set to Now" button populates both inputs with current date/time
-- [x] 1.11 "Reset" button clears both inputs
-- [x] 1.12 Valid past date without time calls onCalculate with date only
-- [x] 1.13 Valid past date with time calls onCalculate with both date and time
+- [x] 1.5 Date input renders as HTML5 date picker with current date as default — 85a4619
+- [x] 1.6 Time input renders as HTML5 time picker with current time as default — 85a4619
+- [x] 1.7 Both inputs are visible by default — 85a4619
+- [x] 1.8 Empty date input shows validation error: "Date is required" — 85a4619
+- [x] 1.9 Future date shows validation error: "Please enter a past or present date" — 85a4619
+- [x] 1.10 "Set to Now" button populates both inputs with current date/time — 85a4619
+- [x] 1.11 "Reset" button clears both inputs — 85a4619
+- [x] 1.12 Valid past date without time calls onCalculate with date only — 85a4619
+- [x] 1.13 Valid past date with time calls onCalculate with both date and time — 85a4619
 
 ### Phase 2: Milestone Results Display
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npm run typecheck`
-- [ ] 2.2 Linting passes: `npm run lint`
-- [ ] 2.3 Build succeeds: `npm run build`
-- [ ] 2.4 Component renders without errors with sample Event array
+- [x] 2.1 Type checking passes: `npm run typecheck`
+- [x] 2.2 Linting passes: `npm run lint`
+- [x] 2.3 Build succeeds: `npm run build`
+- [x] 2.4 Component renders without errors with sample Event array
 
 #### Manual
 
-- [ ] 2.5 Events grouped under correct category headers (Today, ThisWeek, etc.)
-- [ ] 2.6 Within each group, nearest milestone appears first
-- [ ] 2.7 Past events show with muted styling and "Already Passed" badge
-- [ ] 2.8 BeyondHumanLifeExpectancy events do not appear in any group
-- [ ] 2.9 Count indicator shows: "12 more beyond 75 years" (or appropriate count)
-- [ ] 2.10 Empty state message appears when no events to display
+- [x] 2.5 Events grouped under correct category headers (Today, ThisWeek, etc.)
+- [x] 2.6 Within each group, nearest milestone appears first
+- [x] 2.7 Past events show with muted styling and "Already Passed" badge
+- [x] 2.8 BeyondHumanLifeExpectancy events do not appear in any group
+- [x] 2.9 Count indicator shows: "12 more beyond 75 years" (or appropriate count)
+- [x] 2.10 Empty state message appears when no events to display
 
 ### Phase 3: Main Calculator Integration
 

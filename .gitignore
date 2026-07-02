@@ -25,4 +25,5 @@ dist-ssr
 *.sw?
 
 # 10xDevs course
+.claude
 10xdevs3*
