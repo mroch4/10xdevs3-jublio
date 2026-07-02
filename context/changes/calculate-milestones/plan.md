@@ -387,39 +387,39 @@ The onCalculate handler:
 
 #### Automated
 
-- [x] 2.1 Type checking passes: `npm run typecheck`
-- [x] 2.2 Linting passes: `npm run lint`
-- [x] 2.3 Build succeeds: `npm run build`
-- [x] 2.4 Component renders without errors with sample Event array
+- [x] 2.1 Type checking passes: `npm run typecheck` — 7852b99
+- [x] 2.2 Linting passes: `npm run lint` — 7852b99
+- [x] 2.3 Build succeeds: `npm run build` — 7852b99
+- [x] 2.4 Component renders without errors with sample Event array — 7852b99
 
 #### Manual
 
-- [x] 2.5 Events grouped under correct category headers (Today, ThisWeek, etc.)
-- [x] 2.6 Within each group, nearest milestone appears first
-- [x] 2.7 Past events show with muted styling and "Already Passed" badge
-- [x] 2.8 BeyondHumanLifeExpectancy events do not appear in any group
-- [x] 2.9 Count indicator shows: "12 more beyond 75 years" (or appropriate count)
-- [x] 2.10 Empty state message appears when no events to display
+- [x] 2.5 Events grouped under correct category headers (Today, ThisWeek, etc.) — 7852b99
+- [x] 2.6 Within each group, nearest milestone appears first — 7852b99
+- [x] 2.7 Past events show with muted styling and "Already Passed" badge — 7852b99
+- [x] 2.8 BeyondHumanLifeExpectancy events do not appear in any group — 7852b99
+- [x] 2.9 Count indicator shows: "12 more beyond 75 years" (or appropriate count) — 7852b99
+- [x] 2.10 Empty state message appears when no events to display — 7852b99
 
 ### Phase 3: Main Calculator Integration
 
 #### Automated
 
-- [ ] 3.1 Type checking passes: `npm run typecheck`
-- [ ] 3.2 Linting passes: `npm run lint`
-- [ ] 3.3 Build succeeds: `npm run build`
-- [ ] 3.4 Dev server starts without errors: `npm run dev`
+- [x] 3.1 Type checking passes: `npm run typecheck`
+- [x] 3.2 Linting passes: `npm run lint`
+- [x] 3.3 Build succeeds: `npm run build`
+- [x] 3.4 Dev server starts without errors: `npm run dev`
 
 #### Manual
 
-- [ ] 3.5 App loads showing header and date/time input form with current date/time as defaults
-- [ ] 3.6 Input date "2020-06-15" and time "14:30", click Calculate
-- [ ] 3.7 Milestone results appear grouped by proximity with second/minute/hour milestones
-- [ ] 3.8 Input date "2020-06-15" without time, click Calculate, see only day/week/month milestones
-- [ ] 3.9 Verify a few milestone calculations manually (e.g., 1,000 days from June 15, 2020 should be March 12, 2023)
-- [ ] 3.10 Past milestones show with "Already Passed" badge
-- [ ] 3.11 Future date validation prevents calculation
-- [ ] 3.12 "Set to Now" and "Reset" buttons work correctly
-- [ ] 3.13 Results update correctly when calculating multiple times with different inputs
-- [ ] 3.14 Browser timezone is used (verify by checking results against system clock)
-- [ ] 3.15 Dates display according to browser locale (test with en-US and en-GB if possible)
+- [x] 3.5 App loads showing header and date/time input form with current date/time as defaults
+- [x] 3.6 Input date "2020-06-15" and time "14:30", click Calculate
+- [x] 3.7 Milestone results appear grouped by proximity with second/minute/hour milestones
+- [x] 3.8 Input date "2020-06-15" without time, click Calculate, see only day/week/month milestones
+- [x] 3.9 Verify a few milestone calculations manually (e.g., 1,000 days from June 15, 2020 should be March 12, 2023)
+- [x] 3.10 Past milestones show with "Already Passed" badge
+- [x] 3.11 Future date validation prevents calculation
+- [x] 3.12 "Set to Now" and "Reset" buttons work correctly
+- [x] 3.13 Results update correctly when calculating multiple times with different inputs
+- [x] 3.14 Browser timezone is used (verify by checking results against system clock)
+- [x] 3.15 Dates display according to browser locale (test with en-US and en-GB if possible)
