@@ -1,7 +1,7 @@
 ---
 change_id: calculate-milestones
 title: Calculate milestones
-status: implemented
+status: impl_reviewed
 created: 2026-07-02
 updated: 2026-07-02
 archived_at: null
