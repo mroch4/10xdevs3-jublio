@@ -206,6 +206,12 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ## Done
 
+### S-01: Calculate milestones
+
+- **Change ID:** `calculate-milestones`
+- **Archived:** 2026-07-02T19:05:31Z
+- **Outcome:** User can input a date (+ optional time) and see a sorted list of future milestones (10, 100, 1K, 10K, 100K, 1M for each applicable time unit: years, months, weeks, days, hours, minutes, seconds).
+
 (Empty on first generation. `/10x-archive` appends entries here when a change archives.)
 
 ---
