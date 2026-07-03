@@ -31,7 +31,7 @@ Users manually calculate milestone anniversaries in weird time units (10,000 day
 | ---- | -------------------------- | ------------------------------------------------ | ---------------- | ---------------- | -------- |
 | F-01 | firebase-auth-scaffold     | (foundation) Firebase Auth configured for login  | —                | FR-008, FR-009   | done     |
 | F-02 | firestore-portfolio-schema | (foundation) Firestore collections & schema live | —                | FR-010, FR-011   | proposed |
-| S-01 | calculate-milestones       | calculate milestones for any date (anonymous)    | —                | FR-001 to FR-006 | ready    |
+| S-01 | calculate-milestones       | calculate milestones for any date (anonymous)    | —                | FR-001 to FR-006 | done     |
 | S-02 | bookmark-and-manage        | bookmark dates and manage persistent portfolio   | F-01, F-02, S-01 | FR-010 to FR-014 | proposed |
 | S-03 | export-to-calendar         | export a milestone to Google/Apple/Outlook       | S-02             | FR-015 to FR-018 | blocked  |
 | S-04 | social-share-with-ai       | share milestone on social media with AI image    | S-01             | FR-019 to FR-021 | blocked  |
