@@ -33,7 +33,7 @@ Users manually calculate milestone anniversaries in weird time units (10,000 day
 | F-02 | firestore-portfolio-schema | (foundation) Firestore collections & schema live | —                | FR-010, FR-011   | done     |
 | S-01 | calculate-milestones       | calculate milestones for any date (anonymous)    | —                | FR-001 to FR-006 | done     |
 | S-02 | bookmark-and-manage        | bookmark dates and manage persistent portfolio   | F-01, F-02, S-01 | FR-010 to FR-014 | proposed |
-| S-03 | export-to-calendar         | export a milestone to Google/Apple/Outlook       | S-02             | FR-015 to FR-018 | blocked  |
+| S-03 | export-to-calendar         | export a milestone to Google/Apple/Outlook       | S-01             | FR-015 to FR-018 | ready    |
 | S-04 | social-share-with-ai       | share milestone on social media with AI image    | S-01             | FR-019 to FR-021 | blocked  |
 | S-05 | custom-milestone-values    | add custom milestone values (e.g., 420, 25,000)  | S-02             | FR-006           | proposed |
 
@@ -44,8 +44,8 @@ Navigation aid — groups items that share a Prerequisites chain. Canonical orde
 | Stream | Theme                  | Chain                    | Note                                                                     |
 | ------ | ---------------------- | ------------------------ | ------------------------------------------------------------------------ |
 | A      | Foundation & calculate | `F-01` → `F-02` → `S-01` | Async: F-01/F-02 can run in parallel; S-01 independent (no F prereq)     |
-| B      | Portfolio core         | `S-02` → `S-03` / `S-05` | S-02 unblocks portfolio export + custom values; S-03 blocked on decision |
-| C      | Growth (deferred)      | `S-04`                   | Social share blocked on AI model decision; deferred until skills spike   |
+| B      | Portfolio core         | `S-02` → `S-05`          | S-02 unblocks custom values; S-05 requires portfolio schema              |
+| C      | Sharing & export       | `S-01` → `S-03` / `S-04` | S-03 ready (export from calculation); S-04 blocked on AI model decision  |
 
 ## Baseline
 
@@ -66,7 +66,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Outcome:** (foundation) Firebase Authentication configured; passwordless magic-link or OAuth flow ready; login/logout accessible to any UI component.
 - **Change ID:** `firebase-auth-scaffold`
 - **PRD refs:** FR-008 (sign up/log in via email or OAuth), FR-009 (flat user access model)
-- **Unlocks:** S-02 (bookmark + portfolio require logged-in user), S-03 (calendar export logged-in only), S-05 (custom milestones logged-in only)
+- **Unlocks:** S-02 (bookmark + portfolio require logged-in user), S-05 (custom milestones logged-in only)
 - **Prerequisites:** —
 - **Parallel with:** F-02 (both are independent Foundations)
 - **Blockers:** —
@@ -124,16 +124,16 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ### S-03: Export milestone to calendar
 
-- **Outcome:** user can click a calendar icon on any milestone and export it to Google Calendar, Apple Calendar, or Outlook with pre-filled event title ("[Milestone] since [Label] ([Original Date])") and date/time.
+- **Outcome:** user can click a calendar icon on any calculated milestone and export it to Google Calendar, Apple Calendar, or Outlook with pre-filled event title ("[Value] [Unit] milestone ([Original Date])", e.g., "10,000 days milestone (2000-05-15)") and date/time. Export works on any calculated milestone; user does not need to bookmark first.
 - **Change ID:** `export-to-calendar`
 - **PRD refs:** FR-015, FR-016, FR-017, FR-018, US-03
-- **Prerequisites:** S-02 (user must have a bookmarked milestone to export)
-- **Parallel with:** —
+- **Prerequisites:** S-01 (export any calculated milestone)
+- **Parallel with:** S-02 (independent features), S-04 (both share from S-01)
 - **Blockers:** —
 - **Unknowns:**
-  - Exact deep-link formats for Google Calendar, Apple Calendar (iCal), Outlook (requires research). PRD Open Question #2. Block: yes — implementation blocked until formats are known. Recommend: start with URL-based deep links (simplest) rather than custom auth; research during S-02 so answer is ready.
-- **Risk:** Calendar vendor APIs differ (Google vs. Apple vs. Outlook). Skills blocker: unfamiliar with calendar integration deep links. Recommend: spike 2–3 hours on format research before planning S-03 detail. Mark S-03 as `blocked` until deep-link research completes.
-- **Status:** blocked
+  - Exact deep-link formats for Google Calendar, Apple Calendar (iCal), Outlook (requires research). PRD Open Question #2. Block: no — standard formats are well-documented; can research during planning. Recommend: start with URL-based deep links (Google Calendar URL scheme) + iCal file download (.ics) for Apple/Outlook.
+- **Risk:** Calendar vendor APIs differ (Google vs. Apple vs. Outlook). Skills blocker: unfamiliar with calendar integration deep links. Recommend: research standard formats (Google Calendar URL scheme, iCal .ics spec) during planning phase; low risk as these are well-established standards.
+- **Status:** ready
 
 ### S-04: Social share with AI image
 
@@ -171,7 +171,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | F-02       | firestore-portfolio-schema | Design and create Firestore collections + schema     | yes                   | Plan in parallel with F-01; unblocks S-02 and S-05                     |
 | S-01       | calculate-milestones       | Implement milestone calculation with Temporal API    | yes                   | No prerequisites; can start immediately. Prove algorithm first.        |
 | S-02       | bookmark-and-manage        | Bookmark dates, manage portfolio, real-time sync     | no                    | Unblock: F-01 + F-02 + S-01 must be ready                              |
-| S-03       | export-to-calendar         | Export milestone to Google Calendar / Apple Calendar | no                    | Blocked: calendar deep-link format research needed first. See Unknown  |
+| S-03       | export-to-calendar         | Export milestone to Google Calendar / Apple Calendar | yes                   | No prerequisites blocking; calendar formats well-documented. Ready now |
 | S-04       | social-share-with-ai       | Social share with AI-generated image                 | no                    | Blocked: AI model choice + latency validation. Run `/10x-frame` spike  |
 | S-05       | custom-milestone-values    | Custom milestone values per bookmarked date          | no                    | Unblock: S-02 + F-02 must be ready                                     |
 
@@ -179,7 +179,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 1. **AI model for social share image generation?** — PRD Open Question #1. Block: yes (S-04). Owner: TBD. Constraint: free tier or open-source only. Recommendation: spike 2–3 hours evaluating DALL-E free tier, Stable Diffusion, Hugging Face; pick one; test latency (must be < 3 seconds per NFR). This is the Skills blocker.
 
-2. **Calendar deep-link formats for export?** — PRD Open Question #2. Block: yes (S-03). Owner: TBD. Research: what are the exact URL schemes / iCal formats for Google Calendar, Apple Calendar (iCal), Outlook? Recommendation: spike 1–2 hours on documentation; prefer native deep links (no custom auth).
+2. **Calendar deep-link formats for export?** — PRD Open Question #2. Block: no (S-03). Owner: TBD. Research: what are the exact URL schemes / iCal formats for Google Calendar, Apple Calendar (iCal), Outlook? Recommendation: research standard formats during S-03 planning; Google Calendar URL scheme + iCal .ics file are well-documented standards.
 
 3. **Should past milestones be shown by default?** — PRD Open Question #3. Block: no (default to show with "Already passed" visual indicator). Owner: TBD. Can iterate post-launch.
 
