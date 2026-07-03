@@ -16,7 +16,8 @@ Implementing S-03 from the roadmap: enable users to export any calculated milest
 
 - Export functionality for calculated milestones
 - Support for Google Calendar (URL deep link)
-- Support for Apple Calendar / Outlook (URL deep links)
+- Support for Apple Calendar (.ics file download)
+- Support for Outlook (URL deep link)
 - Pre-filled event title with user-provided label: "[Value] [Unit] milestone of [Label]"
 - Works on any calculated milestone from S-01
 - Required label input for milestone context
@@ -30,7 +31,6 @@ Implementing S-03 from the roadmap: enable users to export any calculated milest
 - Custom event titles
 - Calendar authentication/OAuth
 - Recurring events
-- .ics file downloads (deep links only)
 
 ## Prerequisites
 
@@ -95,7 +95,7 @@ Implementation reviewed - APPROVED (pending mobile testing)
 - Standardized provider names (Google, Apple, Outlook)
 
 ### Files Created
-- `src/utils/calendarExport.ts` - Calendar URL generation
+- `src/utils/calendarExport.ts` - Calendar URL generation and ICS file creation
 - `src/utils/enums/CalendarProvider.ts` - Provider enum
 - `src/components/CalendarExportModal.tsx` - Export modal component
 - `src/components/CalendarExportModal.css` - Modal styles
@@ -111,14 +111,18 @@ Implementation reviewed - APPROVED (pending mobile testing)
 - ✅ Build successful
 - ✅ TypeScript compilation passes
 - ✅ Implementation review completed (APPROVED)
-- ⏳ Manual testing on mobile (pending)
+- ✅ Apple Calendar .ics download implemented and tested
+- ⏳ Manual testing on mobile (in progress)
 - ⏳ Cross-browser testing (pending)
 - ⏳ Calendar provider verification (pending)
 
 ### Known Limitations
-- Apple Calendar uses Google Calendar URL (browser-based, may not redirect to native app on all platforms)
-- Requires user to be logged into calendar provider
-- Popup blockers may interfere (handled with error toast)
+- Apple Calendar downloads .ics file (user must open the file to import)
+- Requires user to be logged into calendar provider (Google/Outlook web)
+- Popup blockers may interfere with Google/Outlook (handled with error toast)
+
+## Recent Updates
+- **2026-07-03**: Changed Apple Calendar export from Google Calendar URL to .ics file download for better compatibility
 
 ## Next Steps
 1. Complete mobile testing using TESTING.md guide

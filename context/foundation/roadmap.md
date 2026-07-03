@@ -130,18 +130,20 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Prerequisites:** S-01 (export any calculated milestone)
 - **Parallel with:** S-02 (independent features), S-04 (both share from S-01)
 - **Blockers:** —
-- **Unknowns:** ~~Exact deep-link formats for Google Calendar, Apple Calendar (iCal), Outlook (requires research). PRD Open Question #2.~~ Resolved — implemented with URL deep links for all three providers; Apple Calendar uses Google Calendar URL.
-- **Risk:** ~~Calendar vendor APIs differ (Google vs. Apple vs. Outlook). Skills blocker: unfamiliar with calendar integration deep links.~~ Resolved — standard URL formats implemented and tested.
+- **Unknowns:** ~~Exact deep-link formats for Google Calendar, Apple Calendar (iCal), Outlook (requires research). PRD Open Question #2.~~ Resolved — implemented with URL deep links for Google/Outlook; Apple Calendar uses `.ics` file download.
+- **Risk:** ~~Calendar vendor APIs differ (Google vs. Apple vs. Outlook). Skills blocker: unfamiliar with calendar integration deep links.~~ Resolved — standard URL formats and iCalendar format implemented and tested.
 - **Status:** done (pending mobile testing)
 - **Implementation:** 
   - Milestone.label refactored to clean format (no "+" prefix)
-  - Calendar URL generation utilities for Google/Apple/Outlook
+  - Calendar URL generation utilities for Google/Outlook (deep links)
+  - Apple Calendar: `.ics` file generation and automatic download
   - Toast notification system with auto-dismiss
   - Modal with label input, live preview, and provider selection
   - Accessible UI with ARIA labels and keyboard navigation
   - ESC key and backdrop click to close modal
   - Local timezone handling for timed events
-  - 5 commits: 3f0eb32, bdb632f, 8a8f20d, 611acf7, abf4098, 7589152
+  - Switch statement with default exception for provider routing
+  - 6 commits: 3f0eb32, bdb632f, 8a8f20d, 611acf7, abf4098, 7589152, 85da2e6, 6c17e24
 - **Testing:** Manual mobile testing in progress
 
 ### S-04: Social share with AI image

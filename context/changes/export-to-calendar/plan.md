@@ -149,15 +149,18 @@ Add calendar export functionality to milestone results, enabling users to export
 
 ### Phase 1: Calendar URL generation utilities
 
-**Goal:** Create utility functions to generate calendar deep link URLs for Google, Apple (Google), and Outlook.
+**Goal:** Create utility functions to generate calendar deep link URLs for Google/Outlook and `.ics` file for Apple.
 
 **Files to create:**
 - `src/utils/calendarExport.ts`
 
 **Tasks:**
 - Create `CalendarProvider` enum: `Google`, `Apple`, `Outlook`
-- Create `generateCalendarUrl(event: Event, label: string, provider: CalendarProvider): string` function
-- Implement `formatEventTitle(event: Event, label: string): string` helper
+- Create `generateCalendarUrl(event: Milestone, label: string, provider: CalendarProvider): string` function
+  - Use switch statement with default exception
+  - For Apple: return blob URL for `.ics` file download
+  - For Google/Outlook: return deep link URL
+- Implement `formatEventTitle(event: Milestone, label: string): string` helper
   - Use Milestone.label directly (now clean: "10,000 days")
   - Return: "[Milestone.label] milestone of [label]" (e.g., "10,000 days milestone of Wedding")
 - Implement `formatDateForGoogle(date: Temporal.PlainDate | Temporal.PlainDateTime, isEnd: boolean): string`
@@ -168,6 +171,12 @@ Add calendar export functionality to milestone results, enabling users to export
 - Implement `formatDateForOutlook(date: Temporal.PlainDate | Temporal.PlainDateTime, isEnd: boolean): string`
   - PlainDate → `YYYY-MM-DD` format
   - PlainDateTime → `YYYY-MM-DDTHH:mm:ss` format (local timezone, no Z suffix)
+- Implement `generateIcsFile(event: Milestone, title: string, isAllDay: boolean): string`
+  - Generate RFC 5545 compliant iCalendar content
+  - Create blob and return object URL for download
+  - All-day: use `DTSTART;VALUE=DATE:YYYYMMDD`
+  - Timed: use `DTSTART:YYYYMMDDTHHmmss` (local timezone)
+- Implement helper functions: `formatDateForIcs`, `formatDateTimeForIcs`
   - Use same verified toString format as Google
   - If isEnd and timed, add 1 hour to start time
 - Implement provider-specific URL builders:
@@ -397,7 +406,11 @@ https://outlook.live.com/calendar/0/deeplink/compose?subject={TITLE}&startdt={ST
 
 **Apple Calendar:**
 - No native URL scheme for direct event creation
-- Use Google Calendar URL — works in browser and redirects to Apple Calendar app on macOS/iOS
+- Solution: Generate `.ics` (iCalendar) file and trigger browser download
+- User opens the downloaded file to import into Apple Calendar
+- Format: RFC 5545 iCalendar standard
+- All-day events use `DTSTART;VALUE=DATE:YYYYMMDD`
+- Timed events use `DTSTART:YYYYMMDDTHHmmss` (local timezone)
 
 ### Milestone.label format (after Phase 0 refactoring)
 

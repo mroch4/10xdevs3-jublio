@@ -9,13 +9,15 @@ import { EventCategory } from "../utils/enums/EventCategory";
 import Toast from "./Toast";
 import { generateCalendarUrl } from "../utils/calendarExport";
 import { useState } from "react";
+import { Temporal } from "@js-temporal/polyfill";
 
 interface MilestoneResultsProps {
   events: Milestone[];
   locale: string; // Used by parent to create Milestone objects with locale-aware formatting
+  originalDate: Temporal.PlainDate | Temporal.PlainDateTime | null;
 }
 
-export default function MilestoneResults({ events }: MilestoneResultsProps) {
+export default function MilestoneResults({ events, locale, originalDate }: MilestoneResultsProps) {
   // Note: locale is used by parent to create Milestone objects with locale-formatted dateString
   const [exportModalOpen, setExportModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Milestone | null>(null);
@@ -45,19 +47,36 @@ export default function MilestoneResults({ events }: MilestoneResultsProps) {
   };
 
   const handleExport = (provider: CalendarProvider, label: string) => {
-    if (!selectedEvent) return;
+    if (!selectedEvent || !originalDate) return;
 
     try {
-      const url = generateCalendarUrl(selectedEvent, label, provider);
-      const newWindow = window.open(url, "_blank", "noopener,noreferrer");
+      const url = generateCalendarUrl(selectedEvent, label, provider, originalDate, locale);
 
-      if (newWindow === null) {
-        // Popup blocked
-        setToastMessage("Please allow popups for this site to export to calendar.");
+      if (provider === CalendarProvider.Apple) {
+        // Apple Calendar: Download .ics file
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${label.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_milestone.ics`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Clean up the blob URL
+        setTimeout(() => URL.revokeObjectURL(url), 100);
+
+        setToastMessage("Calendar file downloaded. Open it to add the event to Apple Calendar.");
       } else {
-        // Success
-        const providerName = provider === CalendarProvider.Google ? "Google Calendar" : provider === CalendarProvider.Apple ? "Apple Calendar" : "Outlook";
-        setToastMessage(`Opening ${providerName}... Please log in if the calendar doesn't open.`);
+        // Google Calendar / Outlook: Open in new tab
+        const newWindow = window.open(url, "_blank", "noopener,noreferrer");
+
+        if (newWindow === null) {
+          // Popup blocked
+          setToastMessage("Please allow popups for this site to export to calendar.");
+        } else {
+          // Success
+          const providerName = provider === CalendarProvider.Google ? "Google Calendar" : "Outlook";
+          setToastMessage(`Opening ${providerName}... Please log in if the calendar doesn't open.`);
+        }
       }
     } catch (error) {
       console.error("Failed to generate calendar URL:", error);

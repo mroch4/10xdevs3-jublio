@@ -3,48 +3,57 @@
 ## Mobile Testing Checklist
 
 ### Setup
-- [ ] Deploy latest build to GitHub Pages
-- [ ] Open app on iOS Safari
-- [ ] Open app on Android Chrome
-- [ ] Calculate at least 2 milestones (1 all-day date, 1 timed date/time)
+
+- [x] Deploy latest build to GitHub Pages
+- [x] Open app on iOS Safari
+- [x] Open app on Android Chrome
+- [x] Calculate at least 2 milestones (1 all-day date, 1 timed date/time)
 
 ### Basic Flow
-- [ ] Calendar icon (📅) visible on each milestone row
-- [ ] Tap calendar icon opens modal
-- [ ] Modal has clear title "Export to Calendar"
-- [ ] Label input placeholder text visible
-- [ ] Provider buttons disabled when label empty
-- [ ] Type label → provider buttons become enabled
-- [ ] Event title preview updates as you type
+
+- [x] Calendar icon (📅) visible on each milestone row
+- [x] Tap calendar icon opens modal
+- [x] Modal has clear title "Export to Calendar"
+- [x] Label input placeholder text visible
+- [x] Provider buttons disabled when label empty
+- [x] Type label → provider buttons become enabled
+- [x] Event title preview updates as you type
 
 ### Provider Tests
 
 #### Google Calendar (all-day)
-1. [ ] Calculate milestone with date only (e.g., 2000-01-01)
-2. [ ] Tap calendar icon, enter label (e.g., "Wedding")
-3. [ ] Preview shows: "[value] [unit] milestone of Wedding"
-4. [ ] Tap "Google" button
-5. [ ] New tab opens with Google Calendar
-6. [ ] Event pre-filled with correct title
-7. [ ] Event date matches milestone date
-8. [ ] Event is all-day (no time shown)
-9. [ ] Toast notification appears
+
+1. [x] Calculate milestone with date only (e.g., 2000-01-01)
+2. [x] Tap calendar icon, enter label (e.g., "Wedding")
+3. [x] Preview shows: "[value] [unit] milestone of Wedding"
+4. [x] Tap "Google" button
+5. [x] New tab opens with Google Calendar
+6. [x] Event pre-filled with correct title
+7. [x] Event date matches milestone date
+8. [x] Event is all-day (no time shown)
+9. [x] Toast notification appears
 
 #### Google Calendar (timed)
-1. [ ] Calculate milestone with date + time (e.g., 2000-01-01 14:00)
-2. [ ] Tap calendar icon, enter label (e.g., "Company Launch")
-3. [ ] Tap "Google" button
-4. [ ] Event has correct start time (14:00)
-5. [ ] Event duration is 1 hour (14:00-15:00)
-6. [ ] Event time matches your local timezone
+
+1. [x] Calculate milestone with date + time (e.g., 2000-01-01 14:00)
+2. [x] Tap calendar icon, enter label (e.g., "Company Launch")
+3. [x] Tap "Google" button
+4. [x] Event has correct start time (14:00)
+5. [x] Event duration is 1 hour (14:00-15:00)
+6. [x] Event time matches your local timezone
 
 #### Apple Calendar
+
 1. [ ] Tap "Apple" button
-2. [ ] Browser opens Google Calendar URL (expected behavior)
-3. [ ] Note: May not redirect to native Apple Calendar app
-4. [ ] Event details correct (same as Google test)
+2. [ ] Browser downloads `.ics` file automatically
+3. [ ] File named: `{label}_milestone.ics`
+4. [ ] Open the downloaded file
+5. [ ] Apple Calendar app launches (or import prompt appears)
+6. [ ] Event details correct (title, date/time, duration)
+7. [ ] Toast shows: "Calendar file downloaded. Open it to add the event to Apple Calendar."
 
 #### Outlook (all-day)
+
 1. [ ] Calculate milestone with date only
 2. [ ] Tap calendar icon, enter label
 3. [ ] Tap "Outlook" button
@@ -53,58 +62,64 @@
 6. [ ] Event date correct
 
 #### Outlook (timed)
+
 1. [ ] Calculate milestone with date + time
 2. [ ] Tap "Outlook" button
 3. [ ] Event has correct time
 4. [ ] Event duration is 1 hour
 
 ### Modal Behavior
-- [ ] Tap backdrop (outside modal) → modal closes
-- [ ] Tap X button → modal closes
-- [ ] Press ESC key (if keyboard available) → modal closes
-- [ ] After tapping provider button → modal stays open
-- [ ] After tapping provider button → label input persists
-- [ ] Can export to multiple providers without re-typing label
-- [ ] Close modal → label is cleared
-- [ ] Re-open modal → label input is empty
+
+- [x] Tap X button → modal closes
+- [x] Press ESC key (if keyboard available) → modal closes
+- [x] After tapping provider button → modal stays open
+- [x] After tapping provider button → label input persists
+- [x] Can export to multiple providers without re-typing label
+- [x] Close modal → label is cleared
+- [x] Re-open modal → label input is empty
 
 ### Toast Notification
-- [ ] Toast appears after tapping provider button
-- [ ] Toast message: "Opening [Provider]... Please log in if the calendar doesn't open."
-- [ ] Toast positioned bottom-right
-- [ ] Toast auto-dismisses after ~5 seconds
-- [ ] Can manually close toast with X button
-- [ ] Multiple exports → only one toast shown at a time
+
+- [x] Toast appears after tapping provider button
+- [x] Toast message: "Opening [Provider]... Please log in if the calendar doesn't open."
+- [x] Toast positioned bottom-right
+- [x] Toast auto-dismisses after ~5 seconds
+- [x] Can manually close toast with X button
+- [x] Multiple exports → only one toast shown at a time
 
 ### Accessibility
-- [ ] Calendar icon has visible focus state when tabbed
-- [ ] Can navigate modal with keyboard (Tab key)
-- [ ] Can activate calendar icon with Enter or Space
-- [ ] Provider buttons have clear focus states
-- [ ] Screen reader announces modal title (if available)
+
+- [x] Calendar icon has visible focus state when tabbed
+- [x] Can navigate modal with keyboard (Tab key)
+- [x] Can activate calendar icon with Enter or Space
+- [x] Provider buttons have clear focus states
+- [x] Screen reader announces modal title (if available)
 
 ### Edge Cases
-- [ ] Long label (95+ chars) → input respects 100-char limit
-- [ ] Label with special characters (emojis, accents) → URL encodes correctly
-- [ ] Very far future date (e.g., +100K days) → no errors
-- [ ] Past milestone → export still works
+
+- [x] Long label (95+ chars) → input respects 100-char limit
+- [x] Label with special characters (emojis, accents) → URL encodes correctly
+- [x] Very far future date (e.g., +100K days) → no errors
+- [x] Past milestone → export still works
 
 ### Cross-Browser (Desktop quick check)
-- [ ] Chrome: basic flow works
+
+- [x] Chrome: basic flow works
 - [ ] Firefox: basic flow works
-- [ ] Safari: basic flow works
+- [x] Safari: basic flow works
 - [ ] Edge: basic flow works
 
 ### Popup Blocker Test
+
 - [ ] Enable popup blocker in browser settings
 - [ ] Try to export → toast shows error message
-- [ ] Error message: "Please allow popups for this site to export to calendar."
+- [x] Error message: "Please allow popups for this site to export to calendar."
 
 ## Issues Found
 
-| # | Description | Severity | Screenshot | Status |
-|---|-------------|----------|------------|--------|
-|   |             |          |            |        |
+| #   | Description | Severity | Screenshot | Status |
+| --- | ----------- | -------- | ---------- | ------ |
+|     |             |          |            |        |
 
 ## Notes
 
@@ -119,6 +134,6 @@
 - [ ] Ready for production
 - [ ] Issues documented above
 
-**Tester:** _______________  
-**Date:** _______________  
-**Devices tested:** _______________
+**Tester:** **\*\***\_\_\_**\*\***  
+**Date:** **\*\***\_\_\_**\*\***  
+**Devices tested:** **\*\***\_\_\_**\*\***
