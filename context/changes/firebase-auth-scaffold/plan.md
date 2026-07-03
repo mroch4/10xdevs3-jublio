@@ -460,10 +460,10 @@ This provides the UX flow now and a clear integration point for S-02's bookmark 
 
 #### Automated
 
-- [ ] 1.1 Type checking passes: `npm run typecheck`
-- [ ] 1.2 Linting passes: `npm run lint`
-- [ ] 1.3 Build succeeds: `npm run build`
-- [ ] 1.4 No runtime errors when importing `src/firebase/config.ts` (verify via dev server)
+- [x] 1.1 Type checking passes: `tsc -b` (via build)
+- [x] 1.2 Linting passes: `npm run lint`
+- [x] 1.3 Build succeeds: `npm run build`
+- [x] 1.4 No runtime errors when importing `src/firebase/config.ts` (verify via dev server)
 
 #### Manual
 
