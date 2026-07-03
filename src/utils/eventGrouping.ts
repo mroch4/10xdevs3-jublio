@@ -19,9 +19,7 @@ export function filterEvents(events: Event[]): {
  * @param events - Array of milestone events
  * @returns Map of category to events array
  */
-export function groupByCategory(
-  events: Event[]
-): Map<EventCategory, Event[]> {
+export function groupByCategory(events: Event[]): Map<EventCategory, Event[]> {
   const groups = new Map<EventCategory, Event[]>();
 
   events.forEach((event) => {

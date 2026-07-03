@@ -1,19 +1,16 @@
-import { useState } from "react";
-import { Temporal } from "@js-temporal/polyfill";
-import DateTimeInput from "./DateTimeInput";
-import MilestoneResults from "./MilestoneResults";
 import DateCard from "../utils/classes/DateCard";
 import DateTimeCard from "../utils/classes/DateTimeCard";
+import DateTimeInput from "./DateTimeInput";
 import Event from "../utils/classes/Event";
+import MilestoneResults from "./MilestoneResults";
+import { Temporal } from "@js-temporal/polyfill";
+import { useState } from "react";
 
 export default function MilestoneCalculator() {
   const [events, setEvents] = useState<Event[] | null>(null);
   const locale = navigator.language;
 
-  const handleCalculate = (
-    date: Temporal.PlainDate,
-    time?: Temporal.PlainTime
-  ) => {
+  const handleCalculate = (date: Temporal.PlainDate, time?: Temporal.PlainTime) => {
     let calculatedEvents: Event[];
 
     if (time) {

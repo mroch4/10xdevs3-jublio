@@ -1,4 +1,5 @@
 export enum EventCategory {
+  AlreadyPassed = "Already Passed",
   Today = "Today",
   ThisWeek = "This Week",
   NextWeek = "Next Week",
@@ -8,5 +9,4 @@ export enum EventCategory {
   NextYear = "Next Year",
   Further = "Further",
   BeyondHumanLifeExpectancy = "Beyond Human Life Expectancy",
-  AlreadyPassed = "Already Passed",
 }

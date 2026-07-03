@@ -1,8 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
-import type { FormEvent } from "react";
-import Event from "../utils/classes/Event";
-import { CalendarProvider } from "../utils/enums/CalendarProvider";
 import "./CalendarExportModal.css";
+
+import { useCallback, useEffect, useState } from "react";
+
+import { CalendarProvider } from "../utils/enums/CalendarProvider";
+import Event from "../utils/classes/Event";
+import type { FormEvent } from "react";
 
 interface CalendarExportModalProps {
   isOpen: boolean;
@@ -11,12 +13,7 @@ interface CalendarExportModalProps {
   onExport: (provider: CalendarProvider, label: string) => void;
 }
 
-export default function CalendarExportModal({
-  isOpen,
-  onClose,
-  event,
-  onExport,
-}: CalendarExportModalProps) {
+export default function CalendarExportModal({ isOpen, onClose, event, onExport }: CalendarExportModalProps) {
   const [label, setLabel] = useState("");
 
   const handleSubmit = (e: FormEvent) => {
@@ -52,40 +49,22 @@ export default function CalendarExportModal({
   if (!isOpen) return null;
 
   const isLabelValid = label.trim().length > 0;
-  const previewTitle = label.trim()
-    ? `${event.label} milestone of ${label.trim()}`
-    : `${event.label} milestone of [your label]`;
+  const previewTitle = label.trim() ? `${event.label} milestone of ${label.trim()}` : `${event.label} milestone of [your label]`;
 
   return (
     <>
       {/* Backdrop */}
-      <div
-        className="modal-backdrop fade show"
-        onClick={handleClose}
-        style={{ zIndex: 1040 }}
-      />
+      <div className="modal-backdrop fade show" onClick={handleClose} style={{ zIndex: 1040 }} />
 
       {/* Modal */}
-      <div
-        className="modal fade show"
-        style={{ display: "block", zIndex: 1050 }}
-        tabIndex={-1}
-        role="dialog"
-        aria-labelledby="calendar-export-title"
-        aria-modal="true"
-      >
+      <div className="modal fade show" style={{ display: "block", zIndex: 1050 }} tabIndex={-1} role="dialog" aria-labelledby="calendar-export-title" aria-modal="true">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="calendar-export-title">
                 Export to Calendar
               </h5>
-              <button
-                type="button"
-                className="btn-close"
-                onClick={handleClose}
-                aria-label="Close"
-              />
+              <button type="button" className="btn-close" onClick={handleClose} aria-label="Close" />
             </div>
 
             <div className="modal-body">
@@ -122,20 +101,20 @@ export default function CalendarExportModal({
                   <button
                     type="button"
                     className="btn btn-sm btn-outline-secondary"
-                    onClick={() => handleProviderClick(CalendarProvider.Google)}
-                    disabled={!isLabelValid}
-                    aria-label="Export to Google Calendar"
-                  >
-                    Google
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-sm btn-outline-secondary"
                     onClick={() => handleProviderClick(CalendarProvider.Apple)}
                     disabled={!isLabelValid}
                     aria-label="Export to Apple Calendar"
                   >
                     Apple
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-outline-secondary"
+                    onClick={() => handleProviderClick(CalendarProvider.Google)}
+                    disabled={!isLabelValid}
+                    aria-label="Export to Google Calendar"
+                  >
+                    Google
                   </button>
                   <button
                     type="button"
@@ -151,11 +130,7 @@ export default function CalendarExportModal({
             </div>
 
             <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={handleClose}
-              >
+              <button type="button" className="btn btn-secondary" onClick={handleClose}>
                 Cancel
               </button>
             </div>

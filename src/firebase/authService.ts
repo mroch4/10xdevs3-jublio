@@ -1,12 +1,8 @@
-import {
-  sendSignInLinkToEmail,
-  isSignInWithEmailLink,
-  signInWithEmailLink,
-  signOut as firebaseSignOut,
-} from 'firebase/auth';
-import { auth } from './config';
+import { signOut as firebaseSignOut, isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink } from "firebase/auth";
 
-const EMAIL_STORAGE_KEY = 'emailForSignIn';
+import { auth } from "./config";
+
+const EMAIL_STORAGE_KEY = "emailForSignIn";
 
 interface EmailStorage {
   email: string;

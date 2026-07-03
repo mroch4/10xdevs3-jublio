@@ -1,5 +1,5 @@
 export enum CalendarProvider {
-  Google = "Google",
   Apple = "Apple",
+  Google = "Google",
   Outlook = "Outlook",
 }

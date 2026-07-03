@@ -1,16 +1,10 @@
-import { createContext, useEffect, useState } from 'react';
-import type { ReactNode } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
-import type { User } from 'firebase/auth';
-import { auth } from '../firebase/config';
-import {
-  sendMagicLink,
-  completeMagicLinkSignIn,
-  isSignInLink,
-  getStoredEmail,
-  clearStaleEmail,
-  signOut as firebaseSignOut,
-} from '../firebase/authService';
+import { clearStaleEmail, completeMagicLinkSignIn, signOut as firebaseSignOut, getStoredEmail, isSignInLink, sendMagicLink } from "../firebase/authService";
+import { createContext, useEffect, useState } from "react";
+
+import type { ReactNode } from "react";
+import type { User } from "firebase/auth";
+import { auth } from "../firebase/config";
+import { onAuthStateChanged } from "firebase/auth";
 
 interface AuthContextValue {
   user: User | null;
@@ -40,7 +34,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const email = getStoredEmail();
       if (email) {
         completeMagicLinkSignIn(email).catch((error) => {
-          console.error('Failed to complete sign-in:', error);
+          console.error("Failed to complete sign-in:", error);
         });
       }
     }

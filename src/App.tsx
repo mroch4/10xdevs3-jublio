@@ -1,5 +1,5 @@
-import MilestoneCalculator from "./components/MilestoneCalculator";
 import { AuthHeader } from "./components/AuthHeader";
+import MilestoneCalculator from "./components/MilestoneCalculator";
 
 function App() {
   return (

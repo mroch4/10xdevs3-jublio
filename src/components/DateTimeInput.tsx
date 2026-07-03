@@ -1,9 +1,10 @@
+import "./Animations.css";
+
+import { AuthModal } from "./AuthModal";
 import { Temporal } from "@js-temporal/polyfill";
+import { useAuth } from "../hooks/useAuth";
 import { useState } from "react";
 import { validateDateTime } from "../utils/validation";
-import { useAuth } from "../hooks/useAuth";
-import { AuthModal } from "./AuthModal";
-import "./Animations.css";
 
 interface DateTimeInputProps {
   onCalculate: (date: Temporal.PlainDate, time?: Temporal.PlainTime) => void;
@@ -104,7 +105,7 @@ export default function DateTimeInput({ onCalculate, onReset }: DateTimeInputPro
 
             {/* Time Input */}
             <div className="col-md-6">
-              <label htmlFor="timeInput" className="form-label fw-bold">
+              <label htmlFor="timeInput" className="form-label">
                 Time (optional)
               </label>
               <input type="time" className={`form-control ${error ? "is-invalid" : ""}`} id="timeInput" value={timeValue} onChange={(e) => setTimeValue(e.target.value)} />
@@ -124,12 +125,6 @@ export default function DateTimeInput({ onCalculate, onReset }: DateTimeInputPro
               {showPinSuccess && (
                 <div className="alert alert-success alert-dismissible fade show mb-3" role="alert">
                   <strong>Success!</strong> Date pinned to your account.
-                  <button
-                    type="button"
-                    className="btn-close"
-                    onClick={() => setShowPinSuccess(false)}
-                    aria-label="Close"
-                  />
                 </div>
               )}
               <div className="flex-center flex-wrap gap-2">
@@ -142,24 +137,15 @@ export default function DateTimeInput({ onCalculate, onReset }: DateTimeInputPro
                 <button type="button" className="btn btn-danger" onClick={handleReset}>
                   Reset
                 </button>
-                <button
-                  type="button"
-                  className={`btn ${user ? 'btn-warning' : 'btn-outline-primary'}`}
-                  onClick={handlePinDate}
-                  disabled={!isValid()}
-                >
-                  {user ? 'Pin Date' : 'Sign In to Pin'}
+                <button type="button" className={`btn ${user ? "btn-warning" : "btn-outline-primary"}`} onClick={handlePinDate} disabled={!isValid()}>
+                  {user ? "📌 Pin Date" : "Sign In to Pin"}
                 </button>
               </div>
             </div>
           </div>
         </form>
       </div>
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-        onSuccess={handleAuthSuccess}
-      />
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} onSuccess={handleAuthSuccess} />
     </div>
   );
 }

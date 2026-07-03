@@ -1,7 +1,8 @@
-import { collection, doc, setDoc, getDoc, getDocs, deleteDoc, query, where, orderBy } from 'firebase/firestore';
-import { db } from './config';
-import Bookmark from '../utils/classes/Bookmark';
-import { COLLECTIONS } from './collections';
+import { collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, setDoc, where } from "firebase/firestore";
+
+import Bookmark from "../utils/classes/Bookmark";
+import { COLLECTIONS } from "./collections";
+import { db } from "./config";
 
 /**
  * Check if a title is unique for a user (case-insensitive).
@@ -10,14 +11,10 @@ import { COLLECTIONS } from './collections';
  * @param excludeId - Optional document ID to exclude from the check (for updates)
  * @returns true if title is available (unique), false if already exists
  */
-export async function checkTitleUniqueness(
-  email: string,
-  title: string,
-  excludeId?: string
-): Promise<boolean> {
+export async function checkTitleUniqueness(email: string, title: string, excludeId?: string): Promise<boolean> {
   const titleLower = title.toLowerCase();
   const bookmarksRef = collection(db, COLLECTIONS.MILESTONES, email, COLLECTIONS.BOOKMARKS);
-  const q = query(bookmarksRef, where('titleLowercase', '==', titleLower));
+  const q = query(bookmarksRef, where("titleLowercase", "==", titleLower));
 
   const snapshot = await getDocs(q);
 
@@ -40,11 +37,11 @@ export async function checkTitleUniqueness(
  */
 export async function getBookmarks(email: string): Promise<Bookmark[]> {
   const bookmarksRef = collection(db, COLLECTIONS.MILESTONES, email, COLLECTIONS.BOOKMARKS);
-  const q = query(bookmarksRef, orderBy('createdAt', 'desc'));
+  const q = query(bookmarksRef, orderBy("createdAt", "desc"));
 
   const snapshot = await getDocs(q);
 
-  return snapshot.docs.map(doc => {
+  return snapshot.docs.map((doc) => {
     const data = doc.data();
     const bookmark = new Bookmark(data.title, data.date);
     // Restore timestamps from Firestore
@@ -82,11 +79,7 @@ export async function addBookmark(email: string, bookmark: Bookmark): Promise<st
  * @param docId - Document ID to update
  * @param bookmark - Updated Bookmark instance (createdAt will be preserved)
  */
-export async function updateBookmark(
-  email: string,
-  docId: string,
-  bookmark: Bookmark
-): Promise<void> {
+export async function updateBookmark(email: string, docId: string, bookmark: Bookmark): Promise<void> {
   const bookmarkRef = doc(db, COLLECTIONS.MILESTONES, email, COLLECTIONS.BOOKMARKS, docId);
 
   // Get existing document to preserve createdAt

@@ -1,15 +1,11 @@
-import { Temporal } from "@js-temporal/polyfill";
-import Event from "./classes/Event";
 import { CalendarProvider } from "./enums/CalendarProvider";
+import Event from "./classes/Event";
+import { Temporal } from "@js-temporal/polyfill";
 
 /**
  * Generate a calendar deep link URL for the specified provider
  */
-export function generateCalendarUrl(
-  event: Event,
-  label: string,
-  provider: CalendarProvider
-): string {
+export function generateCalendarUrl(event: Event, label: string, provider: CalendarProvider): string {
   const title = formatEventTitle(event, label);
   const isAllDay = event.date instanceof Temporal.PlainDate;
 
@@ -42,10 +38,7 @@ export function formatEventTitle(event: Event, userLabel: string): string {
  * PlainDate → YYYYMMDD
  * PlainDateTime → YYYYMMDDTHHmmss (local timezone, no Z suffix)
  */
-export function formatDateForGoogle(
-  date: Temporal.PlainDate | Temporal.PlainDateTime,
-  isEnd: boolean
-): string {
+export function formatDateForGoogle(date: Temporal.PlainDate | Temporal.PlainDateTime, isEnd: boolean): string {
   let dateToFormat = date;
 
   // For timed events, add 1 hour if this is the end date
@@ -78,10 +71,7 @@ export function formatDateForGoogle(
  * PlainDate → YYYY-MM-DD
  * PlainDateTime → YYYY-MM-DDTHH:mm:ss (local timezone, no Z suffix)
  */
-export function formatDateForOutlook(
-  date: Temporal.PlainDate | Temporal.PlainDateTime,
-  isEnd: boolean
-): string {
+export function formatDateForOutlook(date: Temporal.PlainDate | Temporal.PlainDateTime, isEnd: boolean): string {
   let dateToFormat = date;
 
   // For timed events, add 1 hour if this is the end date
@@ -111,11 +101,7 @@ export function formatDateForOutlook(
  * Build Google Calendar URL
  * https://calendar.google.com/calendar/render?action=TEMPLATE&text={TITLE}&dates={START}/{END}
  */
-export function buildGoogleCalendarUrl(
-  title: string,
-  start: string,
-  end: string
-): string {
+export function buildGoogleCalendarUrl(title: string, start: string, end: string): string {
   const params = new URLSearchParams({
     action: "TEMPLATE",
     text: title,
@@ -128,12 +114,7 @@ export function buildGoogleCalendarUrl(
  * Build Outlook Calendar URL
  * https://outlook.live.com/calendar/0/deeplink/compose?subject={TITLE}&startdt={START}&enddt={END}&allday={true|false}
  */
-export function buildOutlookCalendarUrl(
-  title: string,
-  start: string,
-  end: string,
-  isAllDay: boolean
-): string {
+export function buildOutlookCalendarUrl(title: string, start: string, end: string, isAllDay: boolean): string {
   const params = new URLSearchParams({
     subject: title,
     startdt: start,

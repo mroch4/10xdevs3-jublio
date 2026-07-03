@@ -13,10 +13,7 @@ export interface ValidationResult {
  * @param timeString - Optional time string from HTML5 time input (HH:MM format)
  * @returns Validation result with parsed Temporal objects or error message
  */
-export function validateDateTime(
-  dateString: string,
-  timeString?: string
-): ValidationResult {
+export function validateDateTime(dateString: string, timeString?: string): ValidationResult {
   // Check date is provided
   if (!dateString || dateString.trim() === "") {
     return {

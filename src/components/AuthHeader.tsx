@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { useAuth } from '../hooks/useAuth';
-import { AuthModal } from './AuthModal';
+import { AuthModal } from "./AuthModal";
+import { useAuth } from "../hooks/useAuth";
+import { useState } from "react";
 
 export function AuthHeader() {
   const { user, loading, signOut } = useAuth();
@@ -19,11 +19,7 @@ export function AuthHeader() {
   if (loading) {
     return (
       <div className="d-flex align-items-center">
-        <span
-          className="spinner-border spinner-border-sm me-2"
-          role="status"
-          aria-hidden="true"
-        />
+        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
         <span className="text-muted small">Loading...</span>
       </div>
     );
@@ -33,22 +29,14 @@ export function AuthHeader() {
     return (
       <div className="d-flex align-items-center gap-3">
         <span className="text-muted small">{user.email}</span>
-        <button
-          className="btn btn-sm btn-outline-secondary"
-          onClick={handleSignOut}
-          disabled={signingOut}
-        >
+        <button className="btn btn-sm btn-outline-secondary" onClick={handleSignOut} disabled={signingOut}>
           {signingOut ? (
             <>
-              <span
-                className="spinner-border spinner-border-sm me-1"
-                role="status"
-                aria-hidden="true"
-              />
+              <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true" />
               Signing out...
             </>
           ) : (
-            'Sign Out'
+            "Sign Out"
           )}
         </button>
       </div>
@@ -57,17 +45,11 @@ export function AuthHeader() {
 
   return (
     <>
-      <button
-        className="btn btn-sm btn-primary"
-        onClick={() => setShowModal(true)}
-      >
+      <button className="btn btn-sm btn-primary" onClick={() => setShowModal(true)}>
         Sign In
       </button>
 
-      <AuthModal
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
-      />
+      <AuthModal isOpen={showModal} onClose={() => setShowModal(false)} />
     </>
   );
 }
