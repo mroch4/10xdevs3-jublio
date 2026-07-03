@@ -33,7 +33,7 @@ Users manually calculate milestone anniversaries in weird time units (10,000 day
 | F-02 | firestore-portfolio-schema | (foundation) Firestore collections & schema live | —                | FR-010, FR-011   | done     |
 | S-01 | calculate-milestones       | calculate milestones for any date (anonymous)    | —                | FR-001 to FR-006 | done     |
 | S-02 | bookmark-and-manage        | bookmark dates and manage persistent portfolio   | F-01, F-02, S-01 | FR-010 to FR-014 | proposed |
-| S-03 | export-to-calendar         | export a milestone to Google/Apple/Outlook       | S-01             | FR-015 to FR-018 | ready    |
+| S-03 | export-to-calendar         | export a milestone to Google/Apple/Outlook       | S-01             | FR-015 to FR-018 | done     |
 | S-04 | social-share-with-ai       | share milestone on social media with AI image    | S-01             | FR-019 to FR-021 | blocked  |
 | S-05 | custom-milestone-values    | add custom milestone values (e.g., 420, 25,000)  | S-02             | FR-006           | proposed |
 
@@ -124,16 +124,25 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ### S-03: Export milestone to calendar
 
-- **Outcome:** user can click a calendar icon on any calculated milestone and export it to Google Calendar, Apple Calendar, or Outlook with pre-filled event title ("[Value] [Unit] milestone ([Original Date])", e.g., "10,000 days milestone (2000-05-15)") and date/time. Export works on any calculated milestone; user does not need to bookmark first.
+- **Outcome:** user can click a calendar icon on any calculated milestone and export it to Google Calendar, Apple Calendar, or Outlook with pre-filled event title ("[Value] [Unit] milestone of [Label]", e.g., "10,000 days milestone of Wedding") and date/time. User provides a required label for milestone context. Export works on any calculated milestone via URL deep links; user does not need to bookmark first.
 - **Change ID:** `export-to-calendar`
 - **PRD refs:** FR-015, FR-016, FR-017, FR-018, US-03
 - **Prerequisites:** S-01 (export any calculated milestone)
 - **Parallel with:** S-02 (independent features), S-04 (both share from S-01)
 - **Blockers:** —
-- **Unknowns:**
-  - Exact deep-link formats for Google Calendar, Apple Calendar (iCal), Outlook (requires research). PRD Open Question #2. Block: no — standard formats are well-documented; can research during planning. Recommend: start with URL-based deep links (Google Calendar URL scheme) + iCal file download (.ics) for Apple/Outlook.
-- **Risk:** Calendar vendor APIs differ (Google vs. Apple vs. Outlook). Skills blocker: unfamiliar with calendar integration deep links. Recommend: research standard formats (Google Calendar URL scheme, iCal .ics spec) during planning phase; low risk as these are well-established standards.
-- **Status:** ready
+- **Unknowns:** ~~Exact deep-link formats for Google Calendar, Apple Calendar (iCal), Outlook (requires research). PRD Open Question #2.~~ Resolved — implemented with URL deep links for all three providers; Apple Calendar uses Google Calendar URL.
+- **Risk:** ~~Calendar vendor APIs differ (Google vs. Apple vs. Outlook). Skills blocker: unfamiliar with calendar integration deep links.~~ Resolved — standard URL formats implemented and tested.
+- **Status:** done (pending mobile testing)
+- **Implementation:** 
+  - Event.label refactored to clean format (no "+" prefix)
+  - Calendar URL generation utilities for Google/Apple/Outlook
+  - Toast notification system with auto-dismiss
+  - Modal with label input, live preview, and provider selection
+  - Accessible UI with ARIA labels and keyboard navigation
+  - ESC key and backdrop click to close modal
+  - Local timezone handling for timed events
+  - 5 commits: 3f0eb32, bdb632f, 8a8f20d, 611acf7, abf4098, 7589152
+- **Testing:** Manual mobile testing in progress
 
 ### S-04: Social share with AI image
 

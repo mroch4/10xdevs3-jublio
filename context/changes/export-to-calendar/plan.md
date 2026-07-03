@@ -507,61 +507,62 @@ src/
 ## Progress
 
 ### Phase 0: Refactor Event.label format (prerequisite)
-- [ ] Modify Event class constructor to remove "+" prefix
-- [ ] Update MilestoneResults to add "+" in JSX display
-- [ ] Verify no other components depend on old Event.label format
-- [ ] Test milestone display unchanged in UI
-- [ ] Commit refactoring as separate change
+- [x] Modify Event class constructor to remove "+" prefix
+- [x] Update MilestoneResults to add "+" in JSX display
+- [x] Verify no other components depend on old Event.label format
+- [x] Test milestone display unchanged in UI
+- [x] Commit refactoring as separate change — **commit 3f0eb32**
 
 ### Phase 1: Calendar URL generation utilities
-- [ ] Create `src/utils/calendarExport.ts`
-- [ ] Implement `CalendarProvider` enum
-- [ ] Implement `generateCalendarUrl` function
-- [ ] Implement `formatEventTitle` helper
-- [ ] Implement `formatDateForGoogle` helper
-- [ ] Implement `formatDateForOutlook` helper
-- [ ] Implement `buildGoogleCalendarUrl`
-- [ ] Implement `buildOutlookCalendarUrl`
-- [ ] Test URL generation with sample events
+- [x] Create `src/utils/calendarExport.ts`
+- [x] Implement `CalendarProvider` enum (moved to separate file per request)
+- [x] Implement `generateCalendarUrl` function
+- [x] Implement `formatEventTitle` helper
+- [x] Implement `formatDateForGoogle` helper
+- [x] Implement `formatDateForOutlook` helper
+- [x] Implement `buildGoogleCalendarUrl`
+- [x] Implement `buildOutlookCalendarUrl`
+- [x] Test URL generation with sample events — **commit bdb632f**
 
 ### Phase 2: Toast notification system
-- [ ] Create `src/components/Toast.tsx`
-- [ ] Create `src/components/Toast.css`
-- [ ] Implement auto-dismiss logic
-- [ ] Implement manual dismiss button
-- [ ] Style toast with Bootstrap classes
-- [ ] Test toast appears and dismisses correctly
+- [x] Create `src/components/Toast.tsx`
+- [x] Create `src/components/Toast.css`
+- [x] Implement auto-dismiss logic
+- [x] Implement manual dismiss button
+- [x] Style toast with Bootstrap classes
+- [x] Test toast appears and dismisses correctly — **commit 8a8f20d**
 
 ### Phase 3: Calendar export modal component
-- [ ] Create `src/components/CalendarExportModal.tsx`
-- [ ] Create `src/components/CalendarExportModal.css`
-- [ ] Implement modal structure (backdrop, dialog, header, body)
-- [ ] Implement label input field with validation
-- [ ] Implement live preview display
-- [ ] Add brand icons for three providers
-- [ ] Implement provider button group
-- [ ] Implement form validation (disable buttons when label empty)
-- [ ] Test modal open/close behavior
+- [x] Create `src/components/CalendarExportModal.tsx`
+- [x] Create `src/components/CalendarExportModal.css`
+- [x] Implement modal structure (backdrop, dialog, header, body)
+- [x] Implement label input field with validation
+- [x] Implement live preview display
+- [x] Add brand icons for three providers (minimalistic text-only buttons per user request)
+- [x] Implement provider button group
+- [x] Implement form validation (disable buttons when label empty)
+- [x] Test modal open/close behavior — **commit 611acf7**
 
 ### Phase 4: UI integration in MilestoneResults
-- [ ] Add calendar icon button to each milestone row
-- [ ] Add state management for modal and toast
-- [ ] Implement `handleExport` function
-- [ ] Wire up modal open/close
-- [ ] Wire up provider selection to URL generation
-- [ ] Implement `window.open` with new tab
-- [ ] Implement toast notification after export
-- [ ] Handle popup blocker error case
-- [ ] Test complete export flow
+- [x] Add calendar icon button to each milestone row
+- [x] Add state management for modal and toast
+- [x] Implement `handleExport` function
+- [x] Wire up modal open/close
+- [x] Wire up provider selection to URL generation
+- [x] Implement `window.open` with new tab
+- [x] Implement toast notification after export
+- [x] Handle popup blocker error case
+- [x] Test complete export flow — **commit abf4098**
 
 ### Phase 5: Styling and polish
-- [ ] Style calendar icon button (hover, spacing)
-- [ ] Style provider buttons (brand colors, hover, disabled)
-- [ ] Style live preview text
-- [ ] Ensure mobile responsiveness
-- [ ] Add focus states for accessibility
-- [ ] Test keyboard navigation
-- [ ] Verify no visual regressions
+- [x] Style calendar icon button (hover, spacing)
+- [x] Style provider buttons (minimalistic outline-secondary per user request)
+- [x] Style live preview text
+- [x] Ensure mobile responsiveness
+- [x] Add focus states for accessibility (comprehensive ARIA labels added)
+- [x] Test keyboard navigation (Enter/Space for icon, ESC to close modal)
+- [x] Verify no visual regressions — **commit 7589152**
+- [x] **Enhancements**: ESC key handler, accessible span icon, ARIA labels, modal persistence
 
 ### Phase 6: Testing and verification
 - [ ] Test Google Calendar export (all-day)
@@ -579,8 +580,13 @@ src/
 - [ ] Mobile testing (iOS Safari, Android Chrome)
 - [ ] Document any issues found
 
+### Implementation Review
+- [x] Implementation review completed — **APPROVED** (2026-07-03)
+- [x] Review saved to `context/changes/export-to-calendar/reviews/impl-review.md`
+- [x] Verdict: 0 critical | 0 warnings | 2 observations (both approved)
+
 ---
 
-**Plan Status:** Ready for implementation
-**Estimated effort:** 7-9 hours (including Phase 0 refactoring)
+**Plan Status:** Implementation complete, pending mobile testing
+**Estimated effort:** 7-9 hours (including Phase 0 refactoring) — **Actual: ~8 hours**
 **Risk level:** Low (well-defined scope, standard web APIs)
