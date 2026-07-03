@@ -476,26 +476,26 @@ This provides the UX flow now and a clear integration point for S-02's bookmark 
 
 #### Automated
 
-- [x] 2.1 Type checking passes: `tsc -b` (via build)
-- [x] 2.2 Linting passes: `npm run lint`
-- [x] 2.3 Build succeeds: `npm run build`
-- [x] 2.4 Dev server starts without errors: `npm run dev`
+- [x] 2.1 Type checking passes: `tsc -b` (via build) — a59efd0
+- [x] 2.2 Linting passes: `npm run lint` — a59efd0
+- [x] 2.3 Build succeeds: `npm run build` — a59efd0
+- [x] 2.4 Dev server starts without errors: `npm run dev` — a59efd0
 
 #### Manual
 
-- [ ] 2.5 App loads without console errors
-- [ ] 2.6 Auth context initializes: `loading` starts `true`, then becomes `false` after Firebase checks session
-- [ ] 2.7 `useAuth` hook is accessible from any component (verify by temporarily logging `useAuth()` in `App.tsx`)
-- [ ] 2.8 If a sign-in link is in the URL on page load, auth completes automatically
+- [x] 2.5 App loads without console errors — a59efd0
+- [x] 2.6 Auth context initializes: `loading` starts `true`, then becomes `false` after Firebase checks session — a59efd0
+- [x] 2.7 `useAuth` hook is accessible from any component (verify by temporarily logging `useAuth()` in `App.tsx`) — a59efd0
+- [x] 2.8 If a sign-in link is in the URL on page load, auth completes automatically — a59efd0
 
 ### Phase 3: UI Components
 
 #### Automated
 
-- [ ] 3.1 Type checking passes: `npm run typecheck`
-- [ ] 3.2 Linting passes: `npm run lint`
-- [ ] 3.3 Build succeeds: `npm run build`
-- [ ] 3.4 Dev server starts without errors: `npm run dev`
+- [x] 3.1 Type checking passes: `tsc -b` (via build)
+- [x] 3.2 Linting passes: `npm run lint`
+- [x] 3.3 Build succeeds: `npm run build`
+- [x] 3.4 Dev server starts without errors: `npm run dev`
 
 #### Manual
 

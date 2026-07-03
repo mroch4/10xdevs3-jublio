@@ -1,6 +1,9 @@
 import { Temporal } from "@js-temporal/polyfill";
 import { useState } from "react";
 import { validateDateTime } from "../utils/validation";
+import { useAuth } from "../hooks/useAuth";
+import { AuthModal } from "./AuthModal";
+import "./Animations.css";
 
 interface DateTimeInputProps {
   onCalculate: (date: Temporal.PlainDate, time?: Temporal.PlainTime) => void;
@@ -17,9 +20,12 @@ const getCurrentDateTime = () => {
 };
 
 export default function DateTimeInput({ onCalculate, onReset }: DateTimeInputProps) {
+  const { user } = useAuth();
   const [dateValue, setDateValue] = useState<string>(() => getCurrentDateTime().date);
   const [timeValue, setTimeValue] = useState<string>(() => getCurrentDateTime().time);
   const [error, setError] = useState<string>("");
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showPinSuccess, setShowPinSuccess] = useState(false);
 
   // Check if current inputs are valid
   const isValid = () => {
@@ -67,6 +73,22 @@ export default function DateTimeInput({ onCalculate, onReset }: DateTimeInputPro
     }
   };
 
+  const handlePinDate = () => {
+    if (!user) {
+      setShowAuthModal(true);
+      return;
+    }
+
+    // Placeholder: actual pin logic will be implemented in S-02
+    setShowPinSuccess(true);
+    setTimeout(() => setShowPinSuccess(false), 3000);
+  };
+
+  const handleAuthSuccess = () => {
+    // Don't close modal here - let user see the "Check your email!" message
+    // They will close it manually using the X button or close button in the success alert
+  };
+
   return (
     <div className="card bg-light shadow-sm">
       <div className="card-body">
@@ -99,6 +121,17 @@ export default function DateTimeInput({ onCalculate, onReset }: DateTimeInputPro
 
             {/* Buttons */}
             <div className="col-12">
+              {showPinSuccess && (
+                <div className="alert alert-success alert-dismissible fade show mb-3" role="alert">
+                  <strong>Success!</strong> Date pinned to your account.
+                  <button
+                    type="button"
+                    className="btn-close"
+                    onClick={() => setShowPinSuccess(false)}
+                    aria-label="Close"
+                  />
+                </div>
+              )}
               <div className="flex-center flex-wrap gap-2">
                 <button type="submit" className="btn btn-success" disabled={!isValid()}>
                   Calculate
@@ -109,11 +142,24 @@ export default function DateTimeInput({ onCalculate, onReset }: DateTimeInputPro
                 <button type="button" className="btn btn-danger" onClick={handleReset}>
                   Reset
                 </button>
+                <button
+                  type="button"
+                  className={`btn ${user ? 'btn-warning' : 'btn-outline-primary'}`}
+                  onClick={handlePinDate}
+                  disabled={!isValid()}
+                >
+                  {user ? 'Pin Date' : 'Sign In to Pin'}
+                </button>
               </div>
             </div>
           </div>
         </form>
       </div>
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onSuccess={handleAuthSuccess}
+      />
     </div>
   );
 }

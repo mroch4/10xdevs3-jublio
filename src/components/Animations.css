@@ -1,0 +1,30 @@
+/* Toast animations only */
+.alert.fade {
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.alert.fade:not(.show) {
+  transform: translateY(-10px);
+  opacity: 0;
+}
+
+.alert.fade.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Success alert slide-in animation */
+@keyframes slideInDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.alert-success.fade.show {
+  animation: slideInDown 0.4s ease-out;
+}
