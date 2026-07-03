@@ -1,7 +1,7 @@
 ---
 change_id: firestore-portfolio-schema
 title: Firestore portfolio schema
-status: implemented
+status: impl_reviewed
 created: 2026-07-03
 updated: 2026-07-03
 planned_at: 2026-07-03

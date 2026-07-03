@@ -267,19 +267,19 @@ service cloud.firestore {
 
 #### Automated
 
-- [ ] 1.1 Type checking passes: `tsc -b` (via build)
-- [ ] 1.2 Linting passes: `npm run lint`
-- [ ] 1.3 Build succeeds: `npm run build`
-- [ ] 1.4 Dev server starts: `npm run dev`
+- [x] 1.1 Type checking passes: `tsc -b` (via build) — 979ac22
+- [x] 1.2 Linting passes: `npm run lint` — 979ac22
+- [x] 1.3 Build succeeds: `npm run build` — 979ac22
+- [x] 1.4 Dev server starts: `npm run dev` — 979ac22
 
 #### Manual
 
-- [ ] 1.5 Firestore instance initialized (no console errors)
-- [ ] 1.6 TypeScript types compile
-- [ ] 1.7 Helper functions importable
-- [ ] 1.8 Security rules deployed
-- [ ] 1.9 Can write bookmark when authenticated
-- [ ] 1.10 Cannot write bookmark without auth
-- [ ] 1.11 Bookmark visible in Firebase Console
-- [ ] 1.12 Title uniqueness check works (case-insensitive)
-- [ ] 1.13 Cannot create duplicate titles (case-insensitive)
+- [x] 1.5 Firestore instance initialized (no console errors) — 979ac22
+- [x] 1.6 TypeScript types compile — 979ac22
+- [x] 1.7 Helper functions importable — 979ac22
+- [x] 1.8 Security rules deployed — dd004a3
+- [x] 1.9 Can write bookmark when authenticated — dd004a3
+- [x] 1.10 Cannot write bookmark without auth — dd004a3
+- [x] 1.11 Bookmark visible in Firebase Console — dd004a3
+- [x] 1.12 Title uniqueness check works (case-insensitive) — dd004a3
+- [x] 1.13 Cannot create duplicate titles (case-insensitive) — dd004a3
