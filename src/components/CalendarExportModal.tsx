@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import Event from "../utils/classes/Event";
 import { CalendarProvider } from "../utils/enums/CalendarProvider";
@@ -18,6 +18,20 @@ export default function CalendarExportModal({
   onExport,
 }: CalendarExportModalProps) {
   const [label, setLabel] = useState("");
+
+  // Handle ESC key to close modal
+  useEffect(() => {
+    const handleEscKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        handleClose();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscKey);
+    return () => {
+      document.removeEventListener("keydown", handleEscKey);
+    };
+  }, [isOpen]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -56,11 +70,16 @@ export default function CalendarExportModal({
         className="modal fade show"
         style={{ display: "block", zIndex: 1050 }}
         tabIndex={-1}
+        role="dialog"
+        aria-labelledby="calendar-export-title"
+        aria-modal="true"
       >
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Export to Calendar</h5>
+              <h5 className="modal-title" id="calendar-export-title">
+                Export to Calendar
+              </h5>
               <button
                 type="button"
                 className="btn-close"
@@ -85,39 +104,45 @@ export default function CalendarExportModal({
                     maxLength={100}
                     autoFocus
                     required
+                    aria-describedby="label-help preview-text"
                   />
-                  <small className="text-muted">
+                  <small id="label-help" className="text-muted">
                     {label.length}/100 characters
                   </small>
                 </div>
 
-                <div className="preview-box mb-3">
-                  <strong>Preview:</strong>
-                  <div className="preview-text">{previewTitle}</div>
+                <div className="preview-box mb-3" role="status" aria-live="polite">
+                  <strong>Event title:</strong>
+                  <div className="preview-text" id="preview-text">
+                    {previewTitle}
+                  </div>
                 </div>
 
-                <div className="provider-buttons">
+                <div className="provider-buttons" role="group" aria-label="Calendar providers">
                   <button
                     type="button"
                     className="btn btn-sm btn-outline-secondary"
                     onClick={() => handleProviderClick(CalendarProvider.Google)}
                     disabled={!isLabelValid}
+                    aria-label="Export to Google Calendar"
                   >
-                    Google Calendar
+                    Google
                   </button>
                   <button
                     type="button"
                     className="btn btn-sm btn-outline-secondary"
                     onClick={() => handleProviderClick(CalendarProvider.Apple)}
                     disabled={!isLabelValid}
+                    aria-label="Export to Apple Calendar"
                   >
-                    Apple Calendar
+                    Apple
                   </button>
                   <button
                     type="button"
                     className="btn btn-sm btn-outline-secondary"
                     onClick={() => handleProviderClick(CalendarProvider.Outlook)}
                     disabled={!isLabelValid}
+                    aria-label="Export to Outlook Calendar"
                   >
                     Outlook
                   </button>
