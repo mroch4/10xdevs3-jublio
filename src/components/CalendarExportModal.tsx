@@ -27,7 +27,6 @@ export default function CalendarExportModal({
     const trimmedLabel = label.trim();
     if (trimmedLabel) {
       onExport(provider, trimmedLabel);
-      setLabel(""); // Reset for next use
     }
   };
 
@@ -100,29 +99,26 @@ export default function CalendarExportModal({
                 <div className="provider-buttons">
                   <button
                     type="button"
-                    className="btn btn-provider btn-google"
+                    className="btn btn-sm btn-outline-secondary"
                     onClick={() => handleProviderClick(CalendarProvider.Google)}
                     disabled={!isLabelValid}
                   >
-                    <span className="provider-icon">🟦</span>
                     Google Calendar
                   </button>
                   <button
                     type="button"
-                    className="btn btn-provider btn-apple"
+                    className="btn btn-sm btn-outline-secondary"
                     onClick={() => handleProviderClick(CalendarProvider.Apple)}
                     disabled={!isLabelValid}
                   >
-                    <span className="provider-icon">🍎</span>
                     Apple Calendar
                   </button>
                   <button
                     type="button"
-                    className="btn btn-provider btn-outlook"
+                    className="btn btn-sm btn-outline-secondary"
                     onClick={() => handleProviderClick(CalendarProvider.Outlook)}
                     disabled={!isLabelValid}
                   >
-                    <span className="provider-icon">📧</span>
                     Outlook
                   </button>
                 </div>
