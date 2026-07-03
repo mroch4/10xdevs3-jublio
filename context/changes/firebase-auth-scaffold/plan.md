@@ -460,26 +460,26 @@ This provides the UX flow now and a clear integration point for S-02's bookmark 
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `tsc -b` (via build)
-- [x] 1.2 Linting passes: `npm run lint`
-- [x] 1.3 Build succeeds: `npm run build`
-- [x] 1.4 No runtime errors when importing `src/firebase/config.ts` (verify via dev server)
+- [x] 1.1 Type checking passes: `tsc -b` (via build) — 1f6e45b
+- [x] 1.2 Linting passes: `npm run lint` — 1f6e45b
+- [x] 1.3 Build succeeds: `npm run build` — 1f6e45b
+- [x] 1.4 No runtime errors when importing `src/firebase/config.ts` (verify via dev server) — 1f6e45b
 
 #### Manual
 
-- [ ] 1.5 `.env.local` file exists with Firebase credentials (developer creates this manually)
-- [ ] 1.6 Firebase config loads without errors in browser console when app starts
-- [ ] 1.7 Auth instance is accessible (can verify by temporarily logging `auth.app.name` in console)
-- [ ] 1.8 Error utility correctly maps common Firebase error codes to friendly messages
+- [x] 1.5 `.env.local` file exists with Firebase credentials (developer creates this manually) — 1f6e45b
+- [x] 1.6 Firebase config loads without errors in browser console when app starts — 1f6e45b
+- [x] 1.7 Auth instance is accessible (can verify by temporarily logging `auth.app.name` in console) — 1f6e45b
+- [x] 1.8 Error utility correctly maps common Firebase error codes to friendly messages — 1f6e45b
 
 ### Phase 2: Auth Context Provider
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npm run typecheck`
-- [ ] 2.2 Linting passes: `npm run lint`
-- [ ] 2.3 Build succeeds: `npm run build`
-- [ ] 2.4 Dev server starts without errors: `npm run dev`
+- [x] 2.1 Type checking passes: `tsc -b` (via build)
+- [x] 2.2 Linting passes: `npm run lint`
+- [x] 2.3 Build succeeds: `npm run build`
+- [x] 2.4 Dev server starts without errors: `npm run dev`
 
 #### Manual
 
