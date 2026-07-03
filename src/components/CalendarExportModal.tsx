@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import Event from "../utils/classes/Event";
 import { CalendarProvider } from "../utils/enums/CalendarProvider";
@@ -19,6 +19,22 @@ export default function CalendarExportModal({
 }: CalendarExportModalProps) {
   const [label, setLabel] = useState("");
 
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+  };
+
+  const handleProviderClick = (provider: CalendarProvider) => {
+    const trimmedLabel = label.trim();
+    if (trimmedLabel) {
+      onExport(provider, trimmedLabel);
+    }
+  };
+
+  const handleClose = useCallback(() => {
+    setLabel("");
+    onClose();
+  }, [onClose]);
+
   // Handle ESC key to close modal
   useEffect(() => {
     const handleEscKey = (e: KeyboardEvent) => {
@@ -31,23 +47,7 @@ export default function CalendarExportModal({
     return () => {
       document.removeEventListener("keydown", handleEscKey);
     };
-  }, [isOpen]);
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-  };
-
-  const handleProviderClick = (provider: CalendarProvider) => {
-    const trimmedLabel = label.trim();
-    if (trimmedLabel) {
-      onExport(provider, trimmedLabel);
-    }
-  };
-
-  const handleClose = () => {
-    setLabel("");
-    onClose();
-  };
+  }, [isOpen, handleClose]);
 
   if (!isOpen) return null;
 
