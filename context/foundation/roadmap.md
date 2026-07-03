@@ -3,6 +3,7 @@ project: Milestone Celebration Tracker
 version: 1
 status: draft
 created: 2026-07-02
+updated: 2026-07-03
 prd_version: 1
 main_goal: speed
 top_blocker: skills
@@ -28,7 +29,7 @@ Users manually calculate milestone anniversaries in weird time units (10,000 day
 
 | ID   | Change ID                  | Outcome (user can …)                             | Prerequisites    | PRD refs         | Status   |
 | ---- | -------------------------- | ------------------------------------------------ | ---------------- | ---------------- | -------- |
-| F-01 | firebase-auth-scaffold     | (foundation) Firebase Auth configured for login  | —                | FR-008, FR-009   | proposed |
+| F-01 | firebase-auth-scaffold     | (foundation) Firebase Auth configured for login  | —                | FR-008, FR-009   | done     |
 | F-02 | firestore-portfolio-schema | (foundation) Firestore collections & schema live | —                | FR-010, FR-011   | proposed |
 | S-01 | calculate-milestones       | calculate milestones for any date (anonymous)    | —                | FR-001 to FR-006 | ready    |
 | S-02 | bookmark-and-manage        | bookmark dates and manage persistent portfolio   | F-01, F-02, S-01 | FR-010 to FR-014 | proposed |
@@ -73,7 +74,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
   - Auth provider choice (magic link vs. OAuth)? Recommendation in PRD: magic link preferred for low friction. Block: no (default to magic link; can swap later).
   - Where to store user ID / session state (Context API, localStorage, Firebase SDK state)? Block: no (Firebase SDK handles session out-of-box).
 - **Risk:** Firebase Auth is new to solo builder (Skills blocker); spike time ~2–3 hours for basic integration. Plan for research/trial.
-- **Status:** proposed
+- **Status:** done
 
 ### F-02: Firestore portfolio schema
 
@@ -205,6 +206,15 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Compliance certification** — PRD Non-Functional Non-Goal. Rationale: basic GDPR, no HIPAA/SOC2 needed. Deferred.
 
 ## Done
+
+### F-01: Firebase Auth scaffold
+
+- **Change ID:** `firebase-auth-scaffold`
+- **Archived:** 2026-07-03
+- **Outcome:** (foundation) Firebase Authentication configured; passwordless magic-link or OAuth flow ready; login/logout accessible to any UI component.
+- **Lesson:** —.
+
+→ `context/archive/2026-07-03-firebase-auth-scaffold/`
 
 ### S-01: Calculate milestones
 
