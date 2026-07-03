@@ -1,4 +1,4 @@
-import Event from "./Event";
+import Milestone from "./Milestone";
 import { Temporal } from "@js-temporal/polyfill";
 import { UnitsConfig } from "../UnitsConfig";
 
@@ -10,15 +10,15 @@ export abstract class CardBase {
   abstract getBase(unit: string): Temporal.PlainDate | Temporal.PlainDateTime;
 
   date!: Temporal.PlainDate;
-  events: Event[] = [];
+  events: Milestone[] = [];
   locale: string = "en-US";
 
   constructor(locale: string) {
     this.locale = locale;
   }
 
-  getEvents(): Event[] {
-    const events = new Array<Event>();
+  getEvents(): Milestone[] {
+    const events = new Array<Milestone>();
 
     UnitsConfig.forEach((item) => {
       if (this.shouldIncludeUnit(item.unit) && item.minExponent !== undefined && item.maxExponent !== undefined) {
@@ -26,7 +26,7 @@ export abstract class CardBase {
           const exponent = 10 ** exp;
           const base = this.getBase(item.unit);
 
-          const event = new Event(base.add({ [item.unit]: exponent }), item.unit, exponent, this.locale);
+          const event = new Milestone(base.add({ [item.unit]: exponent }), item.unit, exponent, this.locale);
 
           events.push(event);
         }

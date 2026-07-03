@@ -4,21 +4,21 @@ import { filterEvents, getCategoryOrder, groupByCategory, sortEventsByDate } fro
 
 import CalendarExportModal from "./CalendarExportModal";
 import { CalendarProvider } from "../utils/enums/CalendarProvider";
-import Event from "../utils/classes/Event";
+import Milestone from "../utils/classes/Milestone";
 import { EventCategory } from "../utils/enums/EventCategory";
 import Toast from "./Toast";
 import { generateCalendarUrl } from "../utils/calendarExport";
 import { useState } from "react";
 
 interface MilestoneResultsProps {
-  events: Event[];
-  locale: string; // Used by parent to create Event objects with locale-aware formatting
+  events: Milestone[];
+  locale: string; // Used by parent to create Milestone objects with locale-aware formatting
 }
 
 export default function MilestoneResults({ events }: MilestoneResultsProps) {
-  // Note: locale is used by parent to create Event objects with locale-formatted dateString
+  // Note: locale is used by parent to create Milestone objects with locale-formatted dateString
   const [exportModalOpen, setExportModalOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<Milestone | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // No longer filtering - all events are visible
@@ -39,7 +39,7 @@ export default function MilestoneResults({ events }: MilestoneResultsProps) {
     );
   }
 
-  const handleExportClick = (event: Event) => {
+  const handleExportClick = (event: Milestone) => {
     setSelectedEvent(event);
     setExportModalOpen(true);
   };

@@ -1,7 +1,7 @@
 import { EventCategory } from "../enums/EventCategory";
 import { Temporal } from "@js-temporal/polyfill";
 
-export default class Event {
+export default class Milestone {
   date: Temporal.PlainDate | Temporal.PlainDateTime;
   dateString: string;
   label: string;

@@ -134,7 +134,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Risk:** ~~Calendar vendor APIs differ (Google vs. Apple vs. Outlook). Skills blocker: unfamiliar with calendar integration deep links.~~ Resolved — standard URL formats implemented and tested.
 - **Status:** done (pending mobile testing)
 - **Implementation:** 
-  - Event.label refactored to clean format (no "+" prefix)
+  - Milestone.label refactored to clean format (no "+" prefix)
   - Calendar URL generation utilities for Google/Apple/Outlook
   - Toast notification system with auto-dismiss
   - Modal with label input, live preview, and provider selection

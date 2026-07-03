@@ -1,17 +1,17 @@
 import DateCard from "../utils/classes/DateCard";
 import DateTimeCard from "../utils/classes/DateTimeCard";
 import DateTimeInput from "./DateTimeInput";
-import Event from "../utils/classes/Event";
+import Milestone from "../utils/classes/Milestone";
 import MilestoneResults from "./MilestoneResults";
 import { Temporal } from "@js-temporal/polyfill";
 import { useState } from "react";
 
 export default function MilestoneCalculator() {
-  const [events, setEvents] = useState<Event[] | null>(null);
+  const [events, setEvents] = useState<Milestone[] | null>(null);
   const locale = navigator.language;
 
   const handleCalculate = (date: Temporal.PlainDate, time?: Temporal.PlainTime) => {
-    let calculatedEvents: Event[];
+    let calculatedEvents: Milestone[];
 
     if (time) {
       // Time provided: use DateTimeCard for all milestone units

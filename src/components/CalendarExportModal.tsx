@@ -3,13 +3,13 @@ import "./CalendarExportModal.css";
 import { useCallback, useEffect, useState } from "react";
 
 import { CalendarProvider } from "../utils/enums/CalendarProvider";
-import Event from "../utils/classes/Event";
+import Milestone from "../utils/classes/Milestone";
 import type { FormEvent } from "react";
 
 interface CalendarExportModalProps {
   isOpen: boolean;
   onClose: () => void;
-  event: Event;
+  event: Milestone;
   onExport: (provider: CalendarProvider, label: string) => void;
 }
 

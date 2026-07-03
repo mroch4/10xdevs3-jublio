@@ -1,4 +1,4 @@
-import Event from "./classes/Event";
+import Milestone from "./classes/Milestone";
 import { EventCategory } from "./enums/EventCategory";
 
 /**
@@ -6,8 +6,8 @@ import { EventCategory } from "./enums/EventCategory";
  * @param events - Array of milestone events
  * @returns Object with all events (no filtering applied)
  */
-export function filterEvents(events: Event[]): {
-  visible: Event[];
+export function filterEvents(events: Milestone[]): {
+  visible: Milestone[];
   beyondCount: number;
 } {
   // Return all events - Beyond Human Life Expectancy will be shown as a regular group
@@ -19,8 +19,8 @@ export function filterEvents(events: Event[]): {
  * @param events - Array of milestone events
  * @returns Map of category to events array
  */
-export function groupByCategory(events: Event[]): Map<EventCategory, Event[]> {
-  const groups = new Map<EventCategory, Event[]>();
+export function groupByCategory(events: Milestone[]): Map<EventCategory, Milestone[]> {
+  const groups = new Map<EventCategory, Milestone[]>();
 
   events.forEach((event) => {
     const category = event.category as EventCategory;
@@ -38,7 +38,7 @@ export function groupByCategory(events: Event[]): Map<EventCategory, Event[]> {
  * @param events - Array of milestone events
  * @returns Sorted array of events
  */
-export function sortEventsByDate(events: Event[]): Event[] {
+export function sortEventsByDate(events: Milestone[]): Milestone[] {
   return [...events].sort((a, b) => {
     return a.date.toString().localeCompare(b.date.toString());
   });

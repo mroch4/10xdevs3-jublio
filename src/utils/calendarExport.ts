@@ -1,11 +1,11 @@
 import { CalendarProvider } from "./enums/CalendarProvider";
-import Event from "./classes/Event";
+import Milestone from "./classes/Milestone";
 import { Temporal } from "@js-temporal/polyfill";
 
 /**
  * Generate a calendar deep link URL for the specified provider
  */
-export function generateCalendarUrl(event: Event, label: string, provider: CalendarProvider): string {
+export function generateCalendarUrl(event: Milestone, label: string, provider: CalendarProvider): string {
   const title = formatEventTitle(event, label);
   const isAllDay = event.date instanceof Temporal.PlainDate;
 
@@ -29,7 +29,7 @@ export function generateCalendarUrl(event: Event, label: string, provider: Calen
  * Format event title: "[event.label] milestone of [user label]"
  * Example: "10,000 days milestone of Wedding"
  */
-export function formatEventTitle(event: Event, userLabel: string): string {
+export function formatEventTitle(event: Milestone, userLabel: string): string {
   return `${event.label} milestone of ${userLabel}`;
 }
 

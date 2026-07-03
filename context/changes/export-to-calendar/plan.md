@@ -100,9 +100,9 @@ Add calendar export functionality to milestone results, enabling users to export
 - [ ] Toast auto-dismisses after 5 seconds
 
 **Technical:**
-- [ ] Event.label refactored to clean format (no "+" prefix)
+- [ ] Milestone.label refactored to clean format (no "+" prefix)
 - [ ] MilestoneResults displays "+" prefix in JSX
-- [ ] Event title uses Event.label directly: "[label] milestone of [user input]"
+- [ ] Event title uses Milestone.label directly: "[label] milestone of [user input]"
 - [ ] All-day events use correct date format (no time component)
 - [ ] Timed events use 1-hour duration from milestone time
 - [ ] URLs are properly encoded (spaces, special characters)
@@ -115,20 +115,20 @@ Add calendar export functionality to milestone results, enabling users to export
 
 ## Key Discoveries
 
-1. **Event.label format refactoring needed:** Currently "+ 10,000 days" includes display prefix. Refactor to store clean "10,000 days" in Event.label, add "+" prefix in MilestoneResults JSX. This makes label reusable for calendar export without parsing.
-2. **No original input date stored:** Event object only has milestone date, which is correct — calendar event is scheduled on the milestone date, not the original input date
+1. **Milestone.label format refactoring needed:** Currently "+ 10,000 days" includes display prefix. Refactor to store clean "10,000 days" in Milestone.label, add "+" prefix in MilestoneResults JSX. This makes label reusable for calendar export without parsing.
+2. **No original input date stored:** Milestone object only has milestone date, which is correct — calendar event is scheduled on the milestone date, not the original input date
 3. **Bootstrap Icons not included:** Will need to add brand icons (Google/Apple/Outlook) as SVG or use a CDN
 4. **No toast notification system:** Need to build a simple one using Bootstrap alerts + auto-dismiss
 5. **Temporal.PlainDate vs PlainDateTime:** Type discrimination determines all-day vs timed event format
 
 ## Implementation Phases
 
-### Phase 0: Refactor Event.label format (prerequisite)
+### Phase 0: Refactor Milestone.label format (prerequisite)
 
-**Goal:** Remove "+" prefix from Event.label to make it reusable for calendar export. Move display formatting to component layer.
+**Goal:** Remove "+" prefix from Milestone.label to make it reusable for calendar export. Move display formatting to component layer.
 
 **Files to modify:**
-- `src/utils/classes/Event.ts`
+- `src/utils/classes/Milestone.ts`
 - `src/components/MilestoneResults.tsx`
 
 **Tasks:**
@@ -137,15 +137,15 @@ Add calendar export functionality to milestone results, enabling users to export
   - To: `this.label = new Intl.NumberFormat(locale).format(exponent) + " " + unit;`
   - Result: label is now "10,000 days" instead of "+ 10,000 days"
 - Update `MilestoneResults` component:
-  - Add "+" prefix in JSX when displaying: `<h6 className="mb-1">+ {event.label}</h6>`
+  - Add "+" prefix in JSX when displaying: `<h6 className="mb-1">+ {Milestone.label}</h6>`
   - No logic change, just display formatting
-- Verify no other components depend on Event.label format
+- Verify no other components depend on Milestone.label format
 - Test milestone display still shows "+ 10,000 days" in UI
 
 **Acceptance:**
-- Event.label contains clean format: "10,000 days" (no "+")
+- Milestone.label contains clean format: "10,000 days" (no "+")
 - MilestoneResults display unchanged: shows "+ 10,000 days"
-- Calendar export can use Event.label directly without parsing
+- Calendar export can use Milestone.label directly without parsing
 
 ### Phase 1: Calendar URL generation utilities
 
@@ -158,8 +158,8 @@ Add calendar export functionality to milestone results, enabling users to export
 - Create `CalendarProvider` enum: `Google`, `Apple`, `Outlook`
 - Create `generateCalendarUrl(event: Event, label: string, provider: CalendarProvider): string` function
 - Implement `formatEventTitle(event: Event, label: string): string` helper
-  - Use Event.label directly (now clean: "10,000 days")
-  - Return: "[event.label] milestone of [label]" (e.g., "10,000 days milestone of Wedding")
+  - Use Milestone.label directly (now clean: "10,000 days")
+  - Return: "[Milestone.label] milestone of [label]" (e.g., "10,000 days milestone of Wedding")
 - Implement `formatDateForGoogle(date: Temporal.PlainDate | Temporal.PlainDateTime, isEnd: boolean): string`
   - PlainDate → `YYYYMMDD` format
   - PlainDateTime → `YYYYMMDDTHHmmss` format (local timezone, no Z suffix)
@@ -179,7 +179,7 @@ Add calendar export functionality to milestone results, enabling users to export
 **Acceptance:**
 - All utility functions type-safe and handle both PlainDate and PlainDateTime
 - URLs correctly formatted for each provider
-- Event titles properly extracted from Event.label format
+- Event titles properly extracted from Milestone.label format
 
 ### Phase 2: Toast notification system
 
@@ -399,25 +399,25 @@ https://outlook.live.com/calendar/0/deeplink/compose?subject={TITLE}&startdt={ST
 - No native URL scheme for direct event creation
 - Use Google Calendar URL — works in browser and redirects to Apple Calendar app on macOS/iOS
 
-### Event.label format (after Phase 0 refactoring)
+### Milestone.label format (after Phase 0 refactoring)
 
 **Before refactoring:** `"+ 10,000 days"` (display formatting in data)
 **After refactoring:** `"10,000 days"` (clean, reusable format)
 
 The "+" prefix is now added in MilestoneResults component JSX:
 ```tsx
-<h6 className="mb-1">+ {event.label}</h6>
+<h6 className="mb-1">+ {Milestone.label}</h6>
 ```
 
-For calendar export, use Event.label directly:
+For calendar export, use Milestone.label directly:
 ```typescript
 function formatEventTitle(event: Event, userLabel: string): string {
-  return `${event.label} milestone of ${userLabel}`;
+  return `${Milestone.label} milestone of ${userLabel}`;
 }
 // Example: "10,000 days milestone of Wedding"
 ```
 
-No parsing needed since Event.label is already clean.
+No parsing needed since Milestone.label is already clean.
 
 ### Temporal date formatting for calendar URLs
 
@@ -506,10 +506,10 @@ src/
 
 ## Progress
 
-### Phase 0: Refactor Event.label format (prerequisite)
-- [x] Modify Event class constructor to remove "+" prefix
+### Phase 0: Refactor Milestone.label format (prerequisite)
+- [x] Modify Milestone class constructor to remove "+" prefix
 - [x] Update MilestoneResults to add "+" in JSX display
-- [x] Verify no other components depend on old Event.label format
+- [x] Verify no other components depend on old Milestone.label format
 - [x] Test milestone display unchanged in UI
 - [x] Commit refactoring as separate change — **commit 3f0eb32**
 
