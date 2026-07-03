@@ -10,7 +10,7 @@ export default class Event {
   constructor(date: Temporal.PlainDate | Temporal.PlainDateTime, unit: string, exponent: number, locale: string, now?: Temporal.PlainDateTime) {
     this.date = date;
     this.dateString = this.date.toLocaleString(locale);
-    this.label = `+ ${new Intl.NumberFormat(locale).format(exponent)} ${unit}`;
+    this.label = `${new Intl.NumberFormat(locale).format(exponent)} ${unit}`;
     this.category = this.getCategory(now);
   }
 
