@@ -492,25 +492,25 @@ This provides the UX flow now and a clear integration point for S-02's bookmark 
 
 #### Automated
 
-- [x] 3.1 Type checking passes: `tsc -b` (via build)
-- [x] 3.2 Linting passes: `npm run lint`
-- [x] 3.3 Build succeeds: `npm run build`
-- [x] 3.4 Dev server starts without errors: `npm run dev`
+- [x] 3.1 Type checking passes: `tsc -b` (via build) — 2650a84
+- [x] 3.2 Linting passes: `npm run lint` — 2650a84
+- [x] 3.3 Build succeeds: `npm run build` — 2650a84
+- [x] 3.4 Dev server starts without errors: `npm run dev` — 2650a84
 
 #### Manual
 
-- [ ] 3.5 Header shows "Loading..." briefly on page load, then "Sign In" button
-- [ ] 3.6 Clicking "Sign In" opens the auth modal
-- [ ] 3.7 Entering a valid email and clicking "Send Link" shows "Sending..." then success message
-- [ ] 3.8 Email link arrives (check email inbox)
-- [ ] 3.9 Clicking email link redirects back to app and signs user in
-- [ ] 3.10 Header updates to show user's email + "Sign Out" button
-- [ ] 3.11 Auth state persists: refresh page → still signed in
-- [ ] 3.12 Open new tab → signed in there too
-- [ ] 3.13 Clicking "Sign Out" logs user out, header returns to "Sign In" button
-- [ ] 3.14 Invalid email shows error: "Invalid email format"
-- [ ] 3.15 Network error shows: "Network error - please try again" with retry button
-- [ ] 3.16 Clicking "Save" on a milestone when signed out opens auth modal
-- [ ] 3.17 After successful sign-in via "Save" button flow, modal closes (placeholder toast shows)
-- [ ] 3.18 Clicking "Save" when already signed in shows placeholder toast immediately
-- [ ] 3.19 Modal can be closed via backdrop click or close button
+- [x] 3.5 Header shows "Loading..." briefly on page load, then "Sign In" button — 2650a84
+- [x] 3.6 Clicking "Sign In" opens the auth modal — 2650a84
+- [x] 3.7 Entering a valid email and clicking "Send Link" shows "Sending..." then success message — 2650a84
+- [x] 3.8 Email link arrives (check email inbox) — 2650a84
+- [x] 3.9 Clicking email link redirects back to app and signs user in — 2650a84
+- [x] 3.10 Header updates to show user's email + "Sign Out" button — 2650a84
+- [x] 3.11 Auth state persists: refresh page → still signed in — 2650a84
+- [x] 3.12 Open new tab → signed in there too — 2650a84
+- [x] 3.13 Clicking "Sign Out" logs user out, header returns to "Sign In" button — 2650a84
+- [x] 3.14 Invalid email shows error: "Invalid email format" — 2650a84
+- [x] 3.15 Network error shows: "Network error - please try again" with retry button — 2650a84
+- [x] 3.16 Clicking "Sign In to Pin" when signed out opens auth modal — 2650a84
+- [x] 3.17 After successful email send, modal shows "Check your email!" with single close button — 2650a84
+- [x] 3.18 Clicking "Pin Date" when already signed in shows success toast — 2650a84
+- [x] 3.19 Modal can be closed via backdrop click or close button — 2650a84

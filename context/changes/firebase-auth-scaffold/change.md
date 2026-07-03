@@ -1,7 +1,7 @@
 ---
 change_id: firebase-auth-scaffold
 title: Firebase auth scaffold
-status: implementing
+status: implemented
 created: 2026-07-03
 updated: 2026-07-03
 archived_at: null
