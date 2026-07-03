@@ -30,7 +30,7 @@ Users manually calculate milestone anniversaries in weird time units (10,000 day
 | ID   | Change ID                  | Outcome (user can …)                             | Prerequisites    | PRD refs         | Status   |
 | ---- | -------------------------- | ------------------------------------------------ | ---------------- | ---------------- | -------- |
 | F-01 | firebase-auth-scaffold     | (foundation) Firebase Auth configured for login  | —                | FR-008, FR-009   | done     |
-| F-02 | firestore-portfolio-schema | (foundation) Firestore collections & schema live | —                | FR-010, FR-011   | proposed |
+| F-02 | firestore-portfolio-schema | (foundation) Firestore collections & schema live | —                | FR-010, FR-011   | done     |
 | S-01 | calculate-milestones       | calculate milestones for any date (anonymous)    | —                | FR-001 to FR-006 | done     |
 | S-02 | bookmark-and-manage        | bookmark dates and manage persistent portfolio   | F-01, F-02, S-01 | FR-010 to FR-014 | proposed |
 | S-03 | export-to-calendar         | export a milestone to Google/Apple/Outlook       | S-02             | FR-015 to FR-018 | blocked  |
@@ -90,7 +90,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
   - Should labels be unique per-date or globally per-user? PRD Open Question #6. Block: no (default to per-user global; simpler, can change later).
   - Should timezone be stored per-date or per-user? PRD Open Question #7. Block: no (default to per-date; more flexible).
 - **Risk:** Schema design is critical for later features (edit, sync); changes mid-stream will require migration. Recommend upfront design review with PRD edge cases.
-- **Status:** proposed
+- **Status:** done
 
 ## Slices
 
@@ -215,6 +215,15 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Lesson:** —.
 
 → `context/archive/2026-07-03-firebase-auth-scaffold/`
+
+### F-02: Firestore portfolio schema
+
+- **Change ID:** `firestore-portfolio-schema`
+- **Archived:** 2026-07-03
+- **Outcome:** (foundation) Firestore collections & schema live; collections ready for S-02 to write bookmarks.
+- **Lesson:** —.
+
+→ `context/archive/2026-07-03-firestore-portfolio-schema/`
 
 ### S-01: Calculate milestones
 

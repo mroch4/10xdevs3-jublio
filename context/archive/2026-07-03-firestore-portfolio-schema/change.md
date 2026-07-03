@@ -1,12 +1,12 @@
 ---
 change_id: firestore-portfolio-schema
 title: Firestore portfolio schema
-status: impl_reviewed
+status: archived
 created: 2026-07-03
 updated: 2026-07-03
 planned_at: 2026-07-03
 implemented_at: 2026-07-03
-archived_at: null
+archived_at: 2026-07-03T00:00:00Z
 ---
 
 ## Notes
