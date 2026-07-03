@@ -1,6 +1,7 @@
 import { collection, doc, setDoc, getDoc, getDocs, deleteDoc, query, where, orderBy } from 'firebase/firestore';
 import { db } from './config';
 import Bookmark from '../utils/classes/Bookmark';
+import { COLLECTIONS } from './collections';
 
 /**
  * Check if a title is unique for a user (case-insensitive).
@@ -15,7 +16,7 @@ export async function checkTitleUniqueness(
   excludeId?: string
 ): Promise<boolean> {
   const titleLower = title.toLowerCase();
-  const bookmarksRef = collection(db, 'milestones', email, 'bookmarks');
+  const bookmarksRef = collection(db, COLLECTIONS.MILESTONES, email, COLLECTIONS.BOOKMARKS);
   const q = query(bookmarksRef, where('titleLowercase', '==', titleLower));
 
   const snapshot = await getDocs(q);
@@ -38,7 +39,7 @@ export async function checkTitleUniqueness(
  * @returns Array of Bookmark instances
  */
 export async function getBookmarks(email: string): Promise<Bookmark[]> {
-  const bookmarksRef = collection(db, 'milestones', email, 'bookmarks');
+  const bookmarksRef = collection(db, COLLECTIONS.MILESTONES, email, COLLECTIONS.BOOKMARKS);
   const q = query(bookmarksRef, orderBy('createdAt', 'desc'));
 
   const snapshot = await getDocs(q);
@@ -62,7 +63,7 @@ export async function getBookmarks(email: string): Promise<Bookmark[]> {
  */
 export async function addBookmark(email: string, bookmark: Bookmark): Promise<string> {
   const docId = bookmark.createdAt.toString();
-  const bookmarkRef = doc(db, 'milestones', email, 'bookmarks', docId);
+  const bookmarkRef = doc(db, COLLECTIONS.MILESTONES, email, COLLECTIONS.BOOKMARKS, docId);
 
   await setDoc(bookmarkRef, {
     title: bookmark.title,
@@ -86,7 +87,7 @@ export async function updateBookmark(
   docId: string,
   bookmark: Bookmark
 ): Promise<void> {
-  const bookmarkRef = doc(db, 'milestones', email, 'bookmarks', docId);
+  const bookmarkRef = doc(db, COLLECTIONS.MILESTONES, email, COLLECTIONS.BOOKMARKS, docId);
 
   // Get existing document to preserve createdAt
   const existingDoc = await getDoc(bookmarkRef);
@@ -111,6 +112,6 @@ export async function updateBookmark(
  * @param docId - Document ID to delete
  */
 export async function deleteBookmark(email: string, docId: string): Promise<void> {
-  const bookmarkRef = doc(db, 'milestones', email, 'bookmarks', docId);
+  const bookmarkRef = doc(db, COLLECTIONS.MILESTONES, email, COLLECTIONS.BOOKMARKS, docId);
   await deleteDoc(bookmarkRef);
 }
