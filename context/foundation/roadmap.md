@@ -1,12 +1,12 @@
 ---
 project: Milestone Celebration Tracker
-version: 1
-status: draft
+version: 2
+status: active
 created: 2026-07-02
-updated: 2026-07-03
+updated: 2026-07-05
 prd_version: 1
 main_goal: speed
-top_blocker: skills
+top_blocker: none
 ---
 
 # Roadmap: Milestone Celebration Tracker
@@ -14,6 +14,19 @@ top_blocker: skills
 > Derived from `context/foundation/prd.md` (v1) + auto-researched codebase baseline.
 > Edit-in-place; archive when superseded.
 > Slices below are listed in dependency order. The "At a glance" table is the index.
+
+## 📊 Status Summary (Updated 2026-07-05)
+
+**Progress:** 5 of 7 items complete (71%)
+
+- ✅ **Foundations complete** — Auth (F-01) + Firestore schema (F-02) both done
+- ✅ **Core calculation** — Milestone calculation with Temporal API (S-01) done
+- ✅ **Calendar export** — Google/Outlook/Apple export (S-03) done
+- ✅ **North Star COMPLETE** — S-02 (bookmark & portfolio) done 2026-07-05
+- 🟢 **Next feature READY** — S-05 (custom values) can start now
+- 🔴 **1 blocker** — S-04 (social share) needs AI model decision
+
+**Next recommended action:** Start planning S-05 (custom-milestone-values) — all prerequisites are met.
 
 ## Vision recap
 
@@ -25,6 +38,8 @@ Users manually calculate milestone anniversaries in weird time units (10,000 day
 
 > **North star** here means the smallest end-to-end slice whose successful delivery would prove the core product hypothesis — placed as early as Prerequisites allow because everything else only matters if this works.
 
+**Status update (2026-07-05):** ✅ North Star feature COMPLETE (archived 2026-07-05). All prerequisites were met and the feature successfully delivered bookmark management with real-time sync, edit/delete capabilities, and cross-device portfolio persistence. Next: S-05 is now unblocked.
+
 ## At a glance
 
 | ID   | Change ID                  | Outcome (user can …)                             | Prerequisites    | PRD refs         | Status   |
@@ -32,10 +47,10 @@ Users manually calculate milestone anniversaries in weird time units (10,000 day
 | F-01 | firebase-auth-scaffold     | (foundation) Firebase Auth configured for login  | —                | FR-008, FR-009   | done     |
 | F-02 | firestore-portfolio-schema | (foundation) Firestore collections & schema live | —                | FR-010, FR-011   | done     |
 | S-01 | calculate-milestones       | calculate milestones for any date (anonymous)    | —                | FR-001 to FR-006 | done     |
-| S-02 | bookmark-and-manage        | bookmark dates and manage persistent portfolio   | F-01, F-02, S-01 | FR-010 to FR-014 | proposed |
+| S-02 | bookmark-and-manage        | bookmark dates and manage persistent portfolio   | F-01, F-02, S-01 | FR-010 to FR-014 | done     |
 | S-03 | export-to-calendar         | export a milestone to Google/Apple/Outlook       | S-01             | FR-015 to FR-018 | done     |
 | S-04 | social-share-with-ai       | share milestone on social media with AI image    | S-01             | FR-019 to FR-021 | blocked  |
-| S-05 | custom-milestone-values    | add custom milestone values (e.g., 420, 25,000)  | S-02             | FR-006           | proposed |
+| S-05 | custom-milestone-values    | add custom milestone values (e.g., 420, 25,000)  | S-02             | FR-006           | ready    |
 
 ## Streams
 
@@ -43,21 +58,30 @@ Navigation aid — groups items that share a Prerequisites chain. Canonical orde
 
 | Stream | Theme                  | Chain                    | Note                                                                     |
 | ------ | ---------------------- | ------------------------ | ------------------------------------------------------------------------ |
-| A      | Foundation & calculate | `F-01` → `F-02` → `S-01` | Async: F-01/F-02 can run in parallel; S-01 independent (no F prereq)     |
-| B      | Portfolio core         | `S-02` → `S-05`          | S-02 unblocks custom values; S-05 requires portfolio schema              |
-| C      | Sharing & export       | `S-01` → `S-03` / `S-04` | S-03 ready (export from calculation); S-04 blocked on AI model decision  |
+| A      | Foundation & calculate | `F-01` → `F-02` → `S-01` | ✅ COMPLETE — All foundation items done; S-01 calculation ready          |
+| B      | Portfolio core         | `S-02` → `S-05`          | S-02 ✅ done (2026-07-05); S-05 🟢 ready to start                        |
+| C      | Sharing & export       | `S-01` → `S-03` / `S-04` | S-03 ✅ done; S-04 blocked on AI model decision                          |
 
 ## Baseline
 
-What's already in place in the codebase as of 2026-07-02 (auto-researched + user-confirmed).
+What's already in place in the codebase as of 2026-07-04 (auto-researched + user-confirmed).
 Foundations below assume these are present and do NOT re-scaffold them.
 
 - **Frontend:** present — Vite + React 19 + TypeScript, entry at `src/main.tsx`, build tooling configured
 - **Backend / API:** absent — No backend framework or API routes (client-side SPA only)
-- **Data:** partial — Firebase Firestore in tech-stack, SDK imported but collections/schema not yet configured
-- **Auth:** partial — Firebase Auth in tech-stack (`has_auth: true`), SDK available but not configured; no auth code in App.tsx yet
+- **Data:** ✅ complete — Firebase Firestore configured with collections/schema (F-02 done)
+- **Auth:** ✅ complete — Firebase Auth configured with magic-link/OAuth (F-01 done)
 - **Deploy / infra:** present — GitHub Pages + GitHub Actions (auto-deploy on merge)
 - **Observability:** absent — No logging or error tracking
+
+**Key capabilities delivered:**
+- ✅ Milestone calculation with Temporal API (S-01)
+- ✅ Calendar export (Google/Outlook/Apple) with modal UI (S-03)
+- ✅ Bookmark management with real-time sync (S-02)
+- ✅ Portfolio view with edit/delete capabilities (S-02)
+- ✅ Toast notification system
+- ✅ Firebase Auth integration with magic-link + Google OAuth
+- ✅ ErrorBoundary and accessibility features (WCAG 2.1 AA)
 
 ## Foundations
 
@@ -70,11 +94,8 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Prerequisites:** —
 - **Parallel with:** F-02 (both are independent Foundations)
 - **Blockers:** —
-- **Unknowns:**
-  - Auth provider choice (magic link vs. OAuth)? Recommendation in PRD: magic link preferred for low friction. Block: no (default to magic link; can swap later).
-  - Where to store user ID / session state (Context API, localStorage, Firebase SDK state)? Block: no (Firebase SDK handles session out-of-box).
-- **Risk:** Firebase Auth is new to solo builder (Skills blocker); spike time ~2–3 hours for basic integration. Plan for research/trial.
-- **Status:** done
+- **Status:** ✅ done (archived 2026-07-03)
+- **Implementation:** Magic-link auth configured; Context API for session state; login/logout UI ready
 
 ### F-02: Firestore portfolio schema
 
@@ -85,12 +106,8 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Prerequisites:** —
 - **Parallel with:** F-01 (both independent)
 - **Blockers:** —
-- **Unknowns:**
-  - Uniqueness scope for labels (case-sensitive or case-insensitive)? PRD Open Question #4. Block: no (default to case-insensitive strict uniqueness; can iterate).
-  - Should labels be unique per-date or globally per-user? PRD Open Question #6. Block: no (default to per-user global; simpler, can change later).
-  - Should timezone be stored per-date or per-user? PRD Open Question #7. Block: no (default to per-date; more flexible).
-- **Risk:** Schema design is critical for later features (edit, sync); changes mid-stream will require migration. Recommend upfront design review with PRD edge cases.
-- **Status:** done
+- **Status:** ✅ done (archived 2026-07-03)
+- **Implementation:** Collections configured; case-insensitive unique labels per-user; per-date timezone storage; real-time sync enabled
 
 ## Slices
 
@@ -102,11 +119,8 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Prerequisites:** —
 - **Parallel with:** F-01, F-02 (no dependency on auth or data storage)
 - **Blockers:** —
-- **Unknowns:**
-  - Should past milestones be shown by default or hidden behind a toggle? PRD Open Question #3. Block: no (default to show with visual indicator "Already passed"; can toggle later).
-  - Date picker UX: what controls for date, time, timezone? Block: no (standard HTML5 + custom overlay if needed).
-- **Risk:** Date/time math is the core algorithm. Must handle DST, leap years, timezone edge cases correctly (NFR: "All milestone dates are mathematically correct"). Use Temporal API polyfill (already in package.json: `@js-temporal/polyfill`) to outsource complexity. If Temporal API unfamiliar, spike 1–2 hours on documentation.
-- **Status:** ready
+- **Status:** ✅ done (archived 2026-07-02)
+- **Implementation:** Temporal API polyfill for accurate date/time math; handles DST, leap years, timezone edge cases; sorted by nearest-first
 
 ### S-02: Bookmark and manage portfolio
 
@@ -116,11 +130,18 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Prerequisites:** F-01 (login required), F-02 (Firestore schema to persist), S-01 (calculate a milestone before bookmarking)
 - **Parallel with:** —
 - **Blockers:** —
-- **Unknowns:**
-  - Sync latency: "cross-device sync within 5 seconds" (NFR). Firestore real-time listeners handle this, but will it meet SLA with network latency? Block: no (can measure post-launch and optimize if needed).
-  - UI state management for edits: controlled component vs. uncontrolled input. Block: no (team choice; React 19 context or local state).
-- **Risk:** Firestore cross-device sync + real-time listeners are new territory for solo builder (Skills blocker). Plan for learning + testing multidevice scenarios.
-- **Status:** proposed
+- **Status:** ✅ done (archived 2026-07-05)
+- **Implementation:** 
+  - Tab navigation (Calculator | Bookmarks)
+  - BookmarkModal with label validation (case-insensitive uniqueness, 50 char limit)
+  - Real-time Firestore sync with `onSnapshot` listeners (<5 second cross-device sync)
+  - BookmarksView with click-to-autofill flow (switches tab + populates calculator)
+  - Edit/delete modals with confirmation and dirty-state detection
+  - Loading/error/empty states with toast feedback
+  - Accessibility: WCAG 2.1 AA compliance (ARIA labels, focus trap, ESC close)
+  - Custom hooks: `useEscapeKey`, `useFocusTrap`
+  - ErrorBoundary wrapper for production resilience
+  - Terminology consistency: "Bookmarks" (not "Portfolio") throughout UI
 
 ### S-03: Export milestone to calendar
 
@@ -171,40 +192,39 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Prerequisites:** S-02 (portfolio to store custom values on), F-02 (Firestore schema to persist custom milestones)
 - **Parallel with:** —
 - **Blockers:** —
-- **Unknowns:**
-  - Per-date vs. global custom values? PRD Open Question #5. Block: no (default to per-date; each date can have its own custom milestones; simpler and more flexible).
-- **Risk:** Low. Small feature; straightforward data model once F-02 schema is live.
-- **Status:** proposed
+- **Status:** 🟢 ready (S-02 complete as of 2026-07-05)
+- **Design decision:** Per-date custom values (each bookmarked date has its own custom milestones)
+- **Next steps:** Ready for `/10x-plan` — all prerequisites met
 
 ## Backlog Handoff
 
 | Roadmap ID | Change ID                  | Suggested issue title                                | Ready for `/10x-plan` | Notes                                                                  |
 | ---------- | -------------------------- | ---------------------------------------------------- | --------------------- | ---------------------------------------------------------------------- |
-| F-01       | firebase-auth-scaffold     | Set up Firebase Auth (magic link or OAuth)           | yes                   | Plan this first if you want to unblock S-02; run in parallel with F-02 |
-| F-02       | firestore-portfolio-schema | Design and create Firestore collections + schema     | yes                   | Plan in parallel with F-01; unblocks S-02 and S-05                     |
-| S-01       | calculate-milestones       | Implement milestone calculation with Temporal API    | yes                   | No prerequisites; can start immediately. Prove algorithm first.        |
-| S-02       | bookmark-and-manage        | Bookmark dates, manage portfolio, real-time sync     | no                    | Unblock: F-01 + F-02 + S-01 must be ready                              |
-| S-03       | export-to-calendar         | Export milestone to Google Calendar / Apple Calendar | ✅ DONE               | Feature complete - tested and ready for production                     |
-| S-04       | social-share-with-ai       | Social share with AI-generated image                 | no                    | Blocked: AI model choice + latency validation. Run `/10x-frame` spike  |
-| S-05       | custom-milestone-values    | Custom milestone values per bookmarked date          | no                    | Unblock: S-02 + F-02 must be ready                                     |
+| F-01       | firebase-auth-scaffold     | Set up Firebase Auth (magic link or OAuth)           | ✅ DONE               | Archived 2026-07-03                                                    |
+| F-02       | firestore-portfolio-schema | Design and create Firestore collections + schema     | ✅ DONE               | Archived 2026-07-03                                                    |
+| S-01       | calculate-milestones       | Implement milestone calculation with Temporal API    | ✅ DONE               | Archived 2026-07-02                                                    |
+| S-02       | bookmark-and-manage        | Bookmark dates, manage portfolio, real-time sync     | ✅ DONE               | Archived 2026-07-05 — North Star feature complete                      |
+| S-03       | export-to-calendar         | Export milestone to Google Calendar / Apple Calendar | ✅ DONE               | Archived 2026-07-03                                                    |
+| S-04       | social-share-with-ai       | Social share with AI-generated image                 | 🔴 NO                 | Blocked: AI model choice + latency validation. Run `/10x-frame` spike  |
+| S-05       | custom-milestone-values    | Custom milestone values per bookmarked date          | 🟢 YES                | **READY NOW** — S-02 complete; can start planning                      |
 
 ## Open Roadmap Questions
 
-1. **AI model for social share image generation?** — PRD Open Question #1. Block: yes (S-04). Owner: TBD. Constraint: free tier or open-source only. Recommendation: spike 2–3 hours evaluating DALL-E free tier, Stable Diffusion, Hugging Face; pick one; test latency (must be < 3 seconds per NFR). This is the Skills blocker.
+1. **AI model for social share image generation?** — PRD Open Question #1. Block: yes (S-04). Owner: TBD. Constraint: free tier or open-source only. Recommendation: spike 2–3 hours evaluating DALL-E free tier, Stable Diffusion, Hugging Face; pick one; test latency (must be < 3 seconds per NFR). This blocks S-04.
 
-2. **Calendar deep-link formats for export?** — PRD Open Question #2. Block: no (S-03). Owner: TBD. Research: what are the exact URL schemes / iCal formats for Google Calendar, Apple Calendar (iCal), Outlook? Recommendation: research standard formats during S-03 planning; Google Calendar URL scheme + iCal .ics file are well-documented standards.
+2. ~~**Calendar deep-link formats for export?**~~ — ✅ RESOLVED in S-03. Google/Outlook use URL deep links; Apple uses `.ics` download. Standard formats implemented and tested.
 
-3. **Should past milestones be shown by default?** — PRD Open Question #3. Block: no (default to show with "Already passed" visual indicator). Owner: TBD. Can iterate post-launch.
+3. **Should past milestones be shown by default?** — PRD Open Question #3. Block: no (default to show with "Already passed" visual indicator). Can iterate post-launch.
 
-4. **Label uniqueness scope (case-sensitive)?** — PRD Open Question #4. Block: no (default to case-insensitive strict uniqueness). Owner: TBD. Can iterate.
+4. ~~**Label uniqueness scope (case-sensitive)?**~~ — ✅ RESOLVED in F-02. Case-insensitive strict uniqueness implemented.
 
-5. **Custom milestone values: per-date or global?** — PRD Open Question #5. Block: no (default to per-date). Owner: TBD. Can iterate.
+5. ~~**Custom milestone values: per-date or global?**~~ — ✅ RESOLVED for S-05. Per-date (each bookmarked date has its own custom milestones).
 
-6. **Can users bookmark same date twice with different labels?** — PRD Open Question #6. Block: no (default to allow; uniqueness is label-only, not date-only). Owner: TBD. Can iterate.
+6. ~~**Can users bookmark same date twice with different labels?**~~ — ✅ RESOLVED in F-02. Yes, uniqueness is label-only (per-user), not date-only.
 
-7. **Timezone stored per-date or per-user?** — PRD Open Question #7. Block: no (default to per-date). Owner: TBD. Can iterate.
+7. ~~**Timezone stored per-date or per-user?**~~ — ✅ RESOLVED in F-02. Per-date timezone storage for maximum flexibility.
 
-8. **Attribution note format for social shares?** — PRD Open Question #8. Block: no (can iterate based on share performance). Owner: TBD.
+8. **Attribution note format for social shares?** — PRD Open Question #8. Block: no (can iterate based on share performance post-launch). Applies to S-04.
 
 ## Parked
 
@@ -246,16 +266,34 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 → `context/archive/2026-07-02-calculate-milestones/`
 
+### S-02: Bookmark and manage portfolio
+
+- **Change ID:** `bookmark-and-manage`
+- **Archived:** 2026-07-05
+- **Outcome:** User can bookmark input dates with unique labels, view persistent portfolio with real-time sync, click to autofill calculator, edit bookmarks (date/time/label), and delete with confirmation. Cross-device sync within 5 seconds via Firestore listeners.
+- **Lesson:** User bookmarks **input dates** (not milestone dates)—clicking bookmark autofills calculator and triggers recalculation. This reuses existing calculation flow and keeps portfolio simple. Terminology consistency matters: "Bookmarks" is clearer than "Portfolio" for end users.
+- **Implementation notes:** 
+  - 6-phase incremental delivery (bookmark → navigation → sync → edit → delete → polish)
+  - WCAG 2.1 AA accessibility (ARIA, focus trap, keyboard nav)
+  - Custom hooks for DRY: `useEscapeKey`, `useFocusTrap`
+  - ErrorBoundary for production resilience
+  - Real-time sync tested across devices (<5 second SLA met)
+  - Case-insensitive unique labels (50 char limit)
+- **Testing:** Manual cross-device testing verified sync latency; accessibility tested with keyboard navigation and screen reader
+
+→ `context/archive/2026-07-05-bookmark-and-manage/`
+
 ### S-03: Export milestone to calendar
 
 - **Change ID:** `export-to-calendar`
 - **Archived:** 2026-07-03
 - **Outcome:** User can export any calculated milestone to Google Calendar, Apple Calendar, or Outlook with pre-filled event title including original input date/time. Google/Outlook use URL deep links; Apple downloads .ics file. Modal provides label input with live preview matching export format.
 - **Lesson:** Apple Calendar requires .ics file download rather than URL deep link for best compatibility. Event title including original date provides important context for calendar reminders.
+- **Implementation notes:** Toast notifications, accessible modal with ESC/backdrop close, local timezone handling for timed events, switch statement with default exception for provider routing.
+- **Testing:** Manual testing completed across all three providers; cross-browser verified.
+- **Commits:** 3f0eb32, bdb632f, 8a8f20d, 611acf7, abf4098, 7589152, 6c17e24, 55e17c2
 
 → `context/archive/2026-07-03-export-to-calendar/`
-
-(Empty on first generation. `/10x-archive` appends entries here when a change archives.)
 
 ---
 
@@ -265,10 +303,13 @@ Foundations below assume these are present and do NOT re-scaffold them.
 ✓ Required sections present in order (Vision recap, North star, At a glance, Streams, Baseline, Foundations, Slices, Backlog Handoff, Open Roadmap Questions, Parked, Done)
 ✓ Every must-have FR covered: FR-001 to FR-025 all traceable to slices or foundations
 ✓ No cycles in dependency graph (Foundations acyclic; slices in topological order)
-✓ Every blocked slice has ≥ 1 Unknown with Block: yes (S-03 ↔ calendar deep-link; S-04 ↔ AI model)
-✓ Every ready/proposed slice has Prerequisites that exist or are Foundations
-✓ Baseline ↔ Foundations consistency: baseline reports auth/data as partial; Foundations F-01/F-02 scaffold them; no redundancy
+✓ Every blocked slice has ≥ 1 blocker identified (S-04 ↔ AI model choice)
+✓ Every ready slice has Prerequisites that are complete
+✓ Baseline ↔ Foundations consistency: baseline updated to reflect completed foundations (F-01, F-02 marked complete)
 ✓ Change IDs unique and kebab-case
-✓ Backlog Handoff has one row per roadmap ID
+✓ Backlog Handoff has one row per roadmap ID with current status
 ✓ Strategic term "north star" defined inline on first use (done in Vision recap section)
 ✓ No invented slices (all trace to PRD US-NN or FR-NNN)
+✓ Status indicators consistent: ✅ done, 🟢 ready, ⏳ waiting, 🔴 blocked
+✓ Open Questions resolved where applicable (5 of 8 resolved with ✅)
+✓ Top blocker updated: changed from "skills" to "none" (prerequisites for S-02 complete)
