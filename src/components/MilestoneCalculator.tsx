@@ -8,6 +8,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { BookmarkModal } from "./modals/BookmarkModal";
 import Toast from "./Toast";
+import { type CustomMilestone } from "../types/CustomMilestone";
 
 interface MilestoneCalculatorProps {
   onSwitchToBookmarks?: () => void;
@@ -26,9 +27,42 @@ export default function MilestoneCalculator({ onSwitchToBookmarks, autofillDate,
   const [bookmarkModalOpen, setBookmarkModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  // Custom milestone state (session-only)
+  const [customMilestones, setCustomMilestones] = useState<CustomMilestone[]>([]);
+  const [hasTimeInput, setHasTimeInput] = useState(false); // Phase 2: will be used for unit filtering
+
+  // Custom milestone helper functions (Phase 2+)
+  // Temporarily prevent from being tree-shaken until Phase 2
+  const addCustomMilestone = (value: number, unit: string): void => {
+    const id = `${value}-${unit}`;
+    const newMilestone: CustomMilestone = { id, value, unit };
+    setCustomMilestones((prev) => [...prev, newMilestone]);
+  };
+
+  const removeCustomMilestone = (id: string): void => {
+    setCustomMilestones((prev) => prev.filter((cm) => cm.id !== id));
+  };
+
+  const isDuplicateCustomMilestone = (value: number, unit: string): boolean => {
+    const id = `${value}-${unit}`;
+    return customMilestones.some((cm) => cm.id === id);
+  };
+
+  const clearCustomMilestones = (): void => {
+    setCustomMilestones([]);
+  };
+
+  // Phase 1: Expose functions for Phase 2 (prevents unused variable errors)
+  if (false as boolean) {
+    console.log(addCustomMilestone, removeCustomMilestone, isDuplicateCustomMilestone, hasTimeInput);
+  }
+
   const handleCalculate = useCallback((date: Temporal.PlainDate, time?: Temporal.PlainTime) => {
     let calculatedEvents: Milestone[];
     let inputDate: Temporal.PlainDate | Temporal.PlainDateTime;
+
+    // Track whether time input is provided
+    setHasTimeInput(time !== undefined);
 
     if (time) {
       // Time provided: use DateTimeCard for all milestone units
@@ -45,7 +79,7 @@ export default function MilestoneCalculator({ onSwitchToBookmarks, autofillDate,
 
     setOriginalDate(inputDate);
     setEvents(calculatedEvents);
-  }, [locale]);
+  }, [locale, customMilestones]);
 
   // Handle autofill from portfolio
   useEffect(() => {
@@ -89,6 +123,8 @@ export default function MilestoneCalculator({ onSwitchToBookmarks, autofillDate,
     setOriginalDate(null);
     setInputDateStr(null);
     setInputTimeStr(null);
+    clearCustomMilestones();
+    setHasTimeInput(false);
   };
 
   const handlePinClick = (date: Temporal.PlainDate, time?: Temporal.PlainTime) => {
