@@ -10,12 +10,12 @@ import { BookmarkModal } from "./modals/BookmarkModal";
 import Toast from "./Toast";
 
 interface MilestoneCalculatorProps {
-  onSwitchToPortfolio?: () => void;
+  onSwitchToBookmarks?: () => void;
   autofillDate?: string | null;
   onAutofillConsumed?: () => void;
 }
 
-export default function MilestoneCalculator({ onSwitchToPortfolio, autofillDate, onAutofillConsumed }: MilestoneCalculatorProps) {
+export default function MilestoneCalculator({ onSwitchToBookmarks, autofillDate, onAutofillConsumed }: MilestoneCalculatorProps) {
   const [events, setEvents] = useState<Milestone[] | null>(null);
   const [originalDate, setOriginalDate] = useState<Temporal.PlainDate | Temporal.PlainDateTime | null>(null);
   const [inputDateStr, setInputDateStr] = useState<string | null>(null);
@@ -100,8 +100,8 @@ export default function MilestoneCalculator({ onSwitchToPortfolio, autofillDate,
 
   const handleBookmarkSuccess = () => {
     setToastMessage("Bookmark saved successfully!");
-    if (onSwitchToPortfolio) {
-      onSwitchToPortfolio();
+    if (onSwitchToBookmarks) {
+      onSwitchToBookmarks();
     }
   };
 

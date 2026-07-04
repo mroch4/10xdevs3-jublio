@@ -7,6 +7,7 @@ import Bookmark from "../../utils/classes/Bookmark";
 import { addBookmark, checkTitleUniqueness } from "../../firebase/firestoreService";
 import { MAX_LABEL_LENGTH } from "../../utils/constants";
 import { useEscapeKey } from "../../hooks/useEscapeKey";
+import { useFocusTrap } from "../../hooks/useFocusTrap";
 
 interface BookmarkModalProps {
   isOpen: boolean;
@@ -32,6 +33,9 @@ export function BookmarkModal({ isOpen, onClose, onSuccess, inputDate, userEmail
 
   // Handle ESC key to close modal
   useEscapeKey(handleClose, isOpen, loading);
+
+  // Handle focus trap and return focus
+  const modalRef = useFocusTrap(isOpen);
 
   const validateLabel = async (value: string): Promise<boolean> => {
     setValidationError(null);
@@ -107,7 +111,7 @@ export function BookmarkModal({ isOpen, onClose, onSuccess, inputDate, userEmail
       <div className="modal-backdrop fade show" onClick={handleClose} style={{ zIndex: 1040 }} />
 
       {/* Modal */}
-      <div className="modal fade show" style={{ display: "block", zIndex: 1050 }} tabIndex={-1}>
+      <div className="modal fade show" style={{ display: "block", zIndex: 1050 }} tabIndex={-1} ref={modalRef}>
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">

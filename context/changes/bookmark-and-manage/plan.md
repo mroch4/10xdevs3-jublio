@@ -16,13 +16,13 @@ Implement the north star slice: logged-in users can bookmark calculated mileston
 
 **What's missing:**
 - No bookmark button in milestone results
-- No portfolio view component to display saved dates
+- No bookmarks view component to display saved dates
 - No edit/delete UI for bookmarked dates
-- No navigation between calculator and portfolio views
+- No navigation between calculator and bookmarks views
 - No real-time Firestore listeners for cross-device sync
 - No recomputation flow when editing a bookmarked date
 - No loading/error states for Firestore operations
-- No empty state for portfolio when user has no bookmarks
+- No empty state for bookmarks view when user has no bookmarks
 
 **Key constraints:**
 - Must use existing `Bookmark` class & `firestoreService` (F-02 foundation)
@@ -45,22 +45,22 @@ Implement the north star slice: logged-in users can bookmark calculated mileston
 1. Calculates milestones (existing flow)
 2. Sees bookmark button on milestone results
 3. Clicks bookmark → modal prompts for unique label → saves **input date/datetime** to Firestore
-4. Navigates to "My Portfolio" tab
+4. Navigates to "My Bookmarks" tab
 5. Sees all bookmarked dates (label + date/time) sorted by creation date
 6. Clicks a bookmarked date → **switches to Calculator tab** and **autofills the input** → triggers automatic recalculation
 7. Edits date/time/label via edit icon → updates Firestore
 8. Deletes date via delete icon → confirmation modal → removes from Firestore
-9. Portfolio syncs across devices in real-time (<5 seconds per NFR)
+9. Bookmarks sync across devices in real-time (<5 seconds per NFR)
 
 ### UI Structure:
 
 ```
 App.tsx
 ├── AuthHeader (existing)
-└── Tabs: [Calculator | My Portfolio]
+└── Tabs: [Calculator | My Bookmarks]
 	├── Calculator Tab (existing MilestoneCalculator)
 	│   └── MilestoneResults with Bookmark button
-	└── Portfolio Tab (new)
+	└── Bookmarks Tab (new)
 		├── Empty state: "No bookmarks yet. Calculate a milestone to get started!"
 		└── BookmarkList
 			└── BookmarkCard (per saved date)
@@ -78,16 +78,16 @@ App.tsx
 3. Validates label uniqueness via `firestoreService.checkTitleUniqueness()`
 4. Creates `Bookmark` instance with **input date/datetime** from calculator (NOT a milestone date)
 5. Calls `firestoreService.addBookmark(user.email, bookmark)`
-6. Shows success toast, switches to Portfolio tab
+6. Shows success toast, switches to Bookmarks tab
 
-**Portfolio view:**
-1. `PortfolioView` component mounts
+**Bookmarks view:**
+1. `BookmarksView` component mounts
 2. Subscribes to Firestore real-time listener via `onSnapshot()`
 3. Renders `BookmarkCard` for each bookmark, sorted by `createdAt` descending
 4. Each card shows: label and date/time (no milestone computation)
 
-**Autofill from portfolio:**
-1. User clicks a `BookmarkCard` in Portfolio tab
+**Autofill from bookmarks:**
+1. User clicks a `BookmarkCard` in Bookmarks tab
 2. App switches to Calculator tab
 3. Passes bookmark's date/time to `MilestoneCalculator` to autofill input
 4. `MilestoneCalculator` triggers automatic recalculation with autofilled date/time
@@ -179,36 +179,36 @@ App.tsx
 
 ---
 
-### Phase 2: Portfolio Tab Navigation
-**Outcome:** User can switch between Calculator and Portfolio tabs
+### Phase 2: Bookmarks Tab Navigation
+**Outcome:** User can switch between Calculator and Bookmarks tabs
 
 **Changes:**
 - Refactor `App.tsx` to use Bootstrap tabs
-- Two tabs: "Calculator" (existing `MilestoneCalculator`) and "My Portfolio" (new `PortfolioView`)
-- Portfolio tab only accessible to logged-in users (anonymous users see "Log in to view your portfolio")
+- Two tabs: "Calculator" (existing `MilestoneCalculator`) and "My Bookmarks" (new `BookmarksView`)
+- Bookmarks tab only accessible to logged-in users (anonymous users see "Sign in to view your bookmarks")
 - Tab state managed in `App.tsx` (default: Calculator)
-- `BookmarkModal` success switches to Portfolio tab
+- `BookmarkModal` success switches to Bookmarks tab
 
 **File contracts:**
-- `src/App.tsx` - add tab navigation, render `MilestoneCalculator` or `PortfolioView` based on active tab
-- `src/components/PortfolioView.tsx` (new) - placeholder component, will be populated in Phase 3
+- `src/App.tsx` - add tab navigation, render `MilestoneCalculator` or `BookmarksView` based on active tab
+- `src/components/BookmarksView.tsx` (new) - placeholder component, will be populated in Phase 3
 
 **Success criteria:**
-- Two tabs visible: Calculator | My Portfolio
+- Two tabs visible: Calculator | My Bookmarks
 - Default tab: Calculator
-- Clicking My Portfolio switches to `PortfolioView`
-- Anonymous users see "Log in to view your portfolio" on My Portfolio tab
-- Bookmarking a milestone switches to My Portfolio tab
+- Clicking My Bookmarks switches to `BookmarksView`
+- Anonymous users see "Sign in to view your bookmarks" on My Bookmarks tab
+- Bookmarking a milestone switches to My Bookmarks tab
 
 **Manual gate:** Verify tab switching works, anonymous users see login prompt
 
 ---
 
-### Phase 3: Portfolio View with Real-time Sync
+### Phase 3: Bookmarks View with Real-time Sync
 **Outcome:** Logged-in user sees all bookmarked dates, click to autofill Calculator and recalculate
 
 **Changes:**
-- Implement `PortfolioView` component:
+- Implement `BookmarksView` component:
   - Subscribe to Firestore real-time listener via `onSnapshot()` on mount
   - Fetch all bookmarks via `firestoreService.getBookmarks(user.email)`
   - Render `BookmarkCard` for each bookmark, sorted by `createdAt` descending
@@ -220,26 +220,26 @@ App.tsx
   - Clickable card → switches to Calculator tab and autofills input → triggers recalculation
   - Placeholder for edit/delete icons (to be wired in Phase 4/5) OR defer icons entirely
 - Real-time sync: `onSnapshot()` listener auto-updates UI on Firestore changes
-- Add `onLoadBookmark` callback from `App.tsx` → `PortfolioView` → `BookmarkCard` to handle autofill:
+- Add `onLoadBookmark` callback from `App.tsx` → `BookmarksView` → `BookmarkCard` to handle autofill:
   - Switch to Calculator tab
   - Pass bookmark date/time to `MilestoneCalculator`
   - Trigger automatic recalculation
 
 **File contracts:**
 - `src/App.tsx` - add `onLoadBookmark` callback to switch tabs and pass date to `MilestoneCalculator`
-- `src/components/PortfolioView.tsx` - real-time listener, renders `BookmarkCard` list, empty/loading/error states
+- `src/components/BookmarksView.tsx` - real-time listener, renders `BookmarkCard` list, empty/loading/error states
 - `src/components/BookmarkCard.tsx` (new) - displays bookmark (label + date/time), click handler calls `onLoadBookmark`, decide: placeholder icons or defer until Phase 4/5
 - `src/components/MilestoneCalculator.tsx` - accept optional initial date/time prop to autofill input and trigger calculation
 
 **Success criteria:**
-- Portfolio displays all bookmarked dates, sorted by `createdAt` descending
+- Bookmarks view displays all bookmarked dates, sorted by `createdAt` descending
 - Empty state renders when no bookmarks, "Go to Calculator" button works
 - Loading spinner during initial fetch
 - Real-time sync: bookmark added in one tab appears in another within 5 seconds
 - Clicking a `BookmarkCard` switches to Calculator tab, autofills input, shows milestone results
-- No milestone computation in portfolio cards (just label + date/time)
+- No milestone computation in bookmark cards (just label + date/time)
 
-**Manual gate:** Open two browser tabs, bookmark on one, verify it appears on the other within 5 seconds. Click bookmark in portfolio, verify Calculator autofills and recalculates.
+**Manual gate:** Open two browser tabs, bookmark on one, verify it appears on the other within 5 seconds. Click bookmark in bookmarks view, verify Calculator autofills and recalculates.
 
 ---
 
@@ -302,39 +302,45 @@ App.tsx
 ### Phase 6: Polish & Error Handling
 **Outcome:** Production-ready UX with loading states, error handling, accessibility
 
-**Status: MOSTLY COMPLETE** - Most items already implemented during Phases 1-5
+**Status: COMPLETE** ✅
 
-**Already implemented:**
+**Implemented:**
 - ✅ Loading spinners for all Firestore operations (PortfolioView, all modals)
 - ✅ Accessible ARIA labels for icons (bookmark, edit, delete) in BookmarkCard
 - ✅ Keyboard navigation (Enter/Space for icon buttons, ESC for modals) via useEscapeKey hook
+- ✅ Focus trap in all modals via useFocusTrap hook - Tab cycles within modal only
+- ✅ Return focus to trigger element when modal closes (e.g., edit icon)
+- ✅ AutoFocus on modal inputs (cursor jumps to input when modal opens)
 - ✅ Validate label length (max 50 chars) with character counter in BookmarkModal and BookmarkEditModal
 - ✅ Empty state with call-to-action: "Go to Calculator" button in PortfolioView
 - ✅ Error handling and error states in PortfolioView and all modals
 - ✅ Toast notifications for success/error feedback
-
-**Remaining items (optional polish):**
-- Error boundaries for React components (not critical - browser error boundary exists)
-- Focus management (modal open → focus input, modal close → return focus) - partially done (autoFocus on inputs)
-- Responsive design testing for mobile (Bootstrap grid already used, needs manual testing)
+- ✅ Error boundary wrapping App component with user-friendly fallback UI
+- ✅ Responsive layout tested on PC and mobile browser
+- ✅ Tab renamed from "My Portfolio" to "My Bookmarks" for consistency
 
 **File contracts:**
 - All components - add ARIA labels, keyboard handlers, focus management ✅ DONE
 - `src/components/modals/BookmarkModal.tsx` - character counter for label input ✅ DONE
-- `src/components/PortfolioView.tsx` - error boundary, loading states ✅ DONE (except error boundary)
-- `src/components/BookmarkCard.tsx` - responsive layout ✅ DONE (Bootstrap used)
+- `src/components/PortfolioView.tsx` - error boundary, loading states ✅ DONE
+- `src/components/BookmarkCard.tsx` - responsive layout ✅ DONE
+- `src/components/ErrorBoundary.tsx` - catch React rendering errors ✅ DONE
+- `src/App.tsx` - wrapped in ErrorBoundary ✅ DONE
+- `src/hooks/useFocusTrap.ts` - focus trap and return focus logic ✅ DONE
 
 **Success criteria:**
 - ✅ All icon buttons have ARIA labels
 - ✅ Keyboard navigation works (Tab, Enter, Space, Escape)
-- ⚠️ Focus management in modals (partial - autoFocus on input, but no focus trap or return focus)
+- ✅ Focus trap in modals - Tab cycles through modal elements only
+- ✅ Return focus to trigger element on modal close
+- ✅ AutoFocus on modal inputs
 - ✅ Label input shows character counter (0/50)
-- ⚠️ Responsive layout on mobile (needs manual testing in Chrome DevTools)
-- ⚠️ Error boundaries catch React errors (optional - not implemented)
+- ✅ Responsive layout on mobile (manually tested by user)
+- ✅ Error boundaries catch React errors
 - ✅ Loading spinners during Firestore operations
 - ✅ Empty state with "Go to Calculator" button switches to Calculator tab
 
-**Manual gate:** Test keyboard navigation ✅, screen reader compatibility (if available) ⚠️, mobile responsiveness ⚠️
+**Manual gate:** ✅ Keyboard navigation tested, ✅ Mobile responsiveness tested, ⏳ Focus trap pending user test
 
 ---
 
@@ -343,11 +349,11 @@ App.tsx
 | Phase | Status | SHA | Notes |
 |-------|--------|-----|-------|
 | 1. Bookmark Button & Modal | completed | 669cf8f | Reused existing Pin Date button, validates without Calculate |
-| 2. Portfolio Tab Navigation | completed | 30184af | Tab content visually connected, consistent Sign In terminology |
-| 3. Portfolio View with Real-time Sync | completed | bdf9079 | Real-time onSnapshot, BookmarkCard with locale formatting, autofill to Calculator, Tab enum extracted |
+| 2. Bookmarks Tab Navigation | completed | 30184af | Tab content visually connected, consistent Sign In terminology, renamed to "My Bookmarks" |
+| 3. Bookmarks View with Real-time Sync | completed | bdf9079 | Real-time onSnapshot, BookmarkCard with locale formatting, autofill to Calculator, Tab enum extracted, Tab.Portfolio → Tab.Bookmarks |
 | 4. Edit Bookmark | completed | 6d46979 | BookmarkEditModal with pre-filled form, edit icon without button wrapper, createdAt as docId, constants for limits; Update button disabled until changes made |
 | 5. Delete Bookmark | completed | fa8c53d | DeleteConfirmationModal with ESC-close, user confirmed working; useEscapeKey hook extracted for all modals |
-| 6. Polish & Error Handling | pending | | |
+| 6. Polish & Error Handling | completed | (pending commit) | ErrorBoundary added, useFocusTrap hook added, mobile tested, all accessibility features complete, PortfolioView → BookmarksView, all portfolio terminology → bookmarks |
 
 ---
 
@@ -356,13 +362,17 @@ App.tsx
 - `src/App.tsx` - tab navigation, `onLoadBookmark` callback to switch tabs and autofill calculator
 - `src/components/MilestoneCalculator.tsx` - add bookmark button, accept optional date/time prop for autofill
 - `src/components/DateTimeInput.tsx` - lift date/time state to parent
-- `src/components/BookmarkModal.tsx` - form to create bookmark with label, saves input date/time
-- `src/components/PortfolioView.tsx` - real-time listener, renders bookmark list, empty/loading/error states
+- `src/components/modals/BookmarkModal.tsx` - form to create bookmark with label, saves input date/time
+- `src/components/BookmarksView.tsx` - real-time listener, renders bookmark list, empty/loading/error states
 - `src/components/BookmarkCard.tsx` - displays bookmark (label + date/time), clickable to autofill calculator, edit/delete icons
-- `src/components/BookmarkEditModal.tsx` - form to edit bookmark
-- `src/components/DeleteConfirmationModal.tsx` - confirmation dialog
+- `src/components/modals/BookmarkEditModal.tsx` - form to edit bookmark
+- `src/components/modals/DeleteConfirmationModal.tsx` - confirmation dialog
+- `src/components/ErrorBoundary.tsx` - catches React rendering errors
+- `src/hooks/useEscapeKey.ts` - ESC key handler for modals
+- `src/hooks/useFocusTrap.ts` - focus trap and return focus for modals
 - `src/firebase/firestoreService.ts` - CRUD operations (already exists from F-02)
 - `src/utils/classes/Bookmark.ts` - data model (already exists from F-02)
+- `src/utils/enums/Tab.ts` - Tab.Calculator, Tab.Bookmarks
 - `src/hooks/useAuth.ts` - access user state (already exists from F-01)
 
 ---

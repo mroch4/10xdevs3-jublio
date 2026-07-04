@@ -1,9 +1,10 @@
 import "./Animations.css";
 
+import { useEffect, useState } from "react";
+
 import { AuthModal } from "./modals/AuthModal";
 import { Temporal } from "@js-temporal/polyfill";
 import { useAuth } from "../hooks/useAuth";
-import { useState, useEffect } from "react";
 import { validateDateTime } from "../utils/validation";
 
 interface DateTimeInputProps {
@@ -159,7 +160,7 @@ export default function DateTimeInput({ onCalculate, onReset, onPinClick, autofi
                 Reset
               </button>
               <button type="button" className={`btn ${user ? "btn-warning" : "btn-outline-primary"}`} onClick={handlePinDate}>
-                {user ? "📌 Pin Date" : "Sign In to Pin"}
+                {user ? "🔖 Bookmark Date" : "Sign In to Bookmark"}
               </button>
             </div>
           </div>

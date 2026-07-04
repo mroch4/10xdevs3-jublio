@@ -1,18 +1,19 @@
-import { useAuth } from "../hooks/useAuth";
-import { useEffect, useState } from "react";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
-import { db } from "../firebase/config";
-import { COLLECTIONS } from "../utils/constants";
+import { useEffect, useState } from "react";
+
 import Bookmark from "../utils/classes/Bookmark";
 import BookmarkCard from "./BookmarkCard";
+import { COLLECTIONS } from "../utils/constants";
 import Toast from "./Toast";
+import { db } from "../firebase/config";
+import { useAuth } from "../hooks/useAuth";
 
-interface PortfolioViewProps {
+interface BookmarksViewProps {
   onLoadBookmark: (date: string) => void;
   onSwitchToCalculator: () => void;
 }
 
-export default function PortfolioView({ onLoadBookmark, onSwitchToCalculator }: PortfolioViewProps) {
+export default function BookmarksView({ onLoadBookmark, onSwitchToCalculator }: BookmarksViewProps) {
   const { user } = useAuth();
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [loading, setLoading] = useState(!!user?.email); // Only show loading if user is logged in
@@ -68,7 +69,7 @@ export default function PortfolioView({ onLoadBookmark, onSwitchToCalculator }: 
   if (!user) {
     return (
       <div className="alert alert-info" role="alert">
-        <h5 className="alert-heading">Sign in to view your portfolio</h5>
+        <h5 className="alert-heading">Sign in to view your bookmarks</h5>
         <p className="mb-0">Your bookmarked dates will appear here after you sign in.</p>
       </div>
     );
@@ -97,7 +98,6 @@ export default function PortfolioView({ onLoadBookmark, onSwitchToCalculator }: 
     return (
       <div className="text-center py-5">
         <h5 className="text-muted mb-3">No bookmarks yet</h5>
-        <p className="text-muted mb-4">Start by calculating milestones for a date you care about!</p>
         <button className="btn btn-primary" onClick={onSwitchToCalculator}>
           Go to Calculator
         </button>

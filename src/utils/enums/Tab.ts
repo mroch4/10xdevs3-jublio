@@ -1,6 +1,6 @@
 enum Tab {
   Calculator = "calculator",
-  Portfolio = "portfolio",
+  Bookmarks = "bookmarks",
 }
 
 export default Tab;

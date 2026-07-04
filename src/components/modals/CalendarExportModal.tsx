@@ -8,6 +8,7 @@ import type { FormEvent } from "react";
 import { Temporal } from "@js-temporal/polyfill";
 import { MAX_EVENT_TITLE_LENGTH } from "../../utils/constants";
 import { useEscapeKey } from "../../hooks/useEscapeKey";
+import { useFocusTrap } from "../../hooks/useFocusTrap";
 
 interface CalendarExportModalProps {
   isOpen: boolean;
@@ -40,6 +41,9 @@ export default function CalendarExportModal({ isOpen, onClose, event, onExport, 
   // Handle ESC key to close modal
   useEscapeKey(handleClose, isOpen);
 
+  // Handle focus trap and return focus
+  const modalRef = useFocusTrap(isOpen);
+
   if (!isOpen) return null;
 
   const isLabelValid = label.trim().length > 0;
@@ -54,7 +58,7 @@ export default function CalendarExportModal({ isOpen, onClose, event, onExport, 
       <div className="modal-backdrop fade show" onClick={handleClose} style={{ zIndex: 1040 }} />
 
       {/* Modal */}
-      <div className="modal fade show" style={{ display: "block", zIndex: 1050 }} tabIndex={-1} role="dialog" aria-labelledby="calendar-export-title" aria-modal="true">
+      <div className="modal fade show" style={{ display: "block", zIndex: 1050 }} tabIndex={-1} role="dialog" aria-labelledby="calendar-export-title" aria-modal="true" ref={modalRef}>
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">

@@ -85,6 +85,32 @@
     - Proper dependency management handled in one place
 - **Applies to**: implement, impl-review
 
+## Modals must trap focus and return focus to trigger element
+
+- **Context**: Modal dialogs where keyboard users navigate with Tab key.
+- **Problem**: Without focus trapping, Tab can move focus outside the modal to background elements, confusing keyboard and screen reader users. When modal closes, focus is lost and user doesn't know where they are in the page.
+- **Rule**: Every modal component must use the `useFocusTrap` custom hook:
+  ```typescript
+  import { useFocusTrap } from "../../hooks/useFocusTrap";
+
+  // In your modal component:
+  const modalRef = useFocusTrap(isOpen);
+
+  // Attach ref to modal root element:
+  <div className="modal" ref={modalRef}>
+  ```
+  - **Behavior:**
+    - When modal opens: stores reference to element that opened it
+    - Tab key: cycles through focusable elements within modal only
+    - Shift+Tab: reverse cycle, wraps from first to last element
+    - When modal closes: returns focus to the trigger element (e.g., edit icon)
+  - **Benefits:**
+    - WCAG 2.1 AA compliance for keyboard accessibility
+    - Screen reader users stay oriented within modal content
+    - Closing modal returns user to their previous context
+    - Works seamlessly with `useEscapeKey` hook
+- **Applies to**: implement, impl-review
+
 ## Disable submit buttons in edit modals until changes are made
 
 - **Context**: Edit/update modal forms where users can modify existing data (e.g., BookmarkEditModal editing saved bookmarks).

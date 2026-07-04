@@ -3,6 +3,7 @@ import "../Animations.css";
 import { useState, useCallback } from "react";
 import { deleteBookmark } from "../../firebase/firestoreService";
 import { useEscapeKey } from "../../hooks/useEscapeKey";
+import { useFocusTrap } from "../../hooks/useFocusTrap";
 
 interface DeleteConfirmationModalProps {
   isOpen: boolean;
@@ -32,6 +33,9 @@ export function DeleteConfirmationModal({
   // Handle ESC key to close modal
   useEscapeKey(handleClose, isOpen, loading);
 
+  // Handle focus trap and return focus
+  const modalRef = useFocusTrap(isOpen);
+
   const handleDelete = async () => {
     setLoading(true);
     setError(null);
@@ -51,7 +55,7 @@ export function DeleteConfirmationModal({
   if (!isOpen) return null;
 
   return (
-    <div className="modal show d-block" tabIndex={-1} role="dialog" aria-labelledby="deleteBookmarkModalLabel">
+    <div className="modal show d-block" tabIndex={-1} role="dialog" aria-labelledby="deleteBookmarkModalLabel" ref={modalRef}>
       <div className="modal-dialog modal-dialog-centered" role="document">
         <div className="modal-content">
           <div className="modal-header">
