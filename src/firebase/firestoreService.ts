@@ -1,7 +1,7 @@
 import { collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, setDoc, where } from "firebase/firestore";
 
 import Bookmark from "../utils/classes/Bookmark";
-import { COLLECTIONS } from "./collections";
+import { COLLECTIONS } from "../utils/constants";
 import { db } from "./config";
 
 /**

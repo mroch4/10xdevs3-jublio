@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Temporal } from "@js-temporal/polyfill";
 import Bookmark from "../utils/classes/Bookmark";
 import { addBookmark, checkTitleUniqueness } from "../firebase/firestoreService";
+import { MAX_LABEL_LENGTH } from "../utils/constants";
 
 interface BookmarkModalProps {
   isOpen: boolean;
@@ -28,8 +29,8 @@ export function BookmarkModal({ isOpen, onClose, onSuccess, inputDate, userEmail
       return false;
     }
 
-    if (value.length > 50) {
-      setValidationError("Label must be 50 characters or less");
+    if (value.length > MAX_LABEL_LENGTH) {
+      setValidationError(`Label must be ${MAX_LABEL_LENGTH} characters or less`);
       return false;
     }
 
@@ -95,7 +96,6 @@ export function BookmarkModal({ isOpen, onClose, onSuccess, inputDate, userEmail
   if (!isOpen) return null;
 
   const charCount = label.length;
-  const charLimit = 50;
 
   return (
     <>
@@ -123,15 +123,18 @@ export function BookmarkModal({ isOpen, onClose, onSuccess, inputDate, userEmail
                     id="bookmark-label"
                     value={label}
                     onChange={(e) => handleLabelChange(e.target.value)}
-                    maxLength={charLimit}
+                    maxLength={MAX_LABEL_LENGTH}
                     disabled={loading}
                     autoFocus
-                    placeholder="e.g., Wedding, Quit Smoking, Company Launch"
-                  />
-                  <div className="form-text">
-                    {charCount}/{charLimit} characters
-                  </div>
-                  {validationError && <div className="invalid-feedback d-block">{validationError}</div>}
+                      placeholder="e.g., Wedding, Quit Smoking, Company Launch"
+                    />
+                    <div className="d-flex justify-content-between mt-1">
+                      <div></div>
+                      <small className="text-muted">
+                        {charCount}/{MAX_LABEL_LENGTH} characters
+                      </small>
+                    </div>
+                    {validationError && <div className="invalid-feedback d-block">{validationError}</div>}
                 </div>
 
                 {error && (
@@ -151,7 +154,7 @@ export function BookmarkModal({ isOpen, onClose, onSuccess, inputDate, userEmail
                         Saving...
                       </>
                     ) : (
-                      "Save Bookmark"
+                      "Save"
                     )}
                   </button>
                 </div>

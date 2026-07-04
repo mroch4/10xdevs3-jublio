@@ -44,3 +44,17 @@
   - **Pattern**: One enum per file for easy imports and maintainability
   - **Benefit**: TypeScript autocomplete + compile-time validation prevents typos
 - **Applies to**: plan, implement, impl-review
+
+## Keep button text simple and extract magic numbers to constants
+
+- **Context**: Action buttons in modals and forms (e.g., "Save Bookmark", "Update Bookmark"), and hardcoded limits like character lengths scattered across components.
+- **Problem**: 
+  - Verbose button text ("Save Bookmark" instead of "Save") adds visual noise and inconsistency.
+  - Magic numbers like `50` for max label length appear in multiple places, making updates error-prone and harder to maintain.
+- **Rule**: 
+  - **Button text**: Use simple, single-word or two-word labels: "Save", "Update", "Delete", "Cancel" (not "Save Bookmark", "Update Bookmark", etc.)
+  - **Constants**: Extract all magic numbers and repeated limits to a constants file (e.g., `src/utils/constants.ts`):
+    - Example: `export const MAX_LABEL_LENGTH = 50;`
+    - Import and use the constant everywhere instead of hardcoding values
+  - **Benefit**: Consistent UX, single source of truth for limits, easier global changes
+- **Applies to**: implement, impl-review

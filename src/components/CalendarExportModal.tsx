@@ -6,6 +6,7 @@ import { CalendarProvider } from "../utils/enums/CalendarProvider";
 import Milestone from "../utils/classes/Milestone";
 import type { FormEvent } from "react";
 import { Temporal } from "@js-temporal/polyfill";
+import { MAX_EVENT_TITLE_LENGTH } from "../utils/constants";
 
 interface CalendarExportModalProps {
   isOpen: boolean;
@@ -86,14 +87,17 @@ export default function CalendarExportModal({ isOpen, onClose, event, onExport, 
                     value={label}
                     onChange={(e) => setLabel(e.target.value)}
                     placeholder="e.g., Wedding, Quit Smoking, Company Launch"
-                    maxLength={100}
+                    maxLength={MAX_EVENT_TITLE_LENGTH}
                     autoFocus
                     required
                     aria-describedby="label-help preview-text"
                   />
-                  <small id="label-help" className="text-muted">
-                    {label.length}/100 characters
-                  </small>
+                  <div className="d-flex justify-content-between mt-1">
+                    <div></div>
+                    <small id="label-help" className="text-muted">
+                      {label.length}/{MAX_EVENT_TITLE_LENGTH} characters
+                    </small>
+                  </div>
                 </div>
 
                 <div className="preview-box mb-3" role="status" aria-live="polite">

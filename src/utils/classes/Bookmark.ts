@@ -5,7 +5,7 @@ import { Temporal } from "@js-temporal/polyfill";
 /// It contains:
 /// 1) The unique title of the event (friendly to the user) - required, max 50 chars
 /// 2) The input date/datetime string associated with the user's event - required, can be either 'YYYY-MM-DD' or 'YYYY-MM-DDTHH:mm:ss' format
-/// 3) The createdAt timestamp (in milliseconds) when the bookmark was created (Document ID) - required, firebase unique document ID is generated from this timestamp
+/// 3) The createdAt timestamp (in milliseconds) when the bookmark was created - required, also used as Firestore document ID (as string)
 /// 4) The updatedAt timestamp (in milliseconds) when the bookmark was last updated - optional, if not provided, it will be set to the createdAt timestamp
 /// 5) The titleLowercase field for case-insensitive uniqueness checks - derived from title
 /// </summary>

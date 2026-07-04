@@ -2,9 +2,10 @@ import { useAuth } from "../hooks/useAuth";
 import { useEffect, useState } from "react";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "../firebase/config";
-import { COLLECTIONS } from "../firebase/collections";
+import { COLLECTIONS } from "../utils/constants";
 import Bookmark from "../utils/classes/Bookmark";
 import BookmarkCard from "./BookmarkCard";
+import Toast from "./Toast";
 
 interface PortfolioViewProps {
   onLoadBookmark: (date: string) => void;
@@ -16,6 +17,7 @@ export default function PortfolioView({ onLoadBookmark, onSwitchToCalculator }: 
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [loading, setLoading] = useState(!!user?.email); // Only show loading if user is logged in
   const [error, setError] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user?.email) {
@@ -50,6 +52,14 @@ export default function PortfolioView({ onLoadBookmark, onSwitchToCalculator }: 
 
     return () => unsubscribe();
   }, [user?.email]);
+
+  const handleEditSuccess = () => {
+    setToastMessage("Bookmark updated successfully!");
+  };
+
+  const handleCloseToast = () => {
+    setToastMessage(null);
+  };
 
   if (!user) {
     return (
@@ -96,9 +106,18 @@ export default function PortfolioView({ onLoadBookmark, onSwitchToCalculator }: 
       <h5 className="mb-3">Your Bookmarked Dates</h5>
       <div className="list-group">
         {bookmarks.map((bookmark) => (
-          <BookmarkCard key={bookmark.createdAt} bookmark={bookmark} onLoadBookmark={onLoadBookmark} />
+          <BookmarkCard
+            key={bookmark.createdAt}
+            bookmark={bookmark}
+            onLoadBookmark={onLoadBookmark}
+            onEditSuccess={handleEditSuccess}
+            userEmail={user.email || ""}
+          />
         ))}
       </div>
+
+      {/* Toast */}
+      <Toast message={toastMessage || ""} show={toastMessage !== null} onClose={handleCloseToast} />
     </div>
   );
 }
