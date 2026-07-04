@@ -9,6 +9,7 @@ import { validateDateTime } from "../utils/validation";
 interface DateTimeInputProps {
   onCalculate: (date: Temporal.PlainDate, time?: Temporal.PlainTime) => void;
   onReset?: () => void;
+  onPinClick?: (date: Temporal.PlainDate, time?: Temporal.PlainTime) => void; // Pass validated date/time to parent
 }
 
 // Get current date/time for default values
@@ -20,13 +21,12 @@ const getCurrentDateTime = () => {
   };
 };
 
-export default function DateTimeInput({ onCalculate, onReset }: DateTimeInputProps) {
+export default function DateTimeInput({ onCalculate, onReset, onPinClick }: DateTimeInputProps) {
   const { user } = useAuth();
   const [dateValue, setDateValue] = useState<string>(() => getCurrentDateTime().date);
   const [timeValue, setTimeValue] = useState<string>(() => getCurrentDateTime().time);
   const [error, setError] = useState<string>("");
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [showPinSuccess, setShowPinSuccess] = useState(false);
 
   // Check if current inputs are valid
   const isValid = () => {
@@ -80,9 +80,19 @@ export default function DateTimeInput({ onCalculate, onReset }: DateTimeInputPro
       return;
     }
 
-    // Placeholder: actual pin logic will be implemented in S-02
-    setShowPinSuccess(true);
-    setTimeout(() => setShowPinSuccess(false), 3000);
+    // Validate date/time before opening modal
+    setError("");
+    const validation = validateDateTime(dateValue, timeValue);
+
+    if (!validation.isValid) {
+      setError(validation.error || "Please enter a valid date");
+      return;
+    }
+
+    // Call parent callback with validated date/time
+    if (onPinClick && validation.date) {
+      onPinClick(validation.date, validation.time);
+    }
   };
 
   const handleAuthSuccess = () => {
@@ -122,11 +132,6 @@ export default function DateTimeInput({ onCalculate, onReset }: DateTimeInputPro
 
             {/* Buttons */}
             <div className="col-12">
-              {showPinSuccess && (
-                <div className="alert alert-success alert-dismissible fade show mb-3" role="alert">
-                  <strong>Success!</strong> Date pinned to your account.
-                </div>
-              )}
               <div className="flex-center flex-wrap gap-2">
                 <button type="submit" className="btn btn-success" disabled={!isValid()}>
                   Calculate
@@ -137,7 +142,7 @@ export default function DateTimeInput({ onCalculate, onReset }: DateTimeInputPro
                 <button type="button" className="btn btn-danger" onClick={handleReset}>
                   Reset
                 </button>
-                <button type="button" className={`btn ${user ? "btn-warning" : "btn-outline-primary"}`} onClick={handlePinDate} disabled={!isValid()}>
+                <button type="button" className={`btn ${user ? "btn-warning" : "btn-outline-primary"}`} onClick={handlePinDate}>
                   {user ? "📌 Pin Date" : "Sign In to Pin"}
                 </button>
               </div>
