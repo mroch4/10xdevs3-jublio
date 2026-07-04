@@ -336,7 +336,7 @@ App.tsx
 
 | Phase | Status | SHA | Notes |
 |-------|--------|-----|-------|
-| 1. Bookmark Button & Modal | pending | | |
+| 1. Bookmark Button & Modal | completed | 669cf8f | Reused existing Pin Date button, validates without Calculate |
 | 2. Portfolio Tab Navigation | pending | | |
 | 3. Portfolio View with Real-time Sync | pending | | |
 | 4. Edit Bookmark | pending | | |
