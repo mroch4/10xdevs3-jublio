@@ -30,3 +30,17 @@
   - Messages: "Sign in to view..." (lowercase mid-sentence)
   - Never mix with "Log in" / "Log out"
 - **Applies to**: implement, impl-review
+
+## Always use enums for string constants to prevent typos
+
+- **Context**: String literals used throughout the codebase for states, tabs, types, identifiers, etc.
+- **Problem**: String literals like `"calculator"`, `"portfolio"`, `"month"` are prone to typos (`"calculatro"`, `"monht"`) that TypeScript won't catch, leading to runtime bugs.
+- **Rule**: 
+  - Create enums in dedicated files (e.g., `src/types/enums.ts` or `src/enums/`) for any string constants that:
+    - Appear in multiple places
+    - Have a fixed set of valid values
+    - Could cause bugs if misspelled
+  - Examples: tab names, states, units, action types, collection names
+  - **Pattern**: One enum per file for easy imports and maintainability
+  - **Benefit**: TypeScript autocomplete + compile-time validation prevents typos
+- **Applies to**: plan, implement, impl-review

@@ -3,13 +3,15 @@ import "./Animations.css";
 import { AuthModal } from "./AuthModal";
 import { Temporal } from "@js-temporal/polyfill";
 import { useAuth } from "../hooks/useAuth";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { validateDateTime } from "../utils/validation";
 
 interface DateTimeInputProps {
   onCalculate: (date: Temporal.PlainDate, time?: Temporal.PlainTime) => void;
   onReset?: () => void;
   onPinClick?: (date: Temporal.PlainDate, time?: Temporal.PlainTime) => void; // Pass validated date/time to parent
+  autofillDate?: string | null;
+  autofillTime?: string | null;
 }
 
 // Get current date/time for default values
@@ -21,12 +23,27 @@ const getCurrentDateTime = () => {
   };
 };
 
-export default function DateTimeInput({ onCalculate, onReset, onPinClick }: DateTimeInputProps) {
+export default function DateTimeInput({ onCalculate, onReset, onPinClick, autofillDate, autofillTime }: DateTimeInputProps) {
   const { user } = useAuth();
   const [dateValue, setDateValue] = useState<string>(() => getCurrentDateTime().date);
   const [timeValue, setTimeValue] = useState<string>(() => getCurrentDateTime().time);
   const [error, setError] = useState<string>("");
   const [showAuthModal, setShowAuthModal] = useState(false);
+
+  // Handle autofill from portfolio using scheduled state update
+  useEffect(() => {
+    if (autofillDate) {
+      queueMicrotask(() => {
+        setDateValue(autofillDate);
+        setError("");
+      });
+    }
+    if (autofillTime !== undefined) {
+      queueMicrotask(() => {
+        setTimeValue(autofillTime || "");
+      });
+    }
+  }, [autofillDate, autofillTime]);
 
   // Check if current inputs are valid
   const isValid = () => {

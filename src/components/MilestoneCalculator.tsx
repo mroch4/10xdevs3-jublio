@@ -4,25 +4,29 @@ import DateTimeInput from "./DateTimeInput";
 import Milestone from "../utils/classes/Milestone";
 import MilestoneResults from "./MilestoneResults";
 import { Temporal } from "@js-temporal/polyfill";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { BookmarkModal } from "./BookmarkModal";
 import Toast from "./Toast";
 
 interface MilestoneCalculatorProps {
   onSwitchToPortfolio?: () => void;
+  autofillDate?: string | null;
+  onAutofillConsumed?: () => void;
 }
 
-export default function MilestoneCalculator({ onSwitchToPortfolio }: MilestoneCalculatorProps) {
+export default function MilestoneCalculator({ onSwitchToPortfolio, autofillDate, onAutofillConsumed }: MilestoneCalculatorProps) {
   const [events, setEvents] = useState<Milestone[] | null>(null);
   const [originalDate, setOriginalDate] = useState<Temporal.PlainDate | Temporal.PlainDateTime | null>(null);
+  const [inputDateStr, setInputDateStr] = useState<string | null>(null);
+  const [inputTimeStr, setInputTimeStr] = useState<string | null>(null);
   const locale = navigator.language;
 
   const { user } = useAuth();
   const [bookmarkModalOpen, setBookmarkModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const handleCalculate = (date: Temporal.PlainDate, time?: Temporal.PlainTime) => {
+  const handleCalculate = useCallback((date: Temporal.PlainDate, time?: Temporal.PlainTime) => {
     let calculatedEvents: Milestone[];
     let inputDate: Temporal.PlainDate | Temporal.PlainDateTime;
 
@@ -41,11 +45,50 @@ export default function MilestoneCalculator({ onSwitchToPortfolio }: MilestoneCa
 
     setOriginalDate(inputDate);
     setEvents(calculatedEvents);
-  };
+  }, [locale]);
+
+  // Handle autofill from portfolio
+  useEffect(() => {
+    if (!autofillDate || !onAutofillConsumed) return;
+
+    try {
+      // Parse the date string
+      let date: Temporal.PlainDate;
+      let time: Temporal.PlainTime | undefined;
+      let dateStr: string;
+      let timeStr: string | null = null;
+
+      if (autofillDate.includes("T")) {
+        const dateTime = Temporal.PlainDateTime.from(autofillDate);
+        date = dateTime.toPlainDate();
+        time = dateTime.toPlainTime();
+        dateStr = date.toString();
+        timeStr = time.toString().slice(0, 5); // HH:MM format
+      } else {
+        date = Temporal.PlainDate.from(autofillDate);
+        dateStr = date.toString();
+      }
+
+      // Update input field values using microtask to avoid setState in effect warning
+      queueMicrotask(() => {
+        setInputDateStr(dateStr);
+        setInputTimeStr(timeStr);
+      });
+
+      // Schedule calculation for next render to avoid setState in effect
+      setTimeout(() => handleCalculate(date, time), 0);
+    } catch (err) {
+      console.error("Failed to parse autofill date:", err);
+    }
+
+    onAutofillConsumed();
+  }, [autofillDate, onAutofillConsumed, handleCalculate]);
 
   const handleReset = () => {
     setEvents(null);
     setOriginalDate(null);
+    setInputDateStr(null);
+    setInputTimeStr(null);
   };
 
   const handlePinClick = (date: Temporal.PlainDate, time?: Temporal.PlainTime) => {
@@ -69,7 +112,13 @@ export default function MilestoneCalculator({ onSwitchToPortfolio }: MilestoneCa
   return (
     <div>
       <div className="mb-4">
-        <DateTimeInput onCalculate={handleCalculate} onReset={handleReset} onPinClick={handlePinClick} />
+        <DateTimeInput 
+          onCalculate={handleCalculate} 
+          onReset={handleReset} 
+          onPinClick={handlePinClick}
+          autofillDate={inputDateStr}
+          autofillTime={inputTimeStr}
+        />
       </div>
 
       {events === null ? (
