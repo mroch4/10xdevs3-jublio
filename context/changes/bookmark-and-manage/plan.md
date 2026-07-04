@@ -339,7 +339,7 @@ App.tsx
 | 1. Bookmark Button & Modal | completed | 669cf8f | Reused existing Pin Date button, validates without Calculate |
 | 2. Portfolio Tab Navigation | completed | 30184af | Tab content visually connected, consistent Sign In terminology |
 | 3. Portfolio View with Real-time Sync | completed | bdf9079 | Real-time onSnapshot, BookmarkCard with locale formatting, autofill to Calculator, Tab enum extracted |
-| 4. Edit Bookmark | pending | | |
+| 4. Edit Bookmark | completed | 6d46979 | BookmarkEditModal with pre-filled form, edit icon without button wrapper, createdAt as docId, constants for limits |
 | 5. Delete Bookmark | pending | | |
 | 6. Polish & Error Handling | pending | | |
 
