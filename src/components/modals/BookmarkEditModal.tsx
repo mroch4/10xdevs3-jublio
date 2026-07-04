@@ -1,11 +1,12 @@
-import "./Animations.css";
+import "../Animations.css";
 
 import type { FormEvent } from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Temporal } from "@js-temporal/polyfill";
-import Bookmark from "../utils/classes/Bookmark";
-import { updateBookmark, checkTitleUniqueness } from "../firebase/firestoreService";
-import { MAX_LABEL_LENGTH } from "../utils/constants";
+import Bookmark from "../../utils/classes/Bookmark";
+import { updateBookmark, checkTitleUniqueness } from "../../firebase/firestoreService";
+import { MAX_LABEL_LENGTH } from "../../utils/constants";
+import { useEscapeKey } from "../../hooks/useEscapeKey";
 
 interface BookmarkEditModalProps {
   isOpen: boolean;
@@ -23,26 +24,49 @@ export function BookmarkEditModal({ isOpen, onClose, onSuccess, bookmark, userEm
   const [error, setError] = useState<string | null>(null);
   const [validationError, setValidationError] = useState<string | null>(null);
 
+  // Track original values to detect changes
+  const [originalLabel, setOriginalLabel] = useState(bookmark.title);
+  const [originalDateValue, setOriginalDateValue] = useState("");
+  const [originalTimeValue, setOriginalTimeValue] = useState("");
+
   // Parse bookmark date on mount and when bookmark changes
   useEffect(() => {
     queueMicrotask(() => {
       try {
         if (bookmark.date.includes("T")) {
           const dateTime = Temporal.PlainDateTime.from(bookmark.date);
-          setDateValue(dateTime.toPlainDate().toString());
-          setTimeValue(dateTime.toPlainTime().toString().slice(0, 5)); // HH:MM
+          const dateStr = dateTime.toPlainDate().toString();
+          const timeStr = dateTime.toPlainTime().toString().slice(0, 5); // HH:MM
+          setDateValue(dateStr);
+          setTimeValue(timeStr);
+          setOriginalDateValue(dateStr);
+          setOriginalTimeValue(timeStr);
         } else {
           const date = Temporal.PlainDate.from(bookmark.date);
-          setDateValue(date.toString());
+          const dateStr = date.toString();
+          setDateValue(dateStr);
           setTimeValue("");
+          setOriginalDateValue(dateStr);
+          setOriginalTimeValue("");
         }
       } catch (err) {
         console.error("Failed to parse bookmark date:", err);
         setError("Invalid date format");
       }
       setLabel(bookmark.title);
+      setOriginalLabel(bookmark.title);
     });
   }, [bookmark]);
+
+  const handleClose = useCallback(() => {
+    setLabel(bookmark.title);
+    setValidationError(null);
+    setError(null);
+    onClose();
+  }, [bookmark.title, onClose]);
+
+  // Handle ESC key to close modal
+  useEscapeKey(handleClose, isOpen, loading);
 
   const validateLabel = async (value: string): Promise<boolean> => {
     setValidationError(null);
@@ -131,16 +155,13 @@ export function BookmarkEditModal({ isOpen, onClose, onSuccess, bookmark, userEm
     }
   };
 
-  const handleClose = () => {
-    setLabel(bookmark.title);
-    setValidationError(null);
-    setError(null);
-    onClose();
-  };
-
   if (!isOpen) return null;
 
   const charCount = label.length;
+
+  // Check if any field has changed
+  const hasChanges =
+    label !== originalLabel || dateValue !== originalDateValue || timeValue !== originalTimeValue;
 
   return (
     <div className="modal show d-block" tabIndex={-1} role="dialog" aria-labelledby="editBookmarkModalLabel">
@@ -148,7 +169,7 @@ export function BookmarkEditModal({ isOpen, onClose, onSuccess, bookmark, userEm
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title" id="editBookmarkModalLabel">
-              Edit Bookmark
+              Update Bookmark
             </h5>
             <button type="button" className="btn-close" onClick={handleClose} aria-label="Close"></button>
           </div>
@@ -223,7 +244,7 @@ export function BookmarkEditModal({ isOpen, onClose, onSuccess, bookmark, userEm
               <button type="button" className="btn btn-secondary" onClick={handleClose} disabled={loading}>
                 Cancel
               </button>
-              <button type="submit" className="btn btn-primary" disabled={loading}>
+              <button type="submit" className="btn btn-primary" disabled={loading || !hasChanges}>
                 {loading ? (
                   <>
                     <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>

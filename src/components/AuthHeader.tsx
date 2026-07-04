@@ -1,4 +1,4 @@
-import { AuthModal } from "./AuthModal";
+import { AuthModal } from "./modals/AuthModal";
 import { useAuth } from "../hooks/useAuth";
 import { useState } from "react";
 

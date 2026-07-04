@@ -1,9 +1,10 @@
-import "./Animations.css";
+import "../Animations.css";
 
 import type { FormEvent } from "react";
-import { getAuthErrorMessage } from "../firebase/authErrors";
-import { useAuth } from "../hooks/useAuth";
-import { useState } from "react";
+import { getAuthErrorMessage } from "../../firebase/authErrors";
+import { useAuth } from "../../hooks/useAuth";
+import { useState, useCallback } from "react";
+import { useEscapeKey } from "../../hooks/useEscapeKey";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -37,13 +38,16 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
     }
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setEmail("");
     setSuccess(false);
     setError(null);
     setLoading(false);
     onClose();
-  };
+  }, [onClose]);
+
+  // Handle ESC key to close modal
+  useEscapeKey(handleClose, isOpen, loading);
 
   const handleRetry = () => {
     setError(null);

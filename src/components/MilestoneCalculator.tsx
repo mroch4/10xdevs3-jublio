@@ -6,7 +6,7 @@ import MilestoneResults from "./MilestoneResults";
 import { Temporal } from "@js-temporal/polyfill";
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../hooks/useAuth";
-import { BookmarkModal } from "./BookmarkModal";
+import { BookmarkModal } from "./modals/BookmarkModal";
 import Toast from "./Toast";
 
 interface MilestoneCalculatorProps {

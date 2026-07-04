@@ -1,18 +1,21 @@
 import { Temporal } from "@js-temporal/polyfill";
 import Bookmark from "../utils/classes/Bookmark";
 import { useState } from "react";
-import { BookmarkEditModal } from "./BookmarkEditModal";
+import { BookmarkEditModal } from "./modals/BookmarkEditModal";
+import { DeleteConfirmationModal } from "./modals/DeleteConfirmationModal";
 
 interface BookmarkCardProps {
   bookmark: Bookmark;
   onLoadBookmark: (date: string) => void;
   onEditSuccess: () => void;
+  onDeleteSuccess: () => void;
   userEmail: string;
 }
 
-export default function BookmarkCard({ bookmark, onLoadBookmark, onEditSuccess, userEmail }: BookmarkCardProps) {
+export default function BookmarkCard({ bookmark, onLoadBookmark, onEditSuccess, onDeleteSuccess, userEmail }: BookmarkCardProps) {
   const locale = navigator.language;
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   // Format date for display
   const formatDate = (dateString: string): string => {
@@ -43,6 +46,11 @@ export default function BookmarkCard({ bookmark, onLoadBookmark, onEditSuccess, 
   const handleEdit = (e: React.MouseEvent | React.KeyboardEvent) => {
     e.stopPropagation(); // Prevent card click
     setIsEditModalOpen(true);
+  };
+
+  const handleDelete = (e: React.MouseEvent | React.KeyboardEvent) => {
+    e.stopPropagation(); // Prevent card click
+    setIsDeleteModalOpen(true);
   };
 
   return (
@@ -82,7 +90,22 @@ export default function BookmarkCard({ bookmark, onLoadBookmark, onEditSuccess, 
             >
               ✏️
             </span>
-            <span className="text-muted">→</span>
+            <span
+              role="button"
+              tabIndex={0}
+              onClick={handleDelete}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  handleDelete(e);
+                }
+              }}
+              aria-label="Delete bookmark"
+              title="Delete"
+              style={{ cursor: "pointer", fontSize: "1.2rem" }}
+            >
+              🗑️
+            </span>
           </div>
         </div>
       </div>
@@ -92,6 +115,15 @@ export default function BookmarkCard({ bookmark, onLoadBookmark, onEditSuccess, 
         onClose={() => setIsEditModalOpen(false)}
         onSuccess={onEditSuccess}
         bookmark={bookmark}
+        userEmail={userEmail}
+      />
+
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onSuccess={onDeleteSuccess}
+        bookmarkTitle={bookmark.title}
+        bookmarkId={String(bookmark.createdAt)}
         userEmail={userEmail}
       />
     </>

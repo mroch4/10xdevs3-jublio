@@ -58,3 +58,43 @@
     - Import and use the constant everywhere instead of hardcoding values
   - **Benefit**: Consistent UX, single source of truth for limits, easier global changes
 - **Applies to**: implement, impl-review
+
+## All modals must close on ESC key
+
+- **Context**: Modal dialogs throughout the application (BookmarkModal, BookmarkEditModal, DeleteConfirmationModal, AuthModal, CalendarExportModal, etc.).
+- **Problem**: Inconsistent keyboard behavior across modals - some close on ESC, others don't. Users expect ESC to close any modal, following standard UX conventions.
+- **Rule**: Every modal component must use the `useEscapeKey` custom hook:
+  ```typescript
+  import { useEscapeKey } from "../../hooks/useEscapeKey";
+
+  // In your modal component:
+  const handleClose = useCallback(() => {
+    // cleanup logic
+    onClose();
+  }, [onClose]);
+
+  useEscapeKey(handleClose, isOpen, loading);
+  ```
+  - **Parameters:**
+    - `onClose`: Callback to close the modal (wrap in `useCallback`)
+    - `isOpen`: Boolean indicating if modal is open
+    - `isBlocked`: (optional) Boolean to block ESC, typically `loading` state
+  - **Benefits:**
+    - DRY principle - single implementation of ESC handling
+    - Consistent behavior across all modals
+    - Proper dependency management handled in one place
+- **Applies to**: implement, impl-review
+
+## Disable submit buttons in edit modals until changes are made
+
+- **Context**: Edit/update modal forms where users can modify existing data (e.g., BookmarkEditModal editing saved bookmarks).
+- **Problem**: Users can click "Update" without making any changes, triggering unnecessary Firestore writes and potentially confusing the user about whether something was updated.
+- **Rule**: Track original values and disable the submit button until at least one field changes:
+  - Store original values in separate state variables (e.g., `originalLabel`, `originalDateValue`, `originalTimeValue`)
+  - Initialize these values when the modal opens or data loads
+  - Compute a `hasChanges` boolean by comparing current form values to originals
+  - Add `!hasChanges` to the submit button's disabled condition: `disabled={loading || !hasChanges}`
+  - Re-enable the button as soon as any field differs from the original
+- **Benefit**: Prevents no-op updates, clearer user feedback, reduced Firestore writes
+- **Applies to**: implement, impl-review
+

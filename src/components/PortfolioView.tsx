@@ -57,6 +57,10 @@ export default function PortfolioView({ onLoadBookmark, onSwitchToCalculator }: 
     setToastMessage("Bookmark updated successfully!");
   };
 
+  const handleDeleteSuccess = () => {
+    setToastMessage("Bookmark deleted successfully!");
+  };
+
   const handleCloseToast = () => {
     setToastMessage(null);
   };
@@ -111,6 +115,7 @@ export default function PortfolioView({ onLoadBookmark, onSwitchToCalculator }: 
             bookmark={bookmark}
             onLoadBookmark={onLoadBookmark}
             onEditSuccess={handleEditSuccess}
+            onDeleteSuccess={handleDeleteSuccess}
             userEmail={user.email || ""}
           />
         ))}

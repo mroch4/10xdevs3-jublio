@@ -1,11 +1,12 @@
-import "./Animations.css";
+import "../Animations.css";
 
 import type { FormEvent } from "react";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Temporal } from "@js-temporal/polyfill";
-import Bookmark from "../utils/classes/Bookmark";
-import { addBookmark, checkTitleUniqueness } from "../firebase/firestoreService";
-import { MAX_LABEL_LENGTH } from "../utils/constants";
+import Bookmark from "../../utils/classes/Bookmark";
+import { addBookmark, checkTitleUniqueness } from "../../firebase/firestoreService";
+import { MAX_LABEL_LENGTH } from "../../utils/constants";
+import { useEscapeKey } from "../../hooks/useEscapeKey";
 
 interface BookmarkModalProps {
   isOpen: boolean;
@@ -20,6 +21,17 @@ export function BookmarkModal({ isOpen, onClose, onSuccess, inputDate, userEmail
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [validationError, setValidationError] = useState<string | null>(null);
+
+  const handleClose = useCallback(() => {
+    setLabel("");
+    setError(null);
+    setValidationError(null);
+    setLoading(false);
+    onClose();
+  }, [onClose]);
+
+  // Handle ESC key to close modal
+  useEscapeKey(handleClose, isOpen, loading);
 
   const validateLabel = async (value: string): Promise<boolean> => {
     setValidationError(null);
@@ -85,14 +97,6 @@ export function BookmarkModal({ isOpen, onClose, onSuccess, inputDate, userEmail
     }
   };
 
-  const handleClose = () => {
-    setLabel("");
-    setError(null);
-    setValidationError(null);
-    setLoading(false);
-    onClose();
-  };
-
   if (!isOpen) return null;
 
   const charCount = label.length;
@@ -107,7 +111,7 @@ export function BookmarkModal({ isOpen, onClose, onSuccess, inputDate, userEmail
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Bookmark Date</h5>
+              <h5 className="modal-title">Save Bookmark</h5>
               <button type="button" className="btn-close" onClick={handleClose} aria-label="Close" disabled={loading} />
             </div>
 

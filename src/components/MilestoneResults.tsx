@@ -2,7 +2,7 @@ import "./MilestoneResults.css";
 
 import { filterEvents, getCategoryOrder, groupByCategory, sortEventsByDate } from "../utils/eventGrouping";
 
-import CalendarExportModal from "./CalendarExportModal";
+import CalendarExportModal from "./modals/CalendarExportModal";
 import { CalendarProvider } from "../utils/enums/CalendarProvider";
 import Milestone from "../utils/classes/Milestone";
 import { EventCategory } from "../utils/enums/EventCategory";

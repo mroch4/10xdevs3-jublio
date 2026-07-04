@@ -1,6 +1,6 @@
 import "./Animations.css";
 
-import { AuthModal } from "./AuthModal";
+import { AuthModal } from "./modals/AuthModal";
 import { Temporal } from "@js-temporal/polyfill";
 import { useAuth } from "../hooks/useAuth";
 import { useState, useEffect } from "react";

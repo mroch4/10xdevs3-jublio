@@ -1,12 +1,13 @@
 import "./CalendarExportModal.css";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
-import { CalendarProvider } from "../utils/enums/CalendarProvider";
-import Milestone from "../utils/classes/Milestone";
+import { CalendarProvider } from "../../utils/enums/CalendarProvider";
+import Milestone from "../../utils/classes/Milestone";
 import type { FormEvent } from "react";
 import { Temporal } from "@js-temporal/polyfill";
-import { MAX_EVENT_TITLE_LENGTH } from "../utils/constants";
+import { MAX_EVENT_TITLE_LENGTH } from "../../utils/constants";
+import { useEscapeKey } from "../../hooks/useEscapeKey";
 
 interface CalendarExportModalProps {
   isOpen: boolean;
@@ -37,18 +38,7 @@ export default function CalendarExportModal({ isOpen, onClose, event, onExport, 
   }, [onClose]);
 
   // Handle ESC key to close modal
-  useEffect(() => {
-    const handleEscKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) {
-        handleClose();
-      }
-    };
-
-    document.addEventListener("keydown", handleEscKey);
-    return () => {
-      document.removeEventListener("keydown", handleEscKey);
-    };
-  }, [isOpen, handleClose]);
+  useEscapeKey(handleClose, isOpen);
 
   if (!isOpen) return null;
 
