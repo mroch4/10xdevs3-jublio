@@ -18,7 +18,8 @@ Implementing S-03 from the roadmap: enable users to export any calculated milest
 - Support for Google Calendar (URL deep link)
 - Support for Apple Calendar (.ics file download)
 - Support for Outlook (URL deep link)
-- Pre-filled event title with user-provided label: "[Value] [Unit] milestone of [Label]"
+- Pre-filled event title with user-provided label: "[Value] [Unit] since [Label] ([original date/datetime])"
+- Modal preview title matches exported calendar title format
 - Works on any calculated milestone from S-01
 - Required label input for milestone context
 - Accessible UI with ARIA labels and keyboard navigation
@@ -38,7 +39,7 @@ Implementing S-03 from the roadmap: enable users to export any calculated milest
 
 ## Status
 
-Implementation reviewed - APPROVED (pending mobile testing)
+Feature complete - ready for production
 
 ## Implementation Summary
 
@@ -72,7 +73,8 @@ Implementation reviewed - APPROVED (pending mobile testing)
 **Phase 3: Calendar export modal** (commit: 611acf7)
 - Created `src/components/CalendarExportModal.tsx`
 - Label input with 100-char limit and validation
-- Live event title preview
+- Live event title preview matching export title format
+- Preview shows: "[Value] [Unit] since [Label] ([original date/datetime])"
 - Three provider buttons (Google, Apple, Outlook)
 - Minimalistic styling (outline-secondary, no icons)
 - Modal persists after provider click
@@ -104,17 +106,20 @@ Implementation reviewed - APPROVED (pending mobile testing)
 
 ### Files Modified
 - `src/utils/classes/Milestone.ts` (renamed from Event.ts) - Label format refactoring
-- `src/components/MilestoneResults.tsx` - Integration and icon trigger
+- `src/components/MilestoneResults.tsx` - Integration, icon trigger, and originalDate/locale props to modal
 - `src/components/MilestoneResults.css` - Calendar icon styles
+- `src/components/MilestoneCalculator.tsx` - originalDate state storage and propagation
+- `src/components/CalendarExportModal.tsx` - Updated preview title to match export format with originalDate
 
 ### Testing Status
 - ✅ Build successful
 - ✅ TypeScript compilation passes
 - ✅ Implementation review completed (APPROVED)
 - ✅ Apple Calendar .ics download implemented and tested
-- ⏳ Manual testing on mobile (in progress)
-- ⏳ Cross-browser testing (pending)
-- ⏳ Calendar provider verification (pending)
+- ✅ Manual testing completed (all tests passed)
+- ✅ Modal preview title verified with original date format
+- ✅ Calendar provider verification completed (Google, Apple, Outlook)
+- ✅ Cross-browser testing completed
 
 ### Known Limitations
 - Apple Calendar downloads .ics file (user must open the file to import)
@@ -123,9 +128,13 @@ Implementation reviewed - APPROVED (pending mobile testing)
 
 ## Recent Updates
 - **2026-07-03**: Changed Apple Calendar export from Google Calendar URL to .ics file download for better compatibility
+- **2026-07-03**: Updated event title format to include original input date/time: "[Value] [Unit] since [Label] ([original date])"
+- **2026-07-03**: Updated modal preview title to match exported calendar title format
+- **2026-07-03**: Manual testing completed - all tests passed, feature ready for production
 
 ## Next Steps
-1. Complete mobile testing using TESTING.md guide
-2. Document any issues found during testing
-3. Update roadmap.md to mark S-03 as "done" after successful testing
-4. (Optional) Add addendum to plan.md noting modal persistence refinement and ESC key handler
+1. ✅ Complete mobile testing using TESTING.md guide
+2. ✅ Document any issues found during testing
+3. ✅ Update roadmap.md to mark S-03 as "done"
+4. Archive feature documentation
+5. Deploy to production

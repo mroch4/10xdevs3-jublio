@@ -25,10 +25,10 @@
 
 1. [x] Calculate milestone with date only (e.g., 2000-01-01)
 2. [x] Tap calendar icon, enter label (e.g., "Wedding")
-3. [x] Preview shows: "[value] [unit] milestone of Wedding"
+3. [x] Preview shows: "[value] [unit] since Wedding ([original date])"
 4. [x] Tap "Google" button
 5. [x] New tab opens with Google Calendar
-6. [x] Event pre-filled with correct title
+6. [x] Event pre-filled with correct title including original date
 7. [x] Event date matches milestone date
 8. [x] Event is all-day (no time shown)
 9. [x] Toast notification appears
@@ -44,29 +44,29 @@
 
 #### Apple Calendar
 
-1. [ ] Tap "Apple" button
-2. [ ] Browser downloads `.ics` file automatically
-3. [ ] File named: `{label}_milestone.ics`
-4. [ ] Open the downloaded file
-5. [ ] Apple Calendar app launches (or import prompt appears)
-6. [ ] Event details correct (title, date/time, duration)
-7. [ ] Toast shows: "Calendar file downloaded. Open it to add the event to Apple Calendar."
+1. [x] Tap "Apple" button
+2. [x] Browser downloads `.ics` file automatically
+3. [x] File named: `{label}_milestone.ics`
+4. [x] Open the downloaded file
+5. [x] Apple Calendar app launches (or import prompt appears)
+6. [x] Event details correct (title, date/time, duration)
+7. [x] Toast shows: "Calendar file downloaded. Open it to add the event to Apple Calendar."
 
 #### Outlook (all-day)
 
-1. [ ] Calculate milestone with date only
-2. [ ] Tap calendar icon, enter label
-3. [ ] Tap "Outlook" button
-4. [ ] Outlook web calendar opens
-5. [ ] Event is all-day
-6. [ ] Event date correct
+1. [x] Calculate milestone with date only
+2. [x] Tap calendar icon, enter label
+3. [x] Tap "Outlook" button
+4. [x] Outlook web calendar opens
+5. [x] Event is all-day
+6. [x] Event date correct
 
 #### Outlook (timed)
 
-1. [ ] Calculate milestone with date + time
-2. [ ] Tap "Outlook" button
-3. [ ] Event has correct time
-4. [ ] Event duration is 1 hour
+1. [x] Calculate milestone with date + time
+2. [x] Tap "Outlook" button
+3. [x] Event has correct time
+4. [x] Event duration is 1 hour
 
 ### Modal Behavior
 
@@ -105,14 +105,14 @@
 ### Cross-Browser (Desktop quick check)
 
 - [x] Chrome: basic flow works
-- [ ] Firefox: basic flow works
+- [x] Firefox: basic flow works
 - [x] Safari: basic flow works
-- [ ] Edge: basic flow works
+- [x] Edge: basic flow works
 
 ### Popup Blocker Test
 
-- [ ] Enable popup blocker in browser settings
-- [ ] Try to export → toast shows error message
+- [x] Enable popup blocker in browser settings
+- [x] Try to export → toast shows error message
 - [x] Error message: "Please allow popups for this site to export to calendar."
 
 ## Issues Found
@@ -123,16 +123,15 @@
 
 ## Notes
 
-- Apple Calendar URL scheme limitation: Uses Google Calendar URL, may not seamlessly redirect to native app on all platforms
 - Requires user to be logged into calendar provider
 - Local timezone handling: Events without "Z" suffix interpreted as local time by calendar providers
 
 ## Sign-off
 
-- [ ] All critical tests passed
-- [ ] No blocking issues found
-- [ ] Ready for production
-- [ ] Issues documented above
+- [x] All critical tests passed
+- [x] No blocking issues found
+- [x] Ready for production
+- [x] Issues documented above
 
 **Tester:** **\*\***\_\_\_**\*\***  
 **Date:** **\*\***\_\_\_**\*\***  

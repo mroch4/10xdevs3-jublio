@@ -139,7 +139,16 @@ export default function MilestoneResults({ events, locale, originalDate }: Miles
         );
       })}
 
-      {selectedEvent && <CalendarExportModal isOpen={exportModalOpen} onClose={handleCloseModal} event={selectedEvent} onExport={handleExport} />}
+      {selectedEvent && (
+        <CalendarExportModal 
+          isOpen={exportModalOpen} 
+          onClose={handleCloseModal} 
+          event={selectedEvent} 
+          onExport={handleExport}
+          originalDate={originalDate}
+          locale={locale}
+        />
+      )}
 
       <Toast message={toastMessage || ""} show={toastMessage !== null} onClose={handleCloseToast} />
     </div>

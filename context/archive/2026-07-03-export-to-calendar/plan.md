@@ -2,7 +2,7 @@
 
 ## Overview
 
-Add calendar export functionality to milestone results, enabling users to export any calculated milestone to Google Calendar, Apple Calendar, or Outlook via URL deep links. Users will provide a label (e.g., "Wedding", "Quit Smoking") and the system generates a pre-filled calendar event with title "[Value] [Unit] milestone of [Label]" scheduled on the milestone date.
+Add calendar export functionality to milestone results, enabling users to export any calculated milestone to Google Calendar, Apple Calendar, or Outlook via URL deep links (Google/Outlook) or `.ics` file download (Apple). Users will provide a label (e.g., "Wedding", "Quit Smoking") and the system generates a pre-filled calendar event with title "[Value] [Unit] since [Label] ([original date/datetime])" scheduled on the milestone date.
 
 ## Current State Analysis
 
@@ -61,16 +61,16 @@ Add calendar export functionality to milestone results, enabling users to export
 2. Each milestone row has a calendar icon button (📅)
 3. Clicking icon opens `CalendarExportModal` with:
    - Text input: "What is this milestone about?" (required, placeholder: "e.g., Wedding, Quit Smoking")
-   - Live preview below input: "10,000 days milestone of [typed text]"
+   - Live preview below input: "[Value] [Unit] since [typed text] ([original date/datetime])"
    - Three provider buttons with brand icons: Google Calendar, Apple Calendar, Outlook
    - Provider buttons disabled until label is entered (validation)
 4. User enters label (e.g., "Wedding") and clicks a provider button
-5. Modal closes, deep link opens in new tab, toast notification appears:
+5. Modal stays open, deep link opens in new tab (or `.ics` downloads for Apple), toast notification appears:
    - "Opening [Provider]... Please log in if the calendar doesn't open."
    - Auto-dismisses after 5 seconds
 
 **Calendar event details:**
-- **Title:** "[Value] [Unit] milestone of [Label]" (e.g., "10,000 days milestone of Wedding")
+- **Title:** "[Value] [Unit] since [Label] ([original date/datetime])" (e.g., "10,000 days since Wedding (2000-01-15)")
 - **Date/time:**
   - All-day event if milestone is `Temporal.PlainDate`
   - 1-hour event if milestone is `Temporal.PlainDateTime` (start time = milestone time)
@@ -160,9 +160,10 @@ Add calendar export functionality to milestone results, enabling users to export
   - Use switch statement with default exception
   - For Apple: return blob URL for `.ics` file download
   - For Google/Outlook: return deep link URL
-- Implement `formatEventTitle(event: Milestone, label: string): string` helper
+- Implement `formatEventTitle(event: Milestone, label: string, originalDate: Temporal.PlainDate | Temporal.PlainDateTime, locale: string): string` helper
   - Use Milestone.label directly (now clean: "10,000 days")
-  - Return: "[Milestone.label] milestone of [label]" (e.g., "10,000 days milestone of Wedding")
+  - Format originalDate using toLocaleString(locale)
+  - Return: "[Milestone.label] since [label] ([formatted original date])" (e.g., "10,000 days since Wedding (2000-01-15)")
 - Implement `formatDateForGoogle(date: Temporal.PlainDate | Temporal.PlainDateTime, isEnd: boolean): string`
   - PlainDate → `YYYYMMDD` format
   - PlainDateTime → `YYYYMMDDTHHmmss` format (local timezone, no Z suffix)
@@ -231,6 +232,8 @@ Add calendar export functionality to milestone results, enabling users to export
   - `onClose: () => void`
   - `event: Event` (milestone to export)
   - `onExport: (provider: CalendarProvider, label: string) => void`
+  - `originalDate: Temporal.PlainDate | Temporal.PlainDateTime | null`
+  - `locale: string`
 - Modal structure (following AuthModal pattern):
   - Backdrop (click to close)
   - Modal dialog (centered)
@@ -239,7 +242,7 @@ Add calendar export functionality to milestone results, enabling users to export
 	- Text input: "What is this milestone about?" (required, autoFocus)
 	- Placeholder: "e.g., Wedding, Quit Smoking, Company Launch"
 	- Character limit: 100 characters
-	- Live preview: "[Value] [Unit] milestone of [typed label]"
+	- Live preview: "[Value] [Unit] since [typed label] ([original date/datetime])"
 	- Three provider buttons with brand icons and labels
   - Footer: Cancel button
 - Form validation:
@@ -251,14 +254,17 @@ Add calendar export functionality to milestone results, enabling users to export
   - Outlook: Microsoft Outlook logo
 - Provider buttons styled with Bootstrap button classes + custom colors
 - Mobile-responsive (single-column button layout on small screens)
+- Modal persists after provider selection (does not close)
+- Input label persists until modal closed
 
 **Acceptance:**
 - Modal matches AuthModal visual style
 - Label input is required and validated
-- Live preview updates as user types
+- Live preview updates as user types and matches export title format
 - Provider buttons show clear branding
 - Modal closes on Cancel or backdrop click
-- Modal closes after provider selection
+- Modal stays open after provider selection
+- Input value persists until modal closed
 
 ### Phase 4: UI integration in MilestoneResults
 

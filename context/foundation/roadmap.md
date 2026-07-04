@@ -124,27 +124,29 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ### S-03: Export milestone to calendar
 
-- **Outcome:** user can click a calendar icon on any calculated milestone and export it to Google Calendar, Apple Calendar, or Outlook with pre-filled event title ("[Value] [Unit] milestone of [Label]", e.g., "10,000 days milestone of Wedding") and date/time. User provides a required label for milestone context. Export works on any calculated milestone via URL deep links; user does not need to bookmark first.
+- **Outcome:** user can click a calendar icon on any calculated milestone and export it to Google Calendar, Apple Calendar, or Outlook with pre-filled event title ("[Value] [Unit] since [Label] ([original date/datetime])", e.g., "10,000 days since Wedding (2000-01-15)") and date/time. User provides a required label for milestone context. Export works on any calculated milestone via URL deep links (Google/Outlook) or .ics file download (Apple); user does not need to bookmark first.
 - **Change ID:** `export-to-calendar`
 - **PRD refs:** FR-015, FR-016, FR-017, FR-018, US-03
 - **Prerequisites:** S-01 (export any calculated milestone)
 - **Parallel with:** S-02 (independent features), S-04 (both share from S-01)
 - **Blockers:** —
-- **Unknowns:** ~~Exact deep-link formats for Google Calendar, Apple Calendar (iCal), Outlook (requires research). PRD Open Question #2.~~ Resolved — implemented with URL deep links for Google/Outlook; Apple Calendar uses `.ics` file download.
-- **Risk:** ~~Calendar vendor APIs differ (Google vs. Apple vs. Outlook). Skills blocker: unfamiliar with calendar integration deep links.~~ Resolved — standard URL formats and iCalendar format implemented and tested.
-- **Status:** done (pending mobile testing)
+- **Unknowns:** ~~Exact deep-link formats for Google Calendar, Apple Calendar (iCal), Outlook (requires research). PRD Open Question #2.~~ ✅ Resolved — implemented with URL deep links for Google/Outlook; Apple Calendar uses `.ics` file download.
+- **Risk:** ~~Calendar vendor APIs differ (Google vs. Apple vs. Outlook). Skills blocker: unfamiliar with calendar integration deep links.~~ ✅ Resolved — standard URL formats and iCalendar format implemented and tested.
+- **Status:** done ✅
 - **Implementation:** 
   - Milestone.label refactored to clean format (no "+" prefix)
   - Calendar URL generation utilities for Google/Outlook (deep links)
   - Apple Calendar: `.ics` file generation and automatic download
   - Toast notification system with auto-dismiss
-  - Modal with label input, live preview, and provider selection
+  - Modal with label input, live preview matching export title format, and provider selection
+  - Event title includes original input date/time for context
   - Accessible UI with ARIA labels and keyboard navigation
   - ESC key and backdrop click to close modal
+  - Modal persists after provider click (label input retained)
   - Local timezone handling for timed events
   - Switch statement with default exception for provider routing
-  - 6 commits: 3f0eb32, bdb632f, 8a8f20d, 611acf7, abf4098, 7589152, 85da2e6, 6c17e24
-- **Testing:** Manual mobile testing in progress
+  - Commits: 3f0eb32, bdb632f, 8a8f20d, 611acf7, abf4098, 7589152, 6c17e24, 55e17c2
+- **Testing:** ✅ Manual testing completed — all providers (Google, Apple, Outlook) verified, modal preview correct, cross-browser tested
 
 ### S-04: Social share with AI image
 
@@ -182,7 +184,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | F-02       | firestore-portfolio-schema | Design and create Firestore collections + schema     | yes                   | Plan in parallel with F-01; unblocks S-02 and S-05                     |
 | S-01       | calculate-milestones       | Implement milestone calculation with Temporal API    | yes                   | No prerequisites; can start immediately. Prove algorithm first.        |
 | S-02       | bookmark-and-manage        | Bookmark dates, manage portfolio, real-time sync     | no                    | Unblock: F-01 + F-02 + S-01 must be ready                              |
-| S-03       | export-to-calendar         | Export milestone to Google Calendar / Apple Calendar | yes                   | No prerequisites blocking; calendar formats well-documented. Ready now |
+| S-03       | export-to-calendar         | Export milestone to Google Calendar / Apple Calendar | ✅ DONE               | Feature complete - tested and ready for production                     |
 | S-04       | social-share-with-ai       | Social share with AI-generated image                 | no                    | Blocked: AI model choice + latency validation. Run `/10x-frame` spike  |
 | S-05       | custom-milestone-values    | Custom milestone values per bookmarked date          | no                    | Unblock: S-02 + F-02 must be ready                                     |
 
@@ -241,6 +243,17 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Change ID:** `calculate-milestones`
 - **Archived:** 2026-07-02T19:05:31Z
 - **Outcome:** User can input a date (+ optional time) and see a sorted list of future milestones (10, 100, 1K, 10K, 100K, 1M for each applicable time unit: years, months, weeks, days, hours, minutes, seconds).
+
+→ `context/archive/2026-07-02-calculate-milestones/`
+
+### S-03: Export milestone to calendar
+
+- **Change ID:** `export-to-calendar`
+- **Archived:** 2026-07-03
+- **Outcome:** User can export any calculated milestone to Google Calendar, Apple Calendar, or Outlook with pre-filled event title including original input date/time. Google/Outlook use URL deep links; Apple downloads .ics file. Modal provides label input with live preview matching export format.
+- **Lesson:** Apple Calendar requires .ics file download rather than URL deep link for best compatibility. Event title including original date provides important context for calendar reminders.
+
+→ `context/archive/2026-07-03-export-to-calendar/`
 
 (Empty on first generation. `/10x-archive` appends entries here when a change archives.)
 

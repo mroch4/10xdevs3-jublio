@@ -5,15 +5,18 @@ import { useCallback, useEffect, useState } from "react";
 import { CalendarProvider } from "../utils/enums/CalendarProvider";
 import Milestone from "../utils/classes/Milestone";
 import type { FormEvent } from "react";
+import { Temporal } from "@js-temporal/polyfill";
 
 interface CalendarExportModalProps {
   isOpen: boolean;
   onClose: () => void;
   event: Milestone;
   onExport: (provider: CalendarProvider, label: string) => void;
+  originalDate: Temporal.PlainDate | Temporal.PlainDateTime | null;
+  locale: string;
 }
 
-export default function CalendarExportModal({ isOpen, onClose, event, onExport }: CalendarExportModalProps) {
+export default function CalendarExportModal({ isOpen, onClose, event, onExport, originalDate, locale }: CalendarExportModalProps) {
   const [label, setLabel] = useState("");
 
   const handleSubmit = (e: FormEvent) => {
@@ -49,7 +52,10 @@ export default function CalendarExportModal({ isOpen, onClose, event, onExport }
   if (!isOpen) return null;
 
   const isLabelValid = label.trim().length > 0;
-  const previewTitle = label.trim() ? `${event.label} milestone of ${label.trim()}` : `${event.label} milestone of [your label]`;
+  const formattedOriginalDate = originalDate ? originalDate.toLocaleString(locale) : "";
+  const previewTitle = label.trim() 
+    ? `${event.label} since ${label.trim()} (${formattedOriginalDate})` 
+    : `${event.label} since [your label] (${formattedOriginalDate})`;
 
   return (
     <>
