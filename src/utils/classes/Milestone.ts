@@ -97,14 +97,23 @@ export default class Milestone {
   //other
 
   private isPast(now: Temporal.PlainDateTime): boolean {
+    if (this.date instanceof Temporal.PlainDateTime) {
+      return Temporal.PlainDateTime.compare(this.date, now) < 0;
+    }
     return Temporal.PlainDate.compare(this.date, now) < 0;
   }
 
   private isToday(now: Temporal.PlainDateTime): boolean {
+    if (this.date instanceof Temporal.PlainDateTime) {
+      return Temporal.PlainDate.compare(this.date, now) === 0;
+    }
     return Temporal.PlainDate.compare(this.date, now) === 0;
   }
 
   private isWeek(weekStarts: Temporal.PlainDateTime, weekEnds: Temporal.PlainDateTime): boolean {
+    if (this.date instanceof Temporal.PlainDateTime) {
+      return Temporal.PlainDateTime.compare(this.date, weekStarts) >= 0 && Temporal.PlainDateTime.compare(this.date, weekEnds) <= 0;
+    }
     return Temporal.PlainDate.compare(this.date, weekStarts) >= 0 && Temporal.PlainDate.compare(this.date, weekEnds) <= 0;
   }
 }
