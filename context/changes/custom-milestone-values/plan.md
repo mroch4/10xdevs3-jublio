@@ -415,7 +415,7 @@ CustomMilestoneModal (NEW)
 
 | Phase | Status | Commits | Notes |
 |-------|--------|---------|-------|
-| Phase 1: Custom Milestone State & Type | ✅ completed | Pending | React state + TypeScript interface. Build passing. Lint warning expected (customMilestones dep used in Phase 3). |
+| Phase 1: Custom Milestone State & Type | ✅ completed | c29892d | React state + TypeScript interface. Build passing. Lint warning expected (customMilestones dep used in Phase 3). |
 | Phase 2: Add Custom Milestone Modal | pending | | Modal + validation |
 | Phase 3: Merge Custom Milestones in Calculation | pending | | Update CardBase, Milestone class |
 | Phase 4: Visual Distinction & Remove Button | pending | | Badge + remove functionality |

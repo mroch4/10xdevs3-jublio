@@ -7,6 +7,7 @@ import { Temporal } from "@js-temporal/polyfill";
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { BookmarkModal } from "./modals/BookmarkModal";
+import { CustomMilestoneModal } from "./modals/CustomMilestoneModal";
 import Toast from "./Toast";
 import { type CustomMilestone } from "../types/CustomMilestone";
 
@@ -25,6 +26,7 @@ export default function MilestoneCalculator({ onSwitchToBookmarks, autofillDate,
 
   const { user } = useAuth();
   const [bookmarkModalOpen, setBookmarkModalOpen] = useState(false);
+  const [customMilestoneModalOpen, setCustomMilestoneModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Custom milestone state (session-only)
@@ -32,7 +34,6 @@ export default function MilestoneCalculator({ onSwitchToBookmarks, autofillDate,
   const [hasTimeInput, setHasTimeInput] = useState(false); // Phase 2: will be used for unit filtering
 
   // Custom milestone helper functions (Phase 2+)
-  // Temporarily prevent from being tree-shaken until Phase 2
   const addCustomMilestone = (value: number, unit: string): void => {
     const id = `${value}-${unit}`;
     const newMilestone: CustomMilestone = { id, value, unit };
@@ -52,9 +53,9 @@ export default function MilestoneCalculator({ onSwitchToBookmarks, autofillDate,
     setCustomMilestones([]);
   };
 
-  // Phase 1: Expose functions for Phase 2 (prevents unused variable errors)
+  // Phase 2: Prevent unused warnings for functions used in Phase 3+
   if (false as boolean) {
-    console.log(addCustomMilestone, removeCustomMilestone, isDuplicateCustomMilestone, hasTimeInput);
+    console.log(removeCustomMilestone, isDuplicateCustomMilestone);
   }
 
   const handleCalculate = useCallback((date: Temporal.PlainDate, time?: Temporal.PlainTime) => {
@@ -141,6 +142,11 @@ export default function MilestoneCalculator({ onSwitchToBookmarks, autofillDate,
     }
   };
 
+  const handleCustomMilestoneSubmit = (value: number, unit: string) => {
+    addCustomMilestone(value, unit);
+    setToastMessage(`Custom milestone added: ${value.toLocaleString()} ${unit}`);
+  };
+
   const handleCloseToast = () => {
     setToastMessage(null);
   };
@@ -162,7 +168,18 @@ export default function MilestoneCalculator({ onSwitchToBookmarks, autofillDate,
           Enter a date and time to calculate milestones
         </div>
       ) : (
-        <MilestoneResults events={events} locale={locale} originalDate={originalDate} />
+        <>
+          <div className="mb-3 d-flex justify-content-end">
+            <button
+              type="button"
+              className="btn btn-outline-primary"
+              onClick={() => setCustomMilestoneModalOpen(true)}
+            >
+              ➕ Add Custom Milestone
+            </button>
+          </div>
+          <MilestoneResults events={events} locale={locale} originalDate={originalDate} />
+        </>
       )}
 
       {/* BookmarkModal */}
@@ -175,6 +192,15 @@ export default function MilestoneCalculator({ onSwitchToBookmarks, autofillDate,
           userEmail={user.email || ""}
         />
       )}
+
+      {/* CustomMilestoneModal */}
+      <CustomMilestoneModal
+        isOpen={customMilestoneModalOpen}
+        onClose={() => setCustomMilestoneModalOpen(false)}
+        onSubmit={handleCustomMilestoneSubmit}
+        existingCustomMilestones={customMilestones}
+        hasTimeInput={hasTimeInput}
+      />
 
       {/* Toast */}
       <Toast message={toastMessage || ""} show={toastMessage !== null} onClose={handleCloseToast} />
