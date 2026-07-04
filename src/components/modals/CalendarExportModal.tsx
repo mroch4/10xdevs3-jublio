@@ -3,10 +3,10 @@ import "./CalendarExportModal.css";
 import { useCallback, useState } from "react";
 
 import { CalendarProvider } from "../../utils/enums/CalendarProvider";
-import Milestone from "../../utils/classes/Milestone";
 import type { FormEvent } from "react";
-import { Temporal } from "@js-temporal/polyfill";
 import { MAX_EVENT_TITLE_LENGTH } from "../../utils/constants";
+import Milestone from "../../utils/classes/Milestone";
+import { Temporal } from "@js-temporal/polyfill";
 import { useEscapeKey } from "../../hooks/useEscapeKey";
 import { useFocusTrap } from "../../hooks/useFocusTrap";
 
@@ -46,11 +46,21 @@ export default function CalendarExportModal({ isOpen, onClose, event, onExport, 
 
   if (!isOpen) return null;
 
-  const isLabelValid = label.trim().length > 0;
   const formattedOriginalDate = originalDate ? originalDate.toLocaleString(locale) : "";
-  const previewTitle = label.trim() 
-    ? `${event.label} since ${label.trim()} (${formattedOriginalDate})` 
-    : `${event.label} since [your label] (${formattedOriginalDate})`;
+
+  // Build event title from parts
+  // Format: "[event.label] since [user label] ([formattedOriginalDate])"
+  const titleParts = [event.label, " since ", label.trim() || "[your label]", " (", formattedOriginalDate, ")"];
+
+  const previewTitle = titleParts.join("");
+  const currentTitleLength = titleParts.reduce((sum, part) => sum + part.length, 0);
+
+  // Calculate max label length to ensure total title ≤ 100 chars
+  const fixedParts = [event.label, " since ", " (", formattedOriginalDate, ")"];
+  const fixedPartLength = fixedParts.reduce((sum, part) => sum + part.length, 0);
+  const maxLabelLength = Math.max(1, MAX_EVENT_TITLE_LENGTH - fixedPartLength);
+
+  const isLabelValid = label.trim().length > 0 && currentTitleLength <= MAX_EVENT_TITLE_LENGTH;
 
   return (
     <>
@@ -81,23 +91,24 @@ export default function CalendarExportModal({ isOpen, onClose, event, onExport, 
                     value={label}
                     onChange={(e) => setLabel(e.target.value)}
                     placeholder="e.g., Wedding, Quit Smoking, Company Launch"
-                    maxLength={MAX_EVENT_TITLE_LENGTH}
+                    maxLength={maxLabelLength}
                     autoFocus
                     required
                     aria-describedby="label-help preview-text"
                   />
-                  <div className="d-flex justify-content-between mt-1">
+
+                  <div className="preview-box mt-2" role="status" aria-live="polite">
+                    <strong>Event title preview:</strong>
+                    <div className="preview-text" id="preview-text">
+                      {previewTitle}
+                    </div>
+                  </div>
+
+                  <div className="d-flex justify-content-between">
                     <div></div>
                     <small id="label-help" className="text-muted">
-                      {label.length}/{MAX_EVENT_TITLE_LENGTH} characters
+                      {currentTitleLength}/{MAX_EVENT_TITLE_LENGTH} characters
                     </small>
-                  </div>
-                </div>
-
-                <div className="preview-box mb-3" role="status" aria-live="polite">
-                  <strong>Event title:</strong>
-                  <div className="preview-text" id="preview-text">
-                    {previewTitle}
                   </div>
                 </div>
 
