@@ -353,7 +353,7 @@ App.tsx
 | 3. Bookmarks View with Real-time Sync | completed | bdf9079 | Real-time onSnapshot, BookmarkCard with locale formatting, autofill to Calculator, Tab enum extracted, Tab.Portfolio → Tab.Bookmarks |
 | 4. Edit Bookmark | completed | 6d46979 | BookmarkEditModal with pre-filled form, edit icon without button wrapper, createdAt as docId, constants for limits; Update button disabled until changes made |
 | 5. Delete Bookmark | completed | fa8c53d | DeleteConfirmationModal with ESC-close, user confirmed working; useEscapeKey hook extracted for all modals |
-| 6. Polish & Error Handling | completed | (pending commit) | ErrorBoundary added, useFocusTrap hook added, mobile tested, all accessibility features complete, PortfolioView → BookmarksView, all portfolio terminology → bookmarks |
+| 6. Polish & Error Handling | completed | 593ac61 | ErrorBoundary, useFocusTrap hook, focus trap in all modals, PortfolioView → BookmarksView rename, implementation review completed (Grade A) |
 
 ---
 
