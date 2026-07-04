@@ -101,56 +101,54 @@ export default function DateTimeInput({ onCalculate, onReset, onPinClick }: Date
   };
 
   return (
-    <div className="card bg-light shadow-sm">
-      <div className="card-body">
-        <form onSubmit={handleCalculate}>
-          <div className="row g-3">
-            {/* Date Input */}
-            <div className="col-md-6">
-              <label htmlFor="dateInput" className="form-label fw-bold">
-                Date (required)
-              </label>
-              <input type="date" className={`form-control ${error ? "is-invalid" : ""}`} id="dateInput" value={dateValue} onChange={(e) => setDateValue(e.target.value)} required />
-            </div>
+    <>
+      <form onSubmit={handleCalculate}>
+        <div className="row g-3">
+          {/* Date Input */}
+          <div className="col-md-6">
+            <label htmlFor="dateInput" className="form-label fw-bold">
+              Date (required)
+            </label>
+            <input type="date" className={`form-control ${error ? "is-invalid" : ""}`} id="dateInput" value={dateValue} onChange={(e) => setDateValue(e.target.value)} required />
+          </div>
 
-            {/* Time Input */}
-            <div className="col-md-6">
-              <label htmlFor="timeInput" className="form-label">
-                Time (optional)
-              </label>
-              <input type="time" className={`form-control ${error ? "is-invalid" : ""}`} id="timeInput" value={timeValue} onChange={(e) => setTimeValue(e.target.value)} />
-            </div>
+          {/* Time Input */}
+          <div className="col-md-6">
+            <label htmlFor="timeInput" className="form-label">
+              Time (optional)
+            </label>
+            <input type="time" className={`form-control ${error ? "is-invalid" : ""}`} id="timeInput" value={timeValue} onChange={(e) => setTimeValue(e.target.value)} />
+          </div>
 
-            {/* Error Message */}
-            {error && (
-              <div className="col-12">
-                <div className="alert alert-danger mb-0" role="alert">
-                  {error}
-                </div>
-              </div>
-            )}
-
-            {/* Buttons */}
+          {/* Error Message */}
+          {error && (
             <div className="col-12">
-              <div className="flex-center flex-wrap gap-2">
-                <button type="submit" className="btn btn-success" disabled={!isValid()}>
-                  Calculate
-                </button>
-                <button type="button" className="btn btn-primary" onClick={handleSetToNow}>
-                  Now
-                </button>
-                <button type="button" className="btn btn-danger" onClick={handleReset}>
-                  Reset
-                </button>
-                <button type="button" className={`btn ${user ? "btn-warning" : "btn-outline-primary"}`} onClick={handlePinDate}>
-                  {user ? "📌 Pin Date" : "Sign In to Pin"}
-                </button>
+              <div className="alert alert-danger mb-0" role="alert">
+                {error}
               </div>
+            </div>
+          )}
+
+          {/* Buttons */}
+          <div className="col-12">
+            <div className="flex-center flex-wrap gap-2">
+              <button type="submit" className="btn btn-success" disabled={!isValid()}>
+                Calculate
+              </button>
+              <button type="button" className="btn btn-primary" onClick={handleSetToNow}>
+                Now
+              </button>
+              <button type="button" className="btn btn-danger" onClick={handleReset}>
+                Reset
+              </button>
+              <button type="button" className={`btn ${user ? "btn-warning" : "btn-outline-primary"}`} onClick={handlePinDate}>
+                {user ? "📌 Pin Date" : "Sign In to Pin"}
+              </button>
             </div>
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
       <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} onSuccess={handleAuthSuccess} />
-    </div>
+    </>
   );
 }

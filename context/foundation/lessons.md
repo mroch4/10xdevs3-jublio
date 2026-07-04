@@ -19,3 +19,14 @@
   - **Label format**: Use consistent pattern (e.g., "Label (required)" not "Label *")
   - **Character counters**: Same format and position (e.g., `{count}/{limit} characters`)
 - **Applies to**: implement, impl-review
+
+## Use consistent terminology throughout the app
+
+- **Context**: Authentication and user actions across UI components (buttons, messages, tooltips, etc.).
+- **Problem**: Mixing "Sign In" / "Sign Out" with "Log in" / "Log out" creates inconsistent UX and looks unprofessional (e.g., "Sign In" button but "Log in to view your portfolio" message).
+- **Rule**: Use **"Sign In" / "Sign Out"** consistently everywhere:
+  - Buttons: "Sign In", "Sign Out"
+  - Modal titles: "Sign In"
+  - Messages: "Sign in to view..." (lowercase mid-sentence)
+  - Never mix with "Log in" / "Log out"
+- **Applies to**: implement, impl-review

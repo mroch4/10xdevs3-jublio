@@ -9,7 +9,11 @@ import { useAuth } from "../hooks/useAuth";
 import { BookmarkModal } from "./BookmarkModal";
 import Toast from "./Toast";
 
-export default function MilestoneCalculator() {
+interface MilestoneCalculatorProps {
+  onSwitchToPortfolio?: () => void;
+}
+
+export default function MilestoneCalculator({ onSwitchToPortfolio }: MilestoneCalculatorProps) {
   const [events, setEvents] = useState<Milestone[] | null>(null);
   const [originalDate, setOriginalDate] = useState<Temporal.PlainDate | Temporal.PlainDateTime | null>(null);
   const locale = navigator.language;
@@ -53,7 +57,9 @@ export default function MilestoneCalculator() {
 
   const handleBookmarkSuccess = () => {
     setToastMessage("Bookmark saved successfully!");
-    // TODO Phase 2: Switch to Portfolio tab
+    if (onSwitchToPortfolio) {
+      onSwitchToPortfolio();
+    }
   };
 
   const handleCloseToast = () => {
