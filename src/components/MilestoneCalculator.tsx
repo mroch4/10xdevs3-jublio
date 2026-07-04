@@ -200,6 +200,7 @@ export default function MilestoneCalculator({ onSwitchToBookmarks, autofillDate,
         onSubmit={handleCustomMilestoneSubmit}
         existingCustomMilestones={customMilestones}
         hasTimeInput={hasTimeInput}
+        originalDate={originalDate}
       />
 
       {/* Toast */}

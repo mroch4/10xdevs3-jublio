@@ -2,6 +2,7 @@ import "../Animations.css";
 
 import type { FormEvent } from "react";
 import { useState, useCallback } from "react";
+import { Temporal } from "@js-temporal/polyfill";
 import { DateTimeUnit } from "../../utils/enums/DateTimeUnit";
 import { MIN_CUSTOM_MILESTONE_VALUE, MAX_CUSTOM_MILESTONE_VALUE } from "../../utils/constants";
 import { useEscapeKey } from "../../hooks/useEscapeKey";
@@ -14,6 +15,7 @@ interface CustomMilestoneModalProps {
   onSubmit: (value: number, unit: string) => void;
   existingCustomMilestones: CustomMilestone[];
   hasTimeInput: boolean;
+  originalDate: Temporal.PlainDate | Temporal.PlainDateTime | null;
 }
 
 export function CustomMilestoneModal({ 
@@ -21,7 +23,8 @@ export function CustomMilestoneModal({
   onClose, 
   onSubmit, 
   existingCustomMilestones, 
-  hasTimeInput 
+  hasTimeInput,
+  originalDate
 }: CustomMilestoneModalProps) {
   const [value, setValue] = useState("");
   const [unit, setUnit] = useState(DateTimeUnit.Days);
@@ -52,6 +55,40 @@ export function CustomMilestoneModal({
         DateTimeUnit.Seconds,
       ]
     : [DateTimeUnit.Years, DateTimeUnit.Months, DateTimeUnit.Weeks, DateTimeUnit.Days];
+
+  // Check if a unit would exceed 75-year limit for a given value
+  const checkUnitExceedsLimit = (checkValue: string, checkUnit: string): boolean => {
+    if (!originalDate || checkValue.trim().length === 0) {
+      return false;
+    }
+
+    const numValue = parseInt(checkValue, 10);
+    if (isNaN(numValue)) {
+      return false;
+    }
+
+    try {
+      let milestoneDate: Temporal.PlainDate | Temporal.PlainDateTime;
+
+      if (originalDate instanceof Temporal.PlainDateTime) {
+        milestoneDate = originalDate.add({ [checkUnit]: numValue });
+      } else {
+        milestoneDate = originalDate.add({ [checkUnit]: numValue });
+      }
+
+      const now = Temporal.Now.plainDateTimeISO();
+      const limit = now.add({ years: 75 });
+      return Temporal.PlainDate.compare(milestoneDate, limit) > 0;
+    } catch {
+      // If calculation fails, disable the unit
+      return true;
+    }
+  };
+
+  // Check if a unit would exceed limit with current value
+  const isUnitDisabled = (checkUnit: string): boolean => {
+    return checkUnitExceedsLimit(value, checkUnit);
+  };
 
   const validateValue = (val: string, selectedUnit: string): boolean => {
     setValidationError(null);
@@ -97,6 +134,32 @@ export function CustomMilestoneModal({
       return false;
     }
 
+    // Check if milestone exceeds 75-year life expectancy limit
+    if (originalDate) {
+      try {
+        let milestoneDate: Temporal.PlainDate | Temporal.PlainDateTime;
+
+        if (originalDate instanceof Temporal.PlainDateTime) {
+          milestoneDate = originalDate.add({ [selectedUnit]: numValue });
+        } else {
+          milestoneDate = originalDate.add({ [selectedUnit]: numValue });
+        }
+
+        const now = Temporal.Now.plainDateTimeISO();
+        const limit = now.add({ years: 75 });
+        const exceeds = Temporal.PlainDate.compare(milestoneDate, limit) > 0;
+
+        if (exceeds) {
+          setValidationError(`Milestone would exceed human lifetime (${numValue.toLocaleString()} ${selectedUnit} is too far in the future)`);
+          return false;
+        }
+      } catch (err) {
+        // If calculation fails (e.g., invalid date arithmetic), show error
+        setValidationError(`Invalid combination: ${numValue.toLocaleString()} ${selectedUnit}`);
+        return false;
+      }
+    }
+
     return true;
   };
 
@@ -114,6 +177,17 @@ export function CustomMilestoneModal({
 
   const handleValueChange = (val: string) => {
     setValue(val);
+
+    // If current unit becomes disabled with new value, switch to first enabled unit
+    if (val.trim().length > 0 && checkUnitExceedsLimit(val, unit)) {
+      const firstEnabledUnit = availableUnits.find((u) => !checkUnitExceedsLimit(val, u));
+      if (firstEnabledUnit) {
+        setUnit(firstEnabledUnit);
+        validateValue(val, firstEnabledUnit);
+        return;
+      }
+    }
+
     if (val.trim().length > 0) {
       validateValue(val, unit);
     } else {
@@ -173,8 +247,9 @@ export function CustomMilestoneModal({
                   required
                 >
                   {availableUnits.map((u) => (
-                    <option key={u} value={u}>
+                    <option key={u} value={u} disabled={isUnitDisabled(u)}>
                       {u}
+                      {isUnitDisabled(u) ? " (exceeds human lifetime)" : ""}
                     </option>
                   ))}
                 </select>
