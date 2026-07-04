@@ -69,13 +69,13 @@ export default function MilestoneCalculator({ onSwitchToBookmarks, autofillDate,
       // Time provided: use DateTimeCard for all milestone units
       const dateTime = date.toPlainDateTime(time);
       inputDate = dateTime;
-      const card = new DateTimeCard(dateTime, locale);
-      calculatedEvents = card.getEvents();
+      const card = new DateTimeCard(dateTime, locale, customMilestones);
+      calculatedEvents = card.getEvents(customMilestones);
     } else {
       // Time not provided: use DateCard for day-level milestones only
       inputDate = date;
-      const card = new DateCard(date, locale);
-      calculatedEvents = card.getEvents();
+      const card = new DateCard(date, locale, customMilestones);
+      calculatedEvents = card.getEvents(customMilestones);
     }
 
     setOriginalDate(inputDate);

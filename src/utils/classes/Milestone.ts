@@ -6,12 +6,24 @@ export default class Milestone {
   dateString: string;
   label: string;
   category: string;
+  isCustom: boolean;
+  customId?: string;
 
-  constructor(date: Temporal.PlainDate | Temporal.PlainDateTime, unit: string, exponent: number, locale: string, now?: Temporal.PlainDateTime) {
+  constructor(
+    date: Temporal.PlainDate | Temporal.PlainDateTime, 
+    unit: string, 
+    exponent: number, 
+    locale: string, 
+    now?: Temporal.PlainDateTime,
+    isCustom?: boolean,
+    customId?: string
+  ) {
     this.date = date;
     this.dateString = this.date.toLocaleString(locale);
     this.label = `${new Intl.NumberFormat(locale).format(exponent)} ${unit}`;
     this.category = this.getCategory(now);
+    this.isCustom = isCustom ?? false;
+    this.customId = customId;
   }
 
   private getCategory(now?: Temporal.PlainDateTime) {

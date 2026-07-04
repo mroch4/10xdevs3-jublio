@@ -153,7 +153,7 @@ export function CustomMilestoneModal({
           setValidationError(`Milestone would exceed human lifetime (${numValue.toLocaleString()} ${selectedUnit} is too far in the future)`);
           return false;
         }
-      } catch (err) {
+      } catch {
         // If calculation fails (e.g., invalid date arithmetic), show error
         setValidationError(`Invalid combination: ${numValue.toLocaleString()} ${selectedUnit}`);
         return false;
