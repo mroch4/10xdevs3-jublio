@@ -40,3 +40,9 @@
 .calendar-icon:active {
   background-color: rgba(0, 0, 0, 0.1);
 }
+
+.custom-badge {
+  font-size: 0.7rem;
+  padding: 0.2rem 0.4rem;
+  font-weight: 600;
+}

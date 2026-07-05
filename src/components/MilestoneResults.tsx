@@ -112,25 +112,32 @@ export default function MilestoneResults({ events, locale, originalDate }: Miles
               {sortedEvents.map((event, index) => (
                 <div key={`${category}-${index}`} className={`list-group-item ${isPastCategory ? "milestone-past" : ""}`}>
                   <div className="d-flex justify-content-between align-items-center">
-                    <div>
-                      <h6 className="mb-1">+ {event.label}</h6>
+                    <div className="flex-grow-1">
+                      <div className="d-flex align-items-center gap-2 mb-1">
+                        <h6 className="mb-0">+ {event.label}</h6>
+                        {event.isCustom && (
+                          <span className="badge bg-primary custom-badge">Custom</span>
+                        )}
+                      </div>
                       <small>{event.dateString}</small>
                     </div>
-                    <span
-                      className="calendar-icon"
-                      onClick={() => handleExportClick(event)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          handleExportClick(event);
-                        }
-                      }}
-                      role="button"
-                      tabIndex={0}
-                      aria-label="Export to calendar"
-                    >
-                      📅
-                    </span>
+                    <div className="d-flex align-items-center gap-2">
+                      <span
+                        className="calendar-icon"
+                        onClick={() => handleExportClick(event)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            handleExportClick(event);
+                          }
+                        }}
+                        role="button"
+                        tabIndex={0}
+                        aria-label="Export to calendar"
+                      >
+                        📅
+                      </span>
+                    </div>
                   </div>
                 </div>
               ))}

@@ -1,7 +1,7 @@
 import "../Animations.css";
 
 import type { FormEvent } from "react";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Temporal } from "@js-temporal/polyfill";
 import { DateTimeUnit } from "../../utils/enums/DateTimeUnit";
 import { MIN_CUSTOM_MILESTONE_VALUE, MAX_CUSTOM_MILESTONE_VALUE } from "../../utils/constants";
@@ -12,7 +12,7 @@ import type { CustomMilestone } from "../../types/CustomMilestone";
 interface CustomMilestoneModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (value: number, unit: string) => void;
+  onUpdateCustomMilestones: (milestones: CustomMilestone[]) => void;
   existingCustomMilestones: CustomMilestone[];
   hasTimeInput: boolean;
   originalDate: Temporal.PlainDate | Temporal.PlainDateTime | null;
@@ -21,19 +21,39 @@ interface CustomMilestoneModalProps {
 export function CustomMilestoneModal({ 
   isOpen, 
   onClose, 
-  onSubmit, 
+  onUpdateCustomMilestones, 
   existingCustomMilestones, 
   hasTimeInput,
   originalDate
 }: CustomMilestoneModalProps) {
   const [value, setValue] = useState("");
-  const [unit, setUnit] = useState(DateTimeUnit.Days);
+  const [selectedUnits, setSelectedUnits] = useState<Set<string>>(new Set());
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [isValueError, setIsValueError] = useState(false); // Track if error is about the value field
+
+  // Initialize from existing custom milestones
+  useEffect(() => {
+    if (isOpen && existingCustomMilestones.length > 0) {
+      // Get the value from the first existing milestone
+      const firstValue = existingCustomMilestones[0].value;
+
+      // Get all units from existing milestones with this value
+      const units = new Set(
+        existingCustomMilestones
+          .filter(cm => cm.value === firstValue)
+          .map(cm => cm.unit)
+      );
+
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setValue(firstValue.toString());
+      setSelectedUnits(units);
+    }
+  }, [isOpen, existingCustomMilestones]);
 
   const handleClose = useCallback(() => {
-    setValue("");
-    setUnit(DateTimeUnit.Days);
+    // Don't clear state on close - keep it for next open
     setValidationError(null);
+    setIsValueError(false);
     onClose();
   }, [onClose]);
 
@@ -43,18 +63,18 @@ export function CustomMilestoneModal({
   // Handle focus trap and return focus
   const modalRef = useFocusTrap(isOpen);
 
-  // Get available units based on input type
+  // Get available units based on input type (sorted shortest to longest)
   const availableUnits = hasTimeInput
     ? [
-        DateTimeUnit.Years,
-        DateTimeUnit.Months,
-        DateTimeUnit.Weeks,
-        DateTimeUnit.Days,
-        DateTimeUnit.Hours,
-        DateTimeUnit.Minutes,
         DateTimeUnit.Seconds,
+        DateTimeUnit.Minutes,
+        DateTimeUnit.Hours,
+        DateTimeUnit.Days,
+        DateTimeUnit.Weeks,
+        DateTimeUnit.Months,
+        DateTimeUnit.Years,
       ]
-    : [DateTimeUnit.Years, DateTimeUnit.Months, DateTimeUnit.Weeks, DateTimeUnit.Days];
+    : [DateTimeUnit.Days, DateTimeUnit.Weeks, DateTimeUnit.Months, DateTimeUnit.Years];
 
   // Check if a unit would exceed 75-year limit for a given value
   const checkUnitExceedsLimit = (checkValue: string, checkUnit: string): boolean => {
@@ -90,13 +110,13 @@ export function CustomMilestoneModal({
     return checkUnitExceedsLimit(value, checkUnit);
   };
 
-  const validateValue = (val: string, selectedUnit: string): boolean => {
+  const validateValue = (val: string): boolean => {
     setValidationError(null);
+    setIsValueError(false);
 
     // Check if value is empty
     if (val.trim().length === 0) {
-      setValidationError("Value is required");
-      return false;
+      return true; // Don't show error for empty value
     }
 
     // Parse as integer
@@ -105,58 +125,64 @@ export function CustomMilestoneModal({
     // Check if valid number
     if (isNaN(numValue)) {
       setValidationError("Value must be a valid number");
+      setIsValueError(true);
       return false;
     }
 
     // Check if integer (no decimals)
     if (val.includes(".")) {
       setValidationError("Value must be a whole number");
+      setIsValueError(true);
       return false;
     }
 
     // Check minimum
     if (numValue < MIN_CUSTOM_MILESTONE_VALUE) {
       setValidationError(`Value must be at least ${MIN_CUSTOM_MILESTONE_VALUE}`);
+      setIsValueError(true);
       return false;
     }
 
     // Check maximum
     if (numValue > MAX_CUSTOM_MILESTONE_VALUE) {
       setValidationError(`Value must be ${MAX_CUSTOM_MILESTONE_VALUE.toLocaleString()} or less`);
+      setIsValueError(true);
       return false;
     }
 
-    // Check for duplicate
-    const id = `${numValue}-${selectedUnit}`;
-    const isDuplicate = existingCustomMilestones.some((cm) => cm.id === id);
-    if (isDuplicate) {
-      setValidationError(`Custom milestone "${numValue} ${selectedUnit}" already exists`);
-      return false;
+    // Only validate units if we have a valid value
+    if (selectedUnits.size === 0) {
+      return true; // Don't show unit error during value input
     }
 
-    // Check if milestone exceeds 75-year life expectancy limit
-    if (originalDate) {
-      try {
-        let milestoneDate: Temporal.PlainDate | Temporal.PlainDateTime;
+    // Check human lifetime limits for each selected unit (skip duplicate check since we're managing the full set)
+    for (const selectedUnit of selectedUnits) {
+      // Check if milestone exceeds 75-year life expectancy limit
+      if (originalDate) {
+        try {
+          let milestoneDate: Temporal.PlainDate | Temporal.PlainDateTime;
 
-        if (originalDate instanceof Temporal.PlainDateTime) {
-          milestoneDate = originalDate.add({ [selectedUnit]: numValue });
-        } else {
-          milestoneDate = originalDate.add({ [selectedUnit]: numValue });
-        }
+          if (originalDate instanceof Temporal.PlainDateTime) {
+            milestoneDate = originalDate.add({ [selectedUnit]: numValue });
+          } else {
+            milestoneDate = originalDate.add({ [selectedUnit]: numValue });
+          }
 
-        const now = Temporal.Now.plainDateTimeISO();
-        const limit = now.add({ years: 75 });
-        const exceeds = Temporal.PlainDate.compare(milestoneDate, limit) > 0;
+          const now = Temporal.Now.plainDateTimeISO();
+          const limit = now.add({ years: 75 });
+          const exceeds = Temporal.PlainDate.compare(milestoneDate, limit) > 0;
 
-        if (exceeds) {
-          setValidationError(`Milestone would exceed human lifetime (${numValue.toLocaleString()} ${selectedUnit} is too far in the future)`);
+          if (exceeds) {
+            setValidationError(`Milestone would exceed human lifetime (${numValue.toLocaleString()} ${selectedUnit} is too far in the future)`);
+            setIsValueError(true);
+            return false;
+          }
+        } catch {
+          // If calculation fails (e.g., invalid date arithmetic), show error
+          setValidationError(`Invalid combination: ${numValue.toLocaleString()} ${selectedUnit}`);
+          setIsValueError(true);
           return false;
         }
-      } catch {
-        // If calculation fails (e.g., invalid date arithmetic), show error
-        setValidationError(`Invalid combination: ${numValue.toLocaleString()} ${selectedUnit}`);
-        return false;
       }
     }
 
@@ -166,64 +192,105 @@ export function CustomMilestoneModal({
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    if (!validateValue(value, unit)) {
+    // Check if a calculation has been done first
+    if (!originalDate) {
+      setValidationError("Please calculate milestones first before adding custom values");
+      setIsValueError(false);
+      return;
+    }
+
+    // Check if at least one unit is selected
+    if (selectedUnits.size === 0) {
+      setValidationError("Please select at least one time unit");
+      setIsValueError(false); // This is a unit selection error, not a value error
+      return;
+    }
+
+    if (!validateValue(value)) {
       return;
     }
 
     const numValue = parseInt(value, 10);
-    onSubmit(numValue, unit);
+
+    // Create new milestone list from selected units
+    const newMilestones: CustomMilestone[] = Array.from(selectedUnits).map(unit => ({
+      id: `${numValue}-${unit}`,
+      value: numValue,
+      unit
+    }));
+
+    onUpdateCustomMilestones(newMilestones);
+    handleClose();
+  };
+
+  const handleResetCustomMilestones = () => {
+    // Clear all custom milestones
+    setValue("");
+    setSelectedUnits(new Set());
+    setValidationError(null);
+    setIsValueError(false);
+    onUpdateCustomMilestones([]);
     handleClose();
   };
 
   const handleValueChange = (val: string) => {
     setValue(val);
 
-    // If current unit becomes disabled with new value, switch to first enabled unit
-    if (val.trim().length > 0 && checkUnitExceedsLimit(val, unit)) {
-      const firstEnabledUnit = availableUnits.find((u) => !checkUnitExceedsLimit(val, u));
-      if (firstEnabledUnit) {
-        setUnit(firstEnabledUnit);
-        validateValue(val, firstEnabledUnit);
-        return;
-      }
-    }
-
     if (val.trim().length > 0) {
-      validateValue(val, unit);
+      validateValue(val);
     } else {
       setValidationError(null);
     }
   };
 
-  const handleUnitChange = (selectedUnit: string) => {
-    setUnit(selectedUnit as DateTimeUnit);
+  const handleUnitToggle = (unit: string) => {
+    const newSelectedUnits = new Set(selectedUnits);
+    if (newSelectedUnits.has(unit)) {
+      newSelectedUnits.delete(unit);
+    } else {
+      newSelectedUnits.add(unit);
+    }
+    setSelectedUnits(newSelectedUnits);
+
     if (value.trim().length > 0) {
-      validateValue(value, selectedUnit);
+      // Re-validate with updated units
+      setTimeout(() => validateValue(value), 0);
     }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="modal show fade-in" style={{ display: "block" }} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="customMilestoneModalLabel">
+    <>
+      {/* Backdrop */}
+      <div className="modal-backdrop fade show" onClick={handleClose} style={{ zIndex: 1040 }} />
+
+      {/* Modal */}
+      <div className="modal show fade-in" style={{ display: "block", zIndex: 1050 }} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="customMilestoneModalLabel">
       <div className="modal-dialog modal-dialog-centered" role="document">
         <div className="modal-content" ref={modalRef}>
           <div className="modal-header">
             <h5 className="modal-title" id="customMilestoneModalLabel">
-              Add Custom Milestone
+              Custom Milestones
             </h5>
             <button type="button" className="btn-close" onClick={handleClose} aria-label="Close"></button>
           </div>
 
           <form onSubmit={handleSubmit}>
             <div className="modal-body">
+              {!originalDate && (
+                <div className="alert alert-info mb-3" role="alert">
+                  ℹ️ Calculate milestones first, then you can add custom values here
+                </div>
+              )}
+
               <div className="mb-3">
                 <label htmlFor="milestoneValue" className="form-label fw-bold">
                   Value <span className="text-danger">*</span>
                 </label>
                 <input
                   type="number"
-                  className={`form-control ${validationError ? "is-invalid" : ""}`}
+                  className={`form-control ${validationError && isValueError ? "is-invalid" : ""}`}
                   id="milestoneValue"
                   value={value}
                   onChange={(e) => handleValueChange(e.target.value)}
@@ -236,25 +303,36 @@ export function CustomMilestoneModal({
               </div>
 
               <div className="mb-3">
-                <label htmlFor="milestoneUnit" className="form-label fw-bold">
-                  Time Unit <span className="text-danger">*</span>
+                <label className="form-label fw-bold">
+                  Time Units <span className="text-danger">*</span>
                 </label>
-                <select
-                  className="form-select"
-                  id="milestoneUnit"
-                  value={unit}
-                  onChange={(e) => handleUnitChange(e.target.value)}
-                  required
-                >
-                  {availableUnits.map((u) => (
-                    <option key={u} value={u} disabled={isUnitDisabled(u)}>
-                      {u}
-                      {isUnitDisabled(u) ? " (exceeds human lifetime)" : ""}
-                    </option>
-                  ))}
-                </select>
+                <div className="form-text mb-2">
+                  Select one or more time units to create multiple milestones at once
+                </div>
+                <div className="d-flex flex-column gap-2">
+                  {availableUnits.map((u) => {
+                    const isDisabled = value.trim().length > 0 && isUnitDisabled(u);
+                    const isChecked = selectedUnits.has(u);
+                    return (
+                      <div key={u} className="form-check">
+                        <input
+                          type="checkbox"
+                          className="form-check-input"
+                          id={`unit-${u}`}
+                          checked={isChecked}
+                          disabled={isDisabled}
+                          onChange={() => handleUnitToggle(u)}
+                        />
+                        <label className="form-check-label" htmlFor={`unit-${u}`}>
+                          {u}
+                          {isDisabled && <span className="text-muted ms-2">(exceeds human lifetime)</span>}
+                        </label>
+                      </div>
+                    );
+                  })}
+                </div>
                 {!hasTimeInput && (
-                  <div className="form-text">
+                  <div className="form-text mt-2">
                     Time-based units (hours, minutes, seconds) require a time input
                   </div>
                 )}
@@ -268,17 +346,20 @@ export function CustomMilestoneModal({
             </div>
 
             <div className="modal-footer">
+              <button type="button" className="btn btn-danger me-auto" onClick={handleResetCustomMilestones}>
+                Reset Custom Milestones
+              </button>
               <button type="button" className="btn btn-secondary" onClick={handleClose}>
                 Cancel
               </button>
-              <button type="submit" className="btn btn-primary" disabled={!!validationError || value.trim().length === 0}>
-                Add Milestone
+              <button type="submit" className="btn btn-primary" disabled={!!validationError || value.trim().length === 0 || selectedUnits.size === 0}>
+                Apply
               </button>
             </div>
           </form>
         </div>
       </div>
-      <div className="modal-backdrop show fade-in" onClick={handleClose}></div>
     </div>
+    </>
   );
 }

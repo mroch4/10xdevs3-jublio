@@ -31,56 +31,34 @@ export default function MilestoneCalculator({ onSwitchToBookmarks, autofillDate,
 
   // Custom milestone state (session-only)
   const [customMilestones, setCustomMilestones] = useState<CustomMilestone[]>([]);
-  const [hasTimeInput, setHasTimeInput] = useState(false); // Phase 2: will be used for unit filtering
+  const [hasTimeInput, setHasTimeInput] = useState(false); // Track time input for unit filtering
 
-  // Custom milestone helper functions (Phase 2+)
-  const addCustomMilestone = (value: number, unit: string): void => {
-    const id = `${value}-${unit}`;
-    const newMilestone: CustomMilestone = { id, value, unit };
-    setCustomMilestones((prev) => [...prev, newMilestone]);
-  };
+  const handleCalculate = useCallback(
+    (date: Temporal.PlainDate, time?: Temporal.PlainTime) => {
+      let calculatedEvents: Milestone[];
+      let inputDate: Temporal.PlainDate | Temporal.PlainDateTime;
 
-  const removeCustomMilestone = (id: string): void => {
-    setCustomMilestones((prev) => prev.filter((cm) => cm.id !== id));
-  };
+      // Track whether time input is provided
+      setHasTimeInput(time !== undefined);
 
-  const isDuplicateCustomMilestone = (value: number, unit: string): boolean => {
-    const id = `${value}-${unit}`;
-    return customMilestones.some((cm) => cm.id === id);
-  };
+      if (time) {
+        // Time provided: use DateTimeCard for all milestone units
+        const dateTime = date.toPlainDateTime(time);
+        inputDate = dateTime;
+        const card = new DateTimeCard(dateTime, locale, customMilestones);
+        calculatedEvents = card.events;
+      } else {
+        // Time not provided: use DateCard for day-level milestones only
+        inputDate = date;
+        const card = new DateCard(date, locale, customMilestones);
+        calculatedEvents = card.events;
+      }
 
-  const clearCustomMilestones = (): void => {
-    setCustomMilestones([]);
-  };
-
-  // Phase 2: Prevent unused warnings for functions used in Phase 3+
-  if (false as boolean) {
-    console.log(removeCustomMilestone, isDuplicateCustomMilestone);
-  }
-
-  const handleCalculate = useCallback((date: Temporal.PlainDate, time?: Temporal.PlainTime) => {
-    let calculatedEvents: Milestone[];
-    let inputDate: Temporal.PlainDate | Temporal.PlainDateTime;
-
-    // Track whether time input is provided
-    setHasTimeInput(time !== undefined);
-
-    if (time) {
-      // Time provided: use DateTimeCard for all milestone units
-      const dateTime = date.toPlainDateTime(time);
-      inputDate = dateTime;
-      const card = new DateTimeCard(dateTime, locale, customMilestones);
-      calculatedEvents = card.getEvents(customMilestones);
-    } else {
-      // Time not provided: use DateCard for day-level milestones only
-      inputDate = date;
-      const card = new DateCard(date, locale, customMilestones);
-      calculatedEvents = card.getEvents(customMilestones);
-    }
-
-    setOriginalDate(inputDate);
-    setEvents(calculatedEvents);
-  }, [locale, customMilestones]);
+      setOriginalDate(inputDate);
+      setEvents(calculatedEvents);
+    },
+    [locale, customMilestones]
+  );
 
   // Handle autofill from portfolio
   useEffect(() => {
@@ -119,12 +97,47 @@ export default function MilestoneCalculator({ onSwitchToBookmarks, autofillDate,
     onAutofillConsumed();
   }, [autofillDate, onAutofillConsumed, handleCalculate]);
 
+  // Recalculate when custom milestones change (after initial calculation)
+  useEffect(() => {
+    if (!originalDate || !inputDateStr) return;
+
+    // Re-run calculation with updated custom milestones
+    try {
+      const date = Temporal.PlainDate.from(inputDateStr);
+      const time = inputTimeStr ? Temporal.PlainTime.from(inputTimeStr) : undefined;
+
+      let calculatedEvents: Milestone[];
+      if (time) {
+        const dateTime = date.toPlainDateTime(time);
+        const card = new DateTimeCard(dateTime, locale, customMilestones);
+        calculatedEvents = card.events;
+      } else {
+        const card = new DateCard(date, locale, customMilestones);
+        calculatedEvents = card.events;
+      }
+
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setEvents(calculatedEvents);
+    } catch {
+      // If parsing fails, skip recalculation
+    }
+  }, [customMilestones, originalDate, inputDateStr, inputTimeStr, locale]);
+
   const handleReset = () => {
+    // Clear calculation but preserve custom milestones
     setEvents(null);
     setOriginalDate(null);
     setInputDateStr(null);
     setInputTimeStr(null);
-    clearCustomMilestones();
+    setHasTimeInput(false);
+  };
+
+  const handleSetToNow = () => {
+    // Same as reset - clear calculation but preserve custom milestones
+    setEvents(null);
+    setOriginalDate(null);
+    setInputDateStr(null);
+    setInputTimeStr(null);
     setHasTimeInput(false);
   };
 
@@ -142,9 +155,8 @@ export default function MilestoneCalculator({ onSwitchToBookmarks, autofillDate,
     }
   };
 
-  const handleCustomMilestoneSubmit = (value: number, unit: string) => {
-    addCustomMilestone(value, unit);
-    setToastMessage(`Custom milestone added: ${value.toLocaleString()} ${unit}`);
+  const handleCustomMilestoneSubmit = (milestones: CustomMilestone[]) => {
+    setCustomMilestones(milestones);
   };
 
   const handleCloseToast = () => {
@@ -156,48 +168,28 @@ export default function MilestoneCalculator({ onSwitchToBookmarks, autofillDate,
       <div className="mb-4">
         <DateTimeInput 
           onCalculate={handleCalculate} 
-          onReset={handleReset} 
-          onPinClick={handlePinClick}
-          autofillDate={inputDateStr}
+          onReset={handleReset}
+          onSetToNow={handleSetToNow}
+          onPinClick={handlePinClick} 
+          onCustomMilestonesClick={() => setCustomMilestoneModalOpen(true)}
+          autofillDate={inputDateStr} 
           autofillTime={inputTimeStr}
+          hasCalculation={!!originalDate}
         />
       </div>
 
-      {events === null ? (
-        <div className="alert alert-info" role="alert">
-          Enter a date and time to calculate milestones
-        </div>
-      ) : (
-        <>
-          <div className="mb-3 d-flex justify-content-end">
-            <button
-              type="button"
-              className="btn btn-outline-primary"
-              onClick={() => setCustomMilestoneModalOpen(true)}
-            >
-              ➕ Add Custom Milestone
-            </button>
-          </div>
-          <MilestoneResults events={events} locale={locale} originalDate={originalDate} />
-        </>
-      )}
+      <MilestoneResults events={events || []} locale={locale} originalDate={originalDate} />
 
       {/* BookmarkModal */}
       {user && originalDate && (
-        <BookmarkModal
-          isOpen={bookmarkModalOpen}
-          onClose={() => setBookmarkModalOpen(false)}
-          onSuccess={handleBookmarkSuccess}
-          inputDate={originalDate}
-          userEmail={user.email || ""}
-        />
+        <BookmarkModal isOpen={bookmarkModalOpen} onClose={() => setBookmarkModalOpen(false)} onSuccess={handleBookmarkSuccess} inputDate={originalDate} userEmail={user.email || ""} />
       )}
 
       {/* CustomMilestoneModal */}
       <CustomMilestoneModal
         isOpen={customMilestoneModalOpen}
         onClose={() => setCustomMilestoneModalOpen(false)}
-        onSubmit={handleCustomMilestoneSubmit}
+        onUpdateCustomMilestones={handleCustomMilestoneSubmit}
         existingCustomMilestones={customMilestones}
         hasTimeInput={hasTimeInput}
         originalDate={originalDate}
