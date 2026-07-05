@@ -415,11 +415,11 @@ CustomMilestoneModal (NEW)
 
 | Phase | Status | Commits | Notes |
 |-------|--------|---------|-------|
-| Phase 1: Custom Milestone State & Type | ✅ completed | c29892d | React state + TypeScript interface. Build passing. Lint warning expected (customMilestones dep used in Phase 3). |
-| Phase 2: Add Custom Milestone Modal | ✅ completed | 6141fa9 | Modal + validation + button. Units filtered by hasTimeInput. Toast notifications. Build passing. |
-| Phase 3: Merge Custom Milestones in Calculation | pending | | Update CardBase, Milestone class |
-| Phase 4: Visual Distinction & Remove Button | pending | | Badge + remove functionality |
-| Phase 5: Unit Compatibility Validation | pending | | Filter units by input type |
+| Phase 1: Custom Milestone State & Type | ✅ completed | c29892d | React state + TypeScript interface. Build passing. |
+| Phase 2: Add Custom Milestone Modal | ✅ completed | 6141fa9, 46a974f | Modal + validation + button. Units filtered by hasTimeInput. Human lifetime validation. Build passing. |
+| Phase 3: Merge Custom Milestones in Calculation | ✅ completed | 534790f | Extended Milestone class, CardBase merge logic, DateCard/DateTimeCard integration. |
+| Phase 4: Visual Distinction & Remove Button | ✅ completed | f71ea40 | Custom badge, modal-based management, "Reset Custom Milestones" button, UX polish. |
+| Phase 5: Unit Compatibility Validation | ✅ completed | 6141fa9 | Unit filtering by hasTimeInput implemented in Phase 2, helper text added. |
 
 ## Risk Assessment
 
