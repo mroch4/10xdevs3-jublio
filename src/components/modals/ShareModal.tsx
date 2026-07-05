@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 
 import { SocialProvider } from "../../utils/enums/SocialProvider";
 import type { FormEvent } from "react";
-import { MAX_SHARE_TEXT_LENGTH } from "../../utils/constants";
+import { MAX_SHARE_TEXT_LENGTH, ATTRIBUTION_URL } from "../../utils/constants";
 import Milestone from "../../utils/classes/Milestone";
 import { Temporal } from "@js-temporal/polyfill";
 import { useEscapeKey } from "../../hooks/useEscapeKey";
@@ -58,14 +58,15 @@ export default function ShareModal({ isOpen, onClose, event, onShare, originalDa
     label.trim() || "[your label]",
     " (",
     formattedOriginalDate,
-    ") - Calculated with Jublio at https://jublio.pl",
+    ") - Calculated with Jublio at ",
+    ATTRIBUTION_URL,
   ];
 
   const previewText = textParts.join("");
   const currentTextLength = textParts.reduce((sum, part) => sum + part.length, 0);
 
   // Calculate max label length to ensure total text ≤ 280 chars
-  const fixedParts = ["Today's ", event.label, " since ", " (", formattedOriginalDate, ") - Calculated with Jublio at https://jublio.pl"];
+  const fixedParts = ["Today's ", event.label, " since ", " (", formattedOriginalDate, ") - Calculated with Jublio at ", ATTRIBUTION_URL];
   const fixedPartLength = fixedParts.reduce((sum, part) => sum + part.length, 0);
   const maxLabelLength = Math.max(1, MAX_SHARE_TEXT_LENGTH - fixedPartLength);
 
