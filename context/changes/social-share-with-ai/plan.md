@@ -525,10 +525,10 @@ Not applicable - new feature with no data migration.
 
 #### Automated
 
-- [x] 3.1 Type checking passes: `npm run build` (includes TypeScript compilation)
-- [x] 3.2 Linting passes: `npm run lint`
-- [x] 3.3 Build succeeds: `npm run build`
-- [x] 3.4 Component imports correctly: `ShareModal`, `SocialProvider`, `generateShareUrl`
+- [x] 3.1 Type checking passes: `npm run build` (includes TypeScript compilation) — 0fd0fab
+- [x] 3.2 Linting passes: `npm run lint` — 0fd0fab
+- [x] 3.3 Build succeeds: `npm run build` — 0fd0fab
+- [x] 3.4 Component imports correctly: `ShareModal`, `SocialProvider`, `generateShareUrl` — 0fd0fab
 
 #### Manual
 
