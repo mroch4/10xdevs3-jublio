@@ -8,6 +8,7 @@ import { MIN_CUSTOM_MILESTONE_VALUE, MAX_CUSTOM_MILESTONE_VALUE } from "../../ut
 import { useEscapeKey } from "../../hooks/useEscapeKey";
 import { useFocusTrap } from "../../hooks/useFocusTrap";
 import type { CustomMilestone } from "../../types/CustomMilestone";
+import { validateCustomMilestoneValue } from "../../utils/customMilestoneValidation";
 
 interface CustomMilestoneModalProps {
   isOpen: boolean;
@@ -111,82 +112,16 @@ export function CustomMilestoneModal({
   };
 
   const validateValue = (val: string): boolean => {
-    setValidationError(null);
-    setIsValueError(false);
+    const result = validateCustomMilestoneValue(
+      val,
+      Array.from(selectedUnits),
+      originalDate
+    );
 
-    // Check if value is empty
-    if (val.trim().length === 0) {
-      return true; // Don't show error for empty value
-    }
+    setValidationError(result.error);
+    setIsValueError(!result.isValid);
 
-    // Parse as integer
-    const numValue = parseInt(val, 10);
-
-    // Check if valid number
-    if (isNaN(numValue)) {
-      setValidationError("Value must be a valid number");
-      setIsValueError(true);
-      return false;
-    }
-
-    // Check if integer (no decimals)
-    if (val.includes(".")) {
-      setValidationError("Value must be a whole number");
-      setIsValueError(true);
-      return false;
-    }
-
-    // Check minimum
-    if (numValue < MIN_CUSTOM_MILESTONE_VALUE) {
-      setValidationError(`Value must be at least ${MIN_CUSTOM_MILESTONE_VALUE}`);
-      setIsValueError(true);
-      return false;
-    }
-
-    // Check maximum
-    if (numValue > MAX_CUSTOM_MILESTONE_VALUE) {
-      setValidationError(`Value must be ${MAX_CUSTOM_MILESTONE_VALUE.toLocaleString()} or less`);
-      setIsValueError(true);
-      return false;
-    }
-
-    // Only validate units if we have a valid value
-    if (selectedUnits.size === 0) {
-      return true; // Don't show unit error during value input
-    }
-
-    // Check human lifetime limits for each selected unit (skip duplicate check since we're managing the full set)
-    for (const selectedUnit of selectedUnits) {
-      // Check if milestone exceeds 75-year life expectancy limit
-      if (originalDate) {
-        try {
-          let milestoneDate: Temporal.PlainDate | Temporal.PlainDateTime;
-
-          if (originalDate instanceof Temporal.PlainDateTime) {
-            milestoneDate = originalDate.add({ [selectedUnit]: numValue });
-          } else {
-            milestoneDate = originalDate.add({ [selectedUnit]: numValue });
-          }
-
-          const now = Temporal.Now.plainDateTimeISO();
-          const limit = now.add({ years: 75 });
-          const exceeds = Temporal.PlainDate.compare(milestoneDate, limit) > 0;
-
-          if (exceeds) {
-            setValidationError(`Milestone would exceed human lifetime (${numValue.toLocaleString()} ${selectedUnit} is too far in the future)`);
-            setIsValueError(true);
-            return false;
-          }
-        } catch {
-          // If calculation fails (e.g., invalid date arithmetic), show error
-          setValidationError(`Invalid combination: ${numValue.toLocaleString()} ${selectedUnit}`);
-          setIsValueError(true);
-          return false;
-        }
-      }
-    }
-
-    return true;
+    return result.isValid;
   };
 
   const handleSubmit = (e: FormEvent) => {

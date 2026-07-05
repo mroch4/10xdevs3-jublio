@@ -69,7 +69,7 @@ Phases are ordered by **risk coverage** (R1–R7) and **test layer efficiency** 
 | Phase 3 | Calendar export format validation (integration) | R3 | Medium | High | `test-phase-3-calendar` | not started |
 | Phase 4 | Anonymous access & auth gating (e2e smoke) | R4, R7 | Low | Medium | `test-phase-4-auth-flow` | not started |
 | Phase 5 | Social share text & clipboard (integration) | R5 | Low | Medium | `test-phase-5-social-share` | not started |
-| Phase 6 | Custom milestone validation (unit) | R6 | Low | Medium | `test-phase-6-custom-values` | not started |
+| Phase 6 | Custom milestone validation (unit) | R6 | Low | Medium | `test-phase-6-custom-values` | complete |
 
 **Rollout sequencing rationale:**
 - **Phase 1 first:** R1 (calculation accuracy) is highest-impact and cheapest to test (pure date math, no UI/network/auth). Unblocks all downstream phases.
@@ -222,6 +222,15 @@ describe("DateCard", () => {
 - **Use `.toString()`** for human-readable assertions (e.g., `"2022-11-25"`)
 - **Access `card.events` property** (not `card.getEvents()`) — events are pre-generated in constructor with custom milestones
 - **Test edge cases, not happy-path** — basic calculations already work (verified in S-01)
+
+**Custom validation testing pattern** (see [`customMilestoneValidation.test.ts`](../../../src/utils/__tests__/customMilestoneValidation.test.ts)):
+- **Extract validation logic to pure utility** before testing (avoid React component dependencies)
+- **Test value-only rules first** (no context dependencies: min/max, integer, non-negative)
+- **Then test context-dependent rules** (life expectancy, Temporal overflow) with fixture dates
+- **Verify error messages match UI strings** (enables refactoring without breaking tests)
+- **Test boundary values explicitly** (e.g., 1, 1000000000, 1000000001)
+- **Use deterministic fixtures** (e.g., `Temporal.PlainDate.from("2020-01-01")` instead of `Temporal.Now`)
+- **Group tests by validation category** (value-only, life expectancy, edge cases) for clarity
 
 
 ### Integration tests (components with mocked Firestore/Auth)
