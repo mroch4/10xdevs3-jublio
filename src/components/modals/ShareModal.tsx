@@ -3,6 +3,7 @@ import "./ShareModal.css";
 import { useCallback, useState } from "react";
 
 import { SocialProvider } from "../../utils/enums/SocialProvider";
+import { EventCategory } from "../../utils/enums/EventCategory";
 import type { FormEvent } from "react";
 import { MAX_SHARE_TEXT_LENGTH, ATTRIBUTION_URL } from "../../utils/constants";
 import Milestone from "../../utils/classes/Milestone";
@@ -49,24 +50,30 @@ export default function ShareModal({ isOpen, onClose, event, onShare, originalDa
 
   const formattedOriginalDate = originalDate ? originalDate.toLocaleString(locale) : "";
 
-  // Determine the context phrase based on whether originalDate is today
-  let contextPhrase = "Today's";
-  if (originalDate) {
-    const today = Temporal.Now.plainDateISO();
-    const dateToCompare = 'toPlainDate' in originalDate 
-      ? originalDate.toPlainDate() 
-      : originalDate;
+  // Determine the context phrase based on milestone category
+  let contextPhrase: string;
 
-    if (Temporal.PlainDate.compare(dateToCompare, today) === 0) {
-      // It's today
-      contextPhrase = "Today's";
-    } else if (Temporal.PlainDate.compare(dateToCompare, today) > 0) {
-      // Future date
-      contextPhrase = "On that day,";
-    } else {
-      // Past date
-      contextPhrase = "On that day, it was";
-    }
+  switch (event.category) {
+    case EventCategory.Today:
+      contextPhrase = "Today's exactly";
+      break;
+    case EventCategory.ThisWeek:
+    case EventCategory.NextWeek:
+    case EventCategory.ThisMonth:
+    case EventCategory.NextMonth:
+    case EventCategory.ThisYear:
+    case EventCategory.NextYear:
+    case EventCategory.Further:
+    case EventCategory.BeyondHumanLifeExpectancy:
+      // Use the milestone's actual date for future events
+      contextPhrase = `On ${event.dateString}, it will be exactly`;
+      break;
+    case EventCategory.AlreadyPassed:
+      // Use the milestone's actual date for past events
+      contextPhrase = `On ${event.dateString}, it was exactly`;
+      break;
+    default:
+      contextPhrase = "Today's exactly";
   }
 
   // Build share text from parts - always include date in brackets for reference

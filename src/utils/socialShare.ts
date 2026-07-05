@@ -1,4 +1,5 @@
 import { SocialProvider } from "./enums/SocialProvider";
+import { EventCategory } from "./enums/EventCategory";
 import Milestone from "./classes/Milestone";
 import { Temporal } from "@js-temporal/polyfill";
 import { ATTRIBUTION_URL } from "./constants";
@@ -23,24 +24,30 @@ export function generateShareUrl(
   // Build share text
   const formattedOriginalDate = originalDate ? originalDate.toLocaleString(locale) : "";
 
-  // Determine the context phrase based on whether originalDate is today
-  let contextPhrase = "Today's";
-  if (originalDate) {
-    const today = Temporal.Now.plainDateISO();
-    const dateToCompare = 'toPlainDate' in originalDate 
-      ? originalDate.toPlainDate() 
-      : originalDate;
+  // Determine the context phrase based on milestone category
+  let contextPhrase: string;
 
-    if (Temporal.PlainDate.compare(dateToCompare, today) === 0) {
-      // It's today
-      contextPhrase = "Today's";
-    } else if (Temporal.PlainDate.compare(dateToCompare, today) > 0) {
-      // Future date
-      contextPhrase = "On that day,";
-    } else {
-      // Past date
-      contextPhrase = "On that day, it was";
-    }
+  switch (milestone.category) {
+    case EventCategory.Today:
+      contextPhrase = "Today's exactly";
+      break;
+    case EventCategory.ThisWeek:
+    case EventCategory.NextWeek:
+    case EventCategory.ThisMonth:
+    case EventCategory.NextMonth:
+    case EventCategory.ThisYear:
+    case EventCategory.NextYear:
+    case EventCategory.Further:
+    case EventCategory.BeyondHumanLifeExpectancy:
+      // Use the milestone's actual date for future events
+      contextPhrase = `On ${milestone.dateString}, it will be exactly`;
+      break;
+    case EventCategory.AlreadyPassed:
+      // Use the milestone's actual date for past events
+      contextPhrase = `On ${milestone.dateString}, it was exactly`;
+      break;
+    default:
+      contextPhrase = "Today's exactly";
   }
 
   const shareText = `${contextPhrase} ${milestone.label} since ${label.trim()} (${formattedOriginalDate}) - Calculated with Jublio at ${ATTRIBUTION_URL}`;
