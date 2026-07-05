@@ -11,3 +11,7 @@ export const COLLECTIONS = {
   MILESTONES: "milestones",
   BOOKMARKS: "bookmarks",
 } as const;
+
+// Social sharing constants
+export const MAX_SHARE_TEXT_LENGTH = 280; // Twitter/LinkedIn limit
+export const ATTRIBUTION_URL = "https://jublio.pl";
