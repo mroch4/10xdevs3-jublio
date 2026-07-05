@@ -122,6 +122,13 @@ export default function ShareModal({ isOpen, onClose, event, onShare, originalDa
                   </div>
                 </div>
 
+                <div className="alert alert-info py-2 px-3 mb-3" role="note">
+                  <small>
+                    <strong>Note:</strong> WhatsApp, X (Twitter), and SMS will pre-fill the text. 
+                    For Facebook, Messenger, and LinkedIn, the text will be copied to your clipboard — just paste it after clicking!
+                  </small>
+                </div>
+
                 <div className="provider-buttons" role="group" aria-label="Social sharing providers">
                   <button
                     type="button"

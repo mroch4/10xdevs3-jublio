@@ -115,6 +115,18 @@ export default function MilestoneResults({ events, locale, originalDate }: Miles
         return;
       }
 
+      // Providers that need clipboard support (don't support pre-filled text)
+      const clipboardProviders = [SocialProvider.Facebook, SocialProvider.Messenger, SocialProvider.LinkedIn];
+      const needsClipboard = clipboardProviders.includes(provider);
+
+      // Copy text to clipboard for Facebook, Messenger, LinkedIn
+      if (needsClipboard) {
+        const shareText = generateShareUrl(selectedShareEvent, label, SocialProvider.Copy, originalDate, locale);
+        navigator.clipboard.writeText(shareText).catch((err) => {
+          console.error("Failed to copy to clipboard:", err);
+        });
+      }
+
       // Handle URL-based providers (Facebook, Twitter, WhatsApp, SMS, Messenger, LinkedIn)
       const url = generateShareUrl(selectedShareEvent, label, provider, originalDate, locale);
       const newWindow = window.open(url, "_blank", "noopener,noreferrer");
