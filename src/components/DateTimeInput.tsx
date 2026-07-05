@@ -99,12 +99,11 @@ export default function DateTimeInput({ onCalculate, onReset, onSetToNow, onPinC
     }
   };
 
-  const handlePinDate = () => {
-    if (!user) {
-      setShowAuthModal(true);
-      return;
-    }
+  const handleSignInClick = () => {
+    setShowAuthModal(true);
+  };
 
+  const handleBookmarkDate = () => {
     // Validate date/time before opening modal
     setError("");
     const validation = validateDateTime(dateValue, timeValue);
@@ -166,9 +165,15 @@ export default function DateTimeInput({ onCalculate, onReset, onSetToNow, onPinC
             </div>
 
             <div className="d-flex gap-2">
-              <button type="button" className={`btn ${user ? "btn-outline-secondary" : "btn-primary"}`} onClick={handlePinDate} disabled={!dateValue.trim()}>
-                {user ? "🔖 Bookmark Date" : "Sign In to Bookmark"}
-              </button>
+              {user ? (
+                <button type="button" className="btn btn-outline-secondary" onClick={handleBookmarkDate} disabled={!dateValue.trim()}>
+                  🔖 Bookmark Date
+                </button>
+              ) : (
+                <button type="button" className="btn btn-primary" onClick={handleSignInClick}>
+                  Sign In to Bookmark
+                </button>
+              )}
               {onCustomMilestonesClick && (
                 <button type="button" className="btn btn-outline-secondary" onClick={onCustomMilestonesClick} disabled={!hasCalculation} title={!hasCalculation ? "Calculate milestones first" : ""}>
                   ⚙️ Custom
