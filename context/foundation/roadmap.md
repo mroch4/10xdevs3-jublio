@@ -196,9 +196,9 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Prerequisites:** S-02 (portfolio to store custom values on), F-02 (Firestore schema to persist custom milestones)
 - **Parallel with:** —
 - **Blockers:** —
-- **Status:** 🟢 ready (S-02 complete as of 2026-07-05)
-- **Design decision:** Per-date custom values (each bookmarked date has its own custom milestones)
-- **Next steps:** Ready for `/10x-plan` — all prerequisites met
+- **Status:** ✅ done (archived 2026-07-05)
+- **Design decision:** Session-only state (React state, not Firebase) — proves feature value before adding persistence
+- **Implementation:** 5-phase incremental delivery with human lifetime validation (75-year limit), dynamic unit filtering, and auto-recalculation
 
 ## Backlog Handoff
 
