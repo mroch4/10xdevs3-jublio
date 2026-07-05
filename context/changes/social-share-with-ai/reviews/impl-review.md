@@ -42,7 +42,7 @@ Both expansions were user-tested and approved. No critical or breaking issues fo
   - Tradeoff: None - pure addition, no breaking changes.
   - Confidence: HIGH — improves UX significantly, all tests pass.
   - Blind spot: None significant.
-- **Decision**: PENDING
+- **Decision**: ACCEPTED-AS-RULE (Lesson: "Expect UX improvements during implementation")
 
 ### F2 — Auto-copy for Facebook/Messenger/LinkedIn not in plan
 
@@ -56,7 +56,7 @@ Both expansions were user-tested and approved. No critical or breaking issues fo
   - Tradeoff: None - improves UX, no breaking changes.
   - Confidence: HIGH — tested and approved by user.
   - Blind spot: None significant.
-- **Decision**: PENDING
+- **Decision**: ACCEPTED-AS-RULE (Lesson: "Expect UX improvements during implementation")
 
 ### F3 — Multiple refinement commits after initial implementation
 
