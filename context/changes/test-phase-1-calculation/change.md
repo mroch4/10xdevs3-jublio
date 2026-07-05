@@ -2,8 +2,8 @@
 change_id: test-phase-1-calculation
 phase: 1
 status: complete
-created: 2026-01-15
-completed: 2026-01-15
+created: 2026-07-05
+completed: 2026-07-05
 test_plan_section: "§2 Phase 1"
 risk_coverage: R1
 ---
