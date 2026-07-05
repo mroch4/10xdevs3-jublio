@@ -13,6 +13,7 @@ interface DateTimeInputProps {
   onSetToNow?: () => void;
   onPinClick?: (date: Temporal.PlainDate, time?: Temporal.PlainTime) => void;
   onCustomMilestonesClick?: () => void;
+  onValidationError?: () => void;
   autofillDate?: string | null;
   autofillTime?: string | null;
   hasCalculation?: boolean;
@@ -27,7 +28,7 @@ const getCurrentDateTime = () => {
   };
 };
 
-export default function DateTimeInput({ onCalculate, onReset, onSetToNow, onPinClick, onCustomMilestonesClick, autofillDate, autofillTime, hasCalculation }: DateTimeInputProps) {
+export default function DateTimeInput({ onCalculate, onReset, onSetToNow, onPinClick, onCustomMilestonesClick, onValidationError, autofillDate, autofillTime, hasCalculation }: DateTimeInputProps) {
   const { user } = useAuth();
   const [dateValue, setDateValue] = useState<string>(() => getCurrentDateTime().date);
   const [timeValue, setTimeValue] = useState<string>(() => getCurrentDateTime().time);
@@ -53,8 +54,11 @@ export default function DateTimeInput({ onCalculate, onReset, onSetToNow, onPinC
       onCalculate(validation.date, validation.time);
     } else {
       setError(validation.error || "Invalid date/time");
+      if (onValidationError) {
+        onValidationError();
+      }
     }
-  }, [dateValue, timeValue, onCalculate]);
+  }, [dateValue, timeValue, onCalculate, onValidationError]);
 
   // Handle autofill from portfolio using scheduled state update
   useEffect(() => {
@@ -151,32 +155,26 @@ export default function DateTimeInput({ onCalculate, onReset, onSetToNow, onPinC
 
         {/* Buttons */}
         <div className="col-12">
-          <div className="flex-center flex-wrap gap-2">
-            <button type="button" className="btn btn-primary" onClick={handleSetToNow}>
-              Now
-            </button>
-            <button type="button" className="btn btn-danger" onClick={handleReset}>
-              Reset
-            </button>
-            <button 
-              type="button" 
-              className={`btn ${user ? "btn-warning" : "btn-outline-primary"}`} 
-              onClick={handlePinDate}
-              disabled={!dateValue.trim()}
-            >
-              {user ? "🔖 Bookmark Date" : "Sign In to Bookmark"}
-            </button>
-            {onCustomMilestonesClick && (
-              <button 
-                type="button" 
-                className="btn btn-outline-secondary" 
-                onClick={onCustomMilestonesClick}
-                disabled={!hasCalculation}
-                title={!hasCalculation ? "Calculate milestones first" : ""}
-              >
-                ⚙️ Custom
+          <div className="d-flex justify-content-between flex-wrap gap-2">
+            <div className="d-flex gap-2">
+              <button type="button" className="btn btn-primary" onClick={handleSetToNow}>
+                Now
               </button>
-            )}
+              <button type="button" className="btn btn-danger" onClick={handleReset}>
+                Reset
+              </button>
+            </div>
+
+            <div className="d-flex gap-2">
+              <button type="button" className={`btn ${user ? "btn-outline-secondary" : "btn-primary"}`} onClick={handlePinDate} disabled={!dateValue.trim()}>
+                {user ? "🔖 Bookmark Date" : "Sign In to Bookmark"}
+              </button>
+              {onCustomMilestonesClick && (
+                <button type="button" className="btn btn-outline-secondary" onClick={onCustomMilestonesClick} disabled={!hasCalculation} title={!hasCalculation ? "Calculate milestones first" : ""}>
+                  ⚙️ Custom
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>

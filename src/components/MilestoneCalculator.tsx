@@ -163,6 +163,11 @@ export default function MilestoneCalculator({ onSwitchToBookmarks, autofillDate,
     setToastMessage(null);
   };
 
+  const handleValidationError = () => {
+    setEvents(null);
+    setOriginalDate(null);
+  };
+
   return (
     <div>
       <div className="mb-4">
@@ -172,6 +177,7 @@ export default function MilestoneCalculator({ onSwitchToBookmarks, autofillDate,
           onSetToNow={handleSetToNow}
           onPinClick={handlePinClick} 
           onCustomMilestonesClick={() => setCustomMilestoneModalOpen(true)}
+          onValidationError={handleValidationError}
           autofillDate={inputDateStr} 
           autofillTime={inputTimeStr}
           hasCalculation={!!originalDate}
