@@ -68,7 +68,7 @@ Phases are ordered by **risk coverage** (R1–R7) and **test layer efficiency** 
 | Phase 2 | Bookmark edit & sync (integration) | R2 | Medium | High | `test-phase-2-bookmarks` | not started |
 | Phase 3 | Calendar export format validation (integration) | R3 | Medium | High | `test-phase-3-calendar` | not started |
 | Phase 4 | Anonymous access & auth gating (e2e smoke) | R4, R7 | Low | Medium | `test-phase-4-auth-flow` | not started |
-| Phase 5 | Social share text & clipboard (integration) | R5 | Low | Medium | `test-phase-5-social-share` | not started |
+| Phase 5 | Social share text & clipboard (integration) | R5 | Low | Medium | `test-phase-5-social-share` | complete |
 | Phase 6 | Custom milestone validation (unit) | R6 | Low | Medium | `test-phase-6-custom-values` | complete |
 
 **Rollout sequencing rationale:**
@@ -231,6 +231,15 @@ describe("DateCard", () => {
 - **Test boundary values explicitly** (e.g., 1, 1000000000, 1000000001)
 - **Use deterministic fixtures** (e.g., `Temporal.PlainDate.from("2020-01-01")` instead of `Temporal.Now`)
 - **Group tests by validation category** (value-only, life expectancy, edge cases) for clarity
+
+**Social share text generation testing pattern** (see [`socialShare.test.ts`](../../../src/utils/__tests__/socialShare.test.ts)):
+- **Test pure text generation function** (no React components, no browser APIs)
+- **Test all provider URL formats** (WhatsApp, Twitter, SMS, Facebook, Messenger, LinkedIn, Copy)
+- **Verify context-aware text** (Today, future, past milestone categories produce different phrases)
+- **Test character encoding** (special characters, emoji encoded in URLs; Copy provider returns plain text)
+- **Use enum values explicitly** (test all `SocialProvider` values to avoid missing providers)
+- **Test locale formatting** (use real locale strings like `"en-US"`, `"pl-PL"` to validate Temporal behavior)
+- **Verify attribution URL** (always present in generated text/URLs)
 
 
 ### Integration tests (components with mocked Firestore/Auth)
