@@ -485,27 +485,27 @@ Not applicable - new feature with no data migration.
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `npm run build` (includes TypeScript compilation)
-- [x] 1.2 Linting passes: `npm run lint`
-- [x] 1.3 File structure matches pattern: `src/utils/enums/SocialProvider.ts` exists with enum export
-- [x] 1.4 Constants file updated: `MAX_SHARE_TEXT_LENGTH` and `ATTRIBUTION_URL` added to `src/utils/constants.ts`
-- [x] 1.5 Utility file created: `src/utils/socialShare.ts` exports `generateShareUrl` function
+- [x] 1.1 Type checking passes: `npm run build` (includes TypeScript compilation) — e9e5e5c
+- [x] 1.2 Linting passes: `npm run lint` — e9e5e5c
+- [x] 1.3 File structure matches pattern: `src/utils/enums/SocialProvider.ts` exists with enum export — e9e5e5c
+- [x] 1.4 Constants file updated: `MAX_SHARE_TEXT_LENGTH` and `ATTRIBUTION_URL` added to `src/utils/constants.ts` — e9e5e5c
+- [x] 1.5 Utility file created: `src/utils/socialShare.ts` exports `generateShareUrl` function — e9e5e5c
 
 #### Manual
 
-- [x] 1.6 Import `SocialProvider` enum in new file → no TypeScript errors
-- [x] 1.7 Import constants from `constants.ts` → values correct
-- [x] 1.8 Call `generateShareUrl()` with test data → returns valid URL for each provider
+- [x] 1.6 Import `SocialProvider` enum in new file → no TypeScript errors — e9e5e5c
+- [x] 1.7 Import constants from `constants.ts` → values correct — e9e5e5c
+- [x] 1.8 Call `generateShareUrl()` with test data → returns valid URL for each provider — e9e5e5c
 - [~] 1.9 Copy URL to browser → platform opens with pre-filled text (skipped - will test during Phase 3 integration)
 
 ### Phase 2: ShareModal Component
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npm run typecheck`
-- [ ] 2.2 Linting passes: `npm run lint`
-- [ ] 2.3 Component imports correctly: `useEscapeKey`, `useFocusTrap`, `SocialProvider`, `Milestone`, `Temporal`
-- [ ] 2.4 CSS file exists: `src/components/modals/ShareModal.css`
+- [x] 2.1 Type checking passes: `npm run build` (includes TypeScript compilation)
+- [x] 2.2 Linting passes: `npm run lint`
+- [x] 2.3 Component imports correctly: `useEscapeKey`, `useFocusTrap`, `SocialProvider`, `Milestone`, `Temporal`
+- [x] 2.4 CSS file exists: `src/components/modals/ShareModal.css`
 
 #### Manual
 

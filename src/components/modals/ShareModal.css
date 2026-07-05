@@ -1,0 +1,19 @@
+.preview-box {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  padding: 1rem;
+}
+
+.preview-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #212529;
+  margin-top: 0.5rem;
+}
+
+.provider-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
