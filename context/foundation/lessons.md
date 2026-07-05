@@ -124,3 +124,16 @@
 - **Benefit**: Prevents no-op updates, clearer user feedback, reduced Firestore writes
 - **Applies to**: implement, impl-review
 
+## Expect UX improvements and platform constraints during implementation
+
+- **Context**: Implementation of user-facing features (social sharing, calendar export, modals, any feature with platform integrations or user interaction flows).
+- **Problem**: Plans can't anticipate every UX detail or platform limitation. Rigid adherence to original plan can prevent quality improvements discovered during implementation. Examples from S-04: context-aware share text (Today's/Future/Past tense based on milestone category), auto-copy workaround for platforms without pre-fill API support (Facebook/LinkedIn/Messenger). Both significantly improved UX but weren't in the original plan.
+- **Rule**: 
+  - **During implementation**: Expect to discover UX improvements and platform constraints not in the original plan
+  - **Document discoveries**: Add as addenda in the plan under "Scope Expansion" or "What We Changed" section (pattern established in this repo - see social-share-with-ai plan header)
+  - **User-test discoveries**: Test each improvement before committing (never assume better UX without validation)
+  - **Update plan before review**: So impl-review compares against current source of truth, not stale plan
+  - **In impl-review**: Don't treat post-plan improvements as violations if they're user-tested and documented - they're expected in iterative development
+  - **When to add addendum**: When the change improves UX, solves a real user problem, or works around discovered platform limitations (not for bug fixes or typos)
+- **Applies to**: implement, impl-review
+
