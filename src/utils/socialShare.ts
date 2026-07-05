@@ -22,7 +22,28 @@ export function generateShareUrl(
 ): string {
   // Build share text
   const formattedOriginalDate = originalDate ? originalDate.toLocaleString(locale) : "";
-  const shareText = `Today's ${milestone.label} since ${label.trim()} (${formattedOriginalDate}) - Calculated with Jublio at ${ATTRIBUTION_URL}`;
+
+  // Determine the context phrase based on whether originalDate is today
+  let contextPhrase = "Today's";
+  if (originalDate) {
+    const today = Temporal.Now.plainDateISO();
+    const dateToCompare = 'toPlainDate' in originalDate 
+      ? originalDate.toPlainDate() 
+      : originalDate;
+
+    if (!Temporal.PlainDate.compare(dateToCompare, today)) {
+      // It's today
+      contextPhrase = "Today's";
+    } else if (Temporal.PlainDate.compare(dateToCompare, today) > 0) {
+      // Future date
+      contextPhrase = `On ${formattedOriginalDate},`;
+    } else {
+      // Past date
+      contextPhrase = `On ${formattedOriginalDate}, it was`;
+    }
+  }
+
+  const shareText = `${contextPhrase} ${milestone.label} since ${label.trim()} - Calculated with Jublio at ${ATTRIBUTION_URL}`;
 
   // Encode for URL usage
   const encodedText = encodeURIComponent(shareText);

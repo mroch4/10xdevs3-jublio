@@ -49,16 +49,34 @@ export default function ShareModal({ isOpen, onClose, event, onShare, originalDa
 
   const formattedOriginalDate = originalDate ? originalDate.toLocaleString(locale) : "";
 
+  // Determine the context phrase based on whether originalDate is today
+  let contextPhrase = "Today's";
+  if (originalDate) {
+    const today = Temporal.Now.plainDateISO();
+    const dateToCompare = 'toPlainDate' in originalDate 
+      ? originalDate.toPlainDate() 
+      : originalDate;
+
+    if (!Temporal.PlainDate.compare(dateToCompare, today)) {
+      // It's today
+      contextPhrase = "Today's";
+    } else if (Temporal.PlainDate.compare(dateToCompare, today) > 0) {
+      // Future date
+      contextPhrase = `On ${formattedOriginalDate},`;
+    } else {
+      // Past date
+      contextPhrase = `On ${formattedOriginalDate}, it was`;
+    }
+  }
+
   // Build share text from parts
-  // Format: "Today's [milestone.label] since [user label] ([formattedOriginalDate]) - Calculated with Jublio at https://jublio.pl"
   const textParts = [
-    "Today's ",
+    contextPhrase,
+    " ",
     event.label,
     " since ",
     label.trim() || "[your label]",
-    " (",
-    formattedOriginalDate,
-    ") - Calculated with Jublio at ",
+    " - Calculated with Jublio at ",
     ATTRIBUTION_URL,
   ];
 
@@ -66,7 +84,7 @@ export default function ShareModal({ isOpen, onClose, event, onShare, originalDa
   const currentTextLength = textParts.reduce((sum, part) => sum + part.length, 0);
 
   // Calculate max label length to ensure total text ≤ 280 chars
-  const fixedParts = ["Today's ", event.label, " since ", " (", formattedOriginalDate, ") - Calculated with Jublio at ", ATTRIBUTION_URL];
+  const fixedParts = [contextPhrase, " ", event.label, " since ", " - Calculated with Jublio at ", ATTRIBUTION_URL];
   const fixedPartLength = fixedParts.reduce((sum, part) => sum + part.length, 0);
   const maxLabelLength = Math.max(1, MAX_SHARE_TEXT_LENGTH - fixedPartLength);
 
