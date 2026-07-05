@@ -49,7 +49,7 @@ Users manually calculate milestone anniversaries in weird time units (10,000 day
 | S-01 | calculate-milestones       | calculate milestones for any date (anonymous)    | —                | FR-001 to FR-006 | done     |
 | S-02 | bookmark-and-manage        | bookmark dates and manage persistent portfolio   | F-01, F-02, S-01 | FR-010 to FR-014 | done     |
 | S-03 | export-to-calendar         | export a milestone to Google/Apple/Outlook       | S-01             | FR-015 to FR-018 | done     |
-| S-04 | social-share-with-ai       | share milestone on social media with AI image    | S-01             | FR-019 to FR-021 | blocked  |
+| S-04 | social-share-with-ai       | share milestone on social media with AI image    | S-01             | FR-019 to FR-021 | done     |
 | S-05 | custom-milestone-values    | add custom milestone values (e.g., 420, 25,000)  | S-01             | FR-006           | done     |
 
 ## Streams
@@ -182,7 +182,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
   - Image generation latency: NFR says "within 3 seconds" — will chosen model meet SLA? Block: yes (cannot proceed until latency verified in spike).
   - Attribution note format? PRD Open Question #8. Block: no (can iterate post-launch based on share performance).
 - **Risk:** Skills blocker: AI integration is new. Social sharing is growth engine per PRD, but it's blocked on AI decision + latency validation. Recommend: run AI model spike as separate `/10x-frame` before S-04 planning; do NOT plan S-04 until spike lands.
-- **Status:** blocked
+- **Status:** done
 
 ### S-05: Custom milestone values
 
@@ -312,6 +312,25 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Commits:** c29892d, 6141fa9, 46a974f, 534790f, f71ea40, 6ee9706, be58e71
 
 → `context/archive/2026-07-05-custom-milestone-values/`
+
+### S-04: Social share with text-only MVP
+
+- **Change ID:** `social-share-with-ai`
+- **Archived:** 2026-07-05
+- **Outcome:** User can share a milestone on Facebook, Messenger, WhatsApp, X/Twitter, LinkedIn, SMS, or copy to clipboard with context-aware text (today vs. future vs. past) and attribution. Text-only MVP de-scoped AI image generation due to latency/cost constraints. Platforms without pre-fill API support (Facebook/Messenger/LinkedIn) use clipboard auto-copy workaround with explanatory note.
+- **Lesson:** Expect UX improvements and platform constraints during implementation — document as plan addenda, user-test, update plan before review. Original plan assumed AI image generation; implementation pivoted to text-only MVP for faster delivery. Context-aware share text (based on milestone category) and auto-copy workaround for limited platforms were discovered during implementation and improved UX significantly.
+- **Implementation notes:**
+  - SocialProvider enum, shared constants (MAX_SHARE_TEXT_LENGTH, ATTRIBUTION_URL)
+  - generateShareUrl() utility with provider-specific URL formats
+  - ShareModal component mirrors CalendarExportModal pattern (label input, live preview, character counter, provider buttons, ESC/focus trap)
+  - Context-aware copy: "Today's exactly..." / "On [date], it will be exactly..." / "On [date], it was exactly..."
+  - Clipboard API for Copy provider and auto-copy workaround for Facebook/Messenger/LinkedIn
+  - Modal note explaining paste-after-click for limited platforms
+  - Toast notifications for success/popup-blocker detection
+- **Testing:** Manual testing verified all providers, context-aware text, clipboard behavior, keyboard accessibility, and no regressions
+- **Commits:** e9e5e5c, 7bee106, 0fd0fab, bf51bba, 7612296, 049e7ce, 6f8afc1, 0516ab8, e6e4806
+
+→ `context/archive/2026-07-05-social-share-with-ai/`
 
 ---
 
