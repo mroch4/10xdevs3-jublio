@@ -17,16 +17,20 @@ top_blocker: none
 
 ## 📊 Status Summary (Updated 2026-07-05)
 
-**Progress:** 6 of 7 items complete (86%)
+**Progress:** 7 of 7 items complete (100%) — ALL ROADMAP V2 ITEMS DONE! 🎉
 
 - ✅ **Foundations complete** — Auth (F-01) + Firestore schema (F-02) both done
 - ✅ **Core calculation** — Milestone calculation with Temporal API (S-01) done
 - ✅ **Calendar export** — Google/Outlook/Apple export (S-03) done
 - ✅ **North Star COMPLETE** — S-02 (bookmark & portfolio) done 2026-07-05
 - ✅ **Custom values COMPLETE** — S-05 (custom milestone values) done 2026-07-05
-- 🔴 **1 blocker** — S-04 (social share) needs AI model decision
+- ✅ **Social share MVP COMPLETE** — S-04 (text-only social share) done 2026-07-05
+  - Note: Text-only MVP shipped. AI image generation de-scoped to separate future feature.
 
-**Next recommended action:** S-04 blocked on AI model spike. Consider polish/improvements or wait for AI decision.
+**Next recommended action:** All v2 roadmap items complete! Consider:
+1. **AI image feature** — S-04 enhancement: add AI-generated images to social shares (requires AI model spike)
+2. **Polish & improvements** — Address technical debt, performance, accessibility
+3. **Roadmap v3** — Define next wave of features based on user feedback
 
 ## Vision recap
 
@@ -59,8 +63,8 @@ Navigation aid — groups items that share a Prerequisites chain. Canonical orde
 | Stream | Theme                  | Chain                    | Note                                                                     |
 | ------ | ---------------------- | ------------------------ | ------------------------------------------------------------------------ |
 | A      | Foundation & calculate | `F-01` → `F-02` → `S-01` | ✅ COMPLETE — All foundation items done; S-01 calculation ready          |
-| B      | Portfolio core         | `S-02` → `S-05`          | S-02 ✅ done (2026-07-05); S-05 🟢 ready to start                        |
-| C      | Sharing & export       | `S-01` → `S-03` / `S-04` | S-03 ✅ done; S-04 blocked on AI model decision                          |
+| B      | Portfolio core         | `S-02` → `S-05`          | ✅ COMPLETE — S-02 done (2026-07-05); S-05 done (2026-07-05)             |
+| C      | Sharing & export       | `S-01` → `S-03` / `S-04` | ✅ COMPLETE — S-03 done; S-04 text-only MVP done (AI images: future)     |
 
 ## Baseline
 
@@ -205,12 +209,12 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-01       | calculate-milestones       | Implement milestone calculation with Temporal API    | ✅ DONE               | Archived 2026-07-02                                                    |
 | S-02       | bookmark-and-manage        | Bookmark dates, manage portfolio, real-time sync     | ✅ DONE               | Archived 2026-07-05 — North Star feature complete                      |
 | S-03       | export-to-calendar         | Export milestone to Google Calendar / Apple Calendar | ✅ DONE               | Archived 2026-07-03                                                    |
-| S-04       | social-share-with-ai       | Social share with AI-generated image                 | 🔴 NO                 | Blocked: AI model choice + latency validation. Run `/10x-frame` spike  |
+| S-04       | social-share-with-ai       | Social share with text (text-only MVP)               | ✅ DONE               | Archived 2026-07-05 — Text-only MVP complete; AI images: future feature |
 | S-05       | custom-milestone-values    | Custom milestone values (session-only)               | ✅ DONE               | Archived 2026-07-05 — Session-only custom milestones complete          |
 
 ## Open Roadmap Questions
 
-1. **AI model for social share image generation?** — PRD Open Question #1. Block: yes (S-04). Owner: TBD. Constraint: free tier or open-source only. Recommendation: spike 2–3 hours evaluating DALL-E free tier, Stable Diffusion, Hugging Face; pick one; test latency (must be < 3 seconds per NFR). This blocks S-04.
+1. ~~**AI model for social share image generation?**~~ — ✅ RESOLVED: De-scoped from S-04. Text-only MVP shipped 2026-07-05. AI image generation is now a **future enhancement** (separate feature after v2 roadmap complete). When ready: spike 2–3 hours evaluating DALL-E free tier, Stable Diffusion, Hugging Face; pick one; test latency (must be < 3 seconds per NFR).
 
 2. ~~**Calendar deep-link formats for export?**~~ — ✅ RESOLVED in S-03. Google/Outlook use URL deep links; Apple uses `.ics` download. Standard formats implemented and tested.
 
@@ -237,6 +241,30 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Offline-first guarantee** — PRD Non-Functional Non-Goal. Rationale: MVP requires internet (calendar + social + Firestore). Deferred.
 - **Multi-region SLA** — PRD Non-Functional Non-Goal. Rationale: single-region sufficient for MVP scale. Deferred.
 - **Compliance certification** — PRD Non-Functional Non-Goal. Rationale: basic GDPR, no HIPAA/SOC2 needed. Deferred.
+
+## Future Enhancements (Post-v2)
+
+**Roadmap v2 complete (100%)** — All foundation and slice items shipped. Below are identified enhancements for future iterations:
+
+### AI Image Generation for Social Shares
+
+- **Context:** S-04 shipped as text-only MVP (2026-07-05). AI image generation was de-scoped due to latency/cost/model-choice uncertainty.
+- **Opportunity:** Add AI-generated milestone images to social shares (e.g., illustrating "10,000 hours since Wedding") for increased engagement and viral potential.
+- **Prerequisites:** 
+  - AI model spike: evaluate DALL-E free tier, Stable Diffusion, Hugging Face (2–3 hours)
+  - Latency validation: must generate < 3 seconds (NFR-002)
+  - Cost analysis: free tier or open-source only constraint
+- **PRD refs:** FR-019, FR-020, FR-021, US-05 (original S-04 scope)
+- **Priority:** HIGH — Social sharing is growth engine per PRD; AI images significantly boost share appeal
+- **Suggested change ID:** `social-share-ai-images`
+- **Next step:** `/10x-frame` spike to evaluate models before planning
+
+### Other Potential Enhancements
+
+- **Persistent custom milestones** — Upgrade S-05 from session-only to Firebase persistence
+- **Notification system** — Push/email reminders X days before milestone
+- **Share history** — Track which milestones were shared, when, and where
+- **Portfolio analytics** — Upcoming milestones dashboard, celebration frequency insights
 
 ## Done
 
