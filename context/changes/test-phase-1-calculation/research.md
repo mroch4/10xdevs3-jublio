@@ -1,7 +1,7 @@
 ---
 change_id: test-phase-1-calculation
 status: researched
-created: 2026-01-15
+created: 2026-07-05
 ---
 
 # Research: Phase 1 — Milestone Calculation Accuracy (Unit Tests)
