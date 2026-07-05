@@ -173,20 +173,28 @@ Foundations below assume these are present and do NOT re-scaffold them.
   - Commits: 3f0eb32, bdb632f, 8a8f20d, 611acf7, abf4098, 7589152, 6c17e24, 55e17c2
 - **Testing:** ✅ Manual testing completed — all providers (Google, Apple, Outlook) verified, modal preview correct, cross-browser tested
 
-### S-04: Social share with AI image
+### S-04: Social share with text-only MVP
 
-- **Outcome:** user can share a milestone on Facebook, Instagram, Twitter, WhatsApp, or SMS with an AI-generated image (e.g., illustrating "10,000 hours since Wedding") and attribution note ("Calculated with [App] at [URL]") for user acquisition.
+- **Outcome:** user can share a milestone on Facebook, Messenger, WhatsApp, X/Twitter, LinkedIn, SMS, or copy to clipboard with context-aware text and attribution note. Text-only MVP de-scoped AI image generation due to latency/cost/model-choice uncertainty.
 - **Change ID:** `social-share-with-ai`
 - **PRD refs:** FR-019, FR-020, FR-021, US-05
 - **Prerequisites:** S-01 (have a milestone to share)
 - **Parallel with:** —
-- **Blockers:** TBD: which AI model? (Free tier: DALL-E, Stable Diffusion, Hugging Face?) Cost and latency constraints? API key availability?
-- **Unknowns:**
-  - AI model choice: DALL-E free tier, open-source Stable Diffusion, Hugging Face? PRD Open Question #1. Block: yes — image generation cannot start until model is chosen (cost/latency/quality tradeoff). Skills blocker: AI integration unfamiliar; recommend: spike 2–3 hours evaluating free models, pick one, test latency.
-  - Image generation latency: NFR says "within 3 seconds" — will chosen model meet SLA? Block: yes (cannot proceed until latency verified in spike).
-  - Attribution note format? PRD Open Question #8. Block: no (can iterate post-launch based on share performance).
-- **Risk:** Skills blocker: AI integration is new. Social sharing is growth engine per PRD, but it's blocked on AI decision + latency validation. Recommend: run AI model spike as separate `/10x-frame` before S-04 planning; do NOT plan S-04 until spike lands.
-- **Status:** done
+- **Blockers:** —
+- **Status:** ✅ done (archived 2026-07-05)
+- **Design decision:** Text-only MVP — AI image generation moved to future enhancement
+- **Implementation notes:**
+  - SocialProvider enum with 7 providers (Facebook, Messenger, WhatsApp, Twitter, LinkedIn, SMS, Copy)
+  - Shared constants: MAX_SHARE_TEXT_LENGTH (280), ATTRIBUTION_URL
+  - Context-aware share text based on milestone category: "Today's exactly..." / "On [date], it will be exactly..." / "On [date], it was exactly..."
+  - Clipboard auto-copy workaround for Facebook/Messenger/LinkedIn (platforms without pre-fill API support)
+  - ShareModal component mirrors CalendarExportModal pattern (label input, live preview, character counter, provider buttons, ESC/focus trap)
+  - Modal note explaining paste-after-click for limited platforms
+  - Toast notifications for success/popup-blocker detection
+  - Switch statement with default exception for provider routing
+  - Commits: e9e5e5c, 7bee106, 0fd0fab, bf51bba, 7612296, 049e7ce, 6f8afc1, 0516ab8, e6e4806
+- **Testing:** ✅ Manual testing completed — all 7 providers verified, context-aware text tested across all milestone categories, clipboard behavior confirmed, keyboard accessibility validated, no regressions
+- **Lesson:** Expect UX improvements during implementation — context-aware text and clipboard workarounds discovered during testing significantly improved UX and were documented as plan addenda
 
 ### S-05: Custom milestone values
 
