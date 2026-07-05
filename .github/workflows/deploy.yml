@@ -24,6 +24,18 @@ jobs:
       - run: npm ci
       - name: Run unit tests
         run: npm test
+      - name: Generate test report
+        run: node scripts/generate-test-report.js
+        if: always()
+      - name: Upload test report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-report
+          path: |
+            test-results/TEST-REPORT.md
+            test-results/vitest-report.json
+          retention-days: 30
       - name: Lint code
         run: npm run lint
       - name: Build project

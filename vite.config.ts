@@ -9,5 +9,9 @@ export default defineConfig({
     globals: true,
     environment: "node", // Phase 1: pure functions, no DOM
     include: ["src/**/*.test.ts"],
+    reporters: ["default", "json"],
+    outputFile: {
+      json: "./test-results/vitest-report.json",
+    },
   },
 });
