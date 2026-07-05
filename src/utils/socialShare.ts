@@ -6,6 +6,12 @@ import { ATTRIBUTION_URL } from "./constants";
 /**
  * Generate share URL or text for the specified social provider
  * For Copy provider, returns the share text directly (not a URL)
+ * 
+ * Platform limitations:
+ * - Facebook: Basic sharer only shares URL (custom text requires FB App integration)
+ * - LinkedIn: Only shares URL (no custom text in public share API)
+ * - Messenger: Link-only sharing via deep link
+ * - Twitter, WhatsApp, SMS: Full text support ✓
  */
 export function generateShareUrl(
   milestone: Milestone,
@@ -25,21 +31,28 @@ export function generateShareUrl(
   // Generate provider-specific URL or return text
   switch (provider) {
     case SocialProvider.Facebook:
-      return `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`;
+      // Facebook sharer.php - only shares URL (quote parameter not supported)
+      // To include custom text, would need Facebook App ID and SDK integration
+      return `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
 
     case SocialProvider.Messenger:
-      return `fb-messenger://share?link=${encodedUrl}&quote=${encodedText}`;
+      // Messenger share - link only
+      return `https://www.facebook.com/dialog/send?link=${encodedUrl}&app_id=&redirect_uri=${encodedUrl}`;
 
     case SocialProvider.WhatsApp:
-      return `https://api.whatsapp.com/send?text=${encodedText}`;
+      // WhatsApp - full text support
+      return `https://wa.me/?text=${encodedText}`;
 
     case SocialProvider.Twitter:
+      // Twitter/X - full text support
       return `https://twitter.com/intent/tweet?text=${encodedText}`;
 
     case SocialProvider.LinkedIn:
-      return `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}&summary=${encodedText}`;
+      // LinkedIn - URL only (summary not supported in public API)
+      return `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
 
     case SocialProvider.SMS:
+      // SMS - full text support (works on mobile devices)
       return `sms:?&body=${encodedText}`;
 
     case SocialProvider.Copy:
