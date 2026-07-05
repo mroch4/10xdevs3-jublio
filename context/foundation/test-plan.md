@@ -65,7 +65,7 @@ Phases are ordered by **risk coverage** (R1–R7) and **test layer efficiency** 
 | Phase | Focus | Risks Covered | Effort | Signal | Change ID | Status |
 |-------|-------|---------------|--------|--------|-----------|--------|
 | Phase 1 | Milestone calculation accuracy (unit) | R1 | Low | High | `test-phase-1-calculation` | complete |
-| Phase 2 | Bookmark edit & sync (integration) | R2 | Medium | High | `test-phase-2-bookmarks` | not started |
+| Phase 2 | Bookmark edit & sync (integration) | R2 | Medium | High | `test-phase-2-bookmarks` | deferred |
 | Phase 3 | Calendar export format validation (integration) | R3 | Medium | High | `test-phase-3-calendar` | complete |
 | Phase 4 | Anonymous access & auth gating (e2e smoke) | R4, R7 | Low | Medium | `test-phase-4-auth-flow` | not started |
 | Phase 5 | Social share text & clipboard (integration) | R5 | Low | Medium | `test-phase-5-social-share` | complete |
