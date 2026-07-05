@@ -502,10 +502,10 @@ Not applicable - new feature with no data migration.
 
 #### Automated
 
-- [x] 2.1 Type checking passes: `npm run build` (includes TypeScript compilation)
-- [x] 2.2 Linting passes: `npm run lint`
-- [x] 2.3 Component imports correctly: `useEscapeKey`, `useFocusTrap`, `SocialProvider`, `Milestone`, `Temporal`
-- [x] 2.4 CSS file exists: `src/components/modals/ShareModal.css`
+- [x] 2.1 Type checking passes: `npm run build` (includes TypeScript compilation) — 7bee106
+- [x] 2.2 Linting passes: `npm run lint` — 7bee106
+- [x] 2.3 Component imports correctly: `useEscapeKey`, `useFocusTrap`, `SocialProvider`, `Milestone`, `Temporal` — 7bee106
+- [x] 2.4 CSS file exists: `src/components/modals/ShareModal.css` — 7bee106
 
 #### Manual
 
@@ -525,10 +525,10 @@ Not applicable - new feature with no data migration.
 
 #### Automated
 
-- [ ] 3.1 Type checking passes: `npm run typecheck`
-- [ ] 3.2 Linting passes: `npm run lint`
-- [ ] 3.3 Build succeeds: `npm run build`
-- [ ] 3.4 Component imports correctly: `ShareModal`, `SocialProvider`, `generateShareUrl`
+- [x] 3.1 Type checking passes: `npm run build` (includes TypeScript compilation)
+- [x] 3.2 Linting passes: `npm run lint`
+- [x] 3.3 Build succeeds: `npm run build`
+- [x] 3.4 Component imports correctly: `ShareModal`, `SocialProvider`, `generateShareUrl`
 
 #### Manual
 

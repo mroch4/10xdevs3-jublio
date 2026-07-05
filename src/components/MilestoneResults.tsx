@@ -3,11 +3,14 @@ import "./MilestoneResults.css";
 import { filterEvents, getCategoryOrder, groupByCategory, sortEventsByDate } from "../utils/eventGrouping";
 
 import CalendarExportModal from "./modals/CalendarExportModal";
+import ShareModal from "./modals/ShareModal";
 import { CalendarProvider } from "../utils/enums/CalendarProvider";
+import { SocialProvider } from "../utils/enums/SocialProvider";
 import Milestone from "../utils/classes/Milestone";
 import { EventCategory } from "../utils/enums/EventCategory";
 import Toast from "./Toast";
 import { generateCalendarUrl } from "../utils/calendarExport";
+import { generateShareUrl } from "../utils/socialShare";
 import { useState } from "react";
 import { Temporal } from "@js-temporal/polyfill";
 
@@ -21,6 +24,8 @@ export default function MilestoneResults({ events, locale, originalDate }: Miles
   // Note: locale is used by parent to create Milestone objects with locale-formatted dateString
   const [exportModalOpen, setExportModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Milestone | null>(null);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [selectedShareEvent, setSelectedShareEvent] = useState<Milestone | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // No longer filtering - all events are visible
@@ -89,6 +94,50 @@ export default function MilestoneResults({ events, locale, originalDate }: Miles
     setSelectedEvent(null);
   };
 
+  const handleShareClick = (event: Milestone) => {
+    setSelectedShareEvent(event);
+    setShareModalOpen(true);
+  };
+
+  const handleShare = (provider: SocialProvider, label: string) => {
+    if (!selectedShareEvent || !originalDate) return;
+
+    try {
+      // Special handling for Copy provider
+      if (provider === SocialProvider.Copy) {
+        const shareText = generateShareUrl(selectedShareEvent, label, provider, originalDate, locale);
+        navigator.clipboard.writeText(shareText).then(() => {
+          setToastMessage("Copied to clipboard! Paste it anywhere to share.");
+        }).catch((err) => {
+          console.error("Failed to copy to clipboard:", err);
+          setToastMessage("Failed to copy to clipboard. Please try again.");
+        });
+        return;
+      }
+
+      // Handle URL-based providers (Facebook, Twitter, WhatsApp, SMS, Messenger, LinkedIn)
+      const url = generateShareUrl(selectedShareEvent, label, provider, originalDate, locale);
+      const newWindow = window.open(url, "_blank", "noopener,noreferrer");
+
+      if (newWindow === null) {
+        // Popup blocked
+        setToastMessage("Please allow popups for this site to share on social media.");
+      } else {
+        // Success
+        const providerName = provider; // "Facebook", "Twitter", etc.
+        setToastMessage(`Opening ${providerName}... Share your milestone!`);
+      }
+    } catch (error) {
+      console.error("Failed to generate share URL:", error);
+      setToastMessage("Failed to generate share link. Please try again.");
+    }
+  };
+
+  const handleCloseShareModal = () => {
+    setShareModalOpen(false);
+    setSelectedShareEvent(null);
+  };
+
   const handleCloseToast = () => {
     setToastMessage(null);
   };
@@ -137,6 +186,21 @@ export default function MilestoneResults({ events, locale, originalDate }: Miles
                       >
                         📅
                       </span>
+                      <span
+                        className="share-icon"
+                        onClick={() => handleShareClick(event)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            handleShareClick(event);
+                          }
+                        }}
+                        role="button"
+                        tabIndex={0}
+                        aria-label="Share on social media"
+                      >
+                        🔗
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -152,6 +216,17 @@ export default function MilestoneResults({ events, locale, originalDate }: Miles
           onClose={handleCloseModal} 
           event={selectedEvent} 
           onExport={handleExport}
+          originalDate={originalDate}
+          locale={locale}
+        />
+      )}
+
+      {selectedShareEvent && (
+        <ShareModal 
+          isOpen={shareModalOpen} 
+          onClose={handleCloseShareModal} 
+          event={selectedShareEvent} 
+          onShare={handleShare}
           originalDate={originalDate}
           locale={locale}
         />
