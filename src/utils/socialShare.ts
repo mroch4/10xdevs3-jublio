@@ -31,19 +31,19 @@ export function generateShareUrl(
       ? originalDate.toPlainDate() 
       : originalDate;
 
-    if (!Temporal.PlainDate.compare(dateToCompare, today)) {
+    if (Temporal.PlainDate.compare(dateToCompare, today) === 0) {
       // It's today
       contextPhrase = "Today's";
     } else if (Temporal.PlainDate.compare(dateToCompare, today) > 0) {
       // Future date
-      contextPhrase = `On ${formattedOriginalDate},`;
+      contextPhrase = "On that day,";
     } else {
       // Past date
-      contextPhrase = `On ${formattedOriginalDate}, it was`;
+      contextPhrase = "On that day, it was";
     }
   }
 
-  const shareText = `${contextPhrase} ${milestone.label} since ${label.trim()} - Calculated with Jublio at ${ATTRIBUTION_URL}`;
+  const shareText = `${contextPhrase} ${milestone.label} since ${label.trim()} (${formattedOriginalDate}) - Calculated with Jublio at ${ATTRIBUTION_URL}`;
 
   // Encode for URL usage
   const encodedText = encodeURIComponent(shareText);

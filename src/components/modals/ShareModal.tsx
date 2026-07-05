@@ -57,26 +57,28 @@ export default function ShareModal({ isOpen, onClose, event, onShare, originalDa
       ? originalDate.toPlainDate() 
       : originalDate;
 
-    if (!Temporal.PlainDate.compare(dateToCompare, today)) {
+    if (Temporal.PlainDate.compare(dateToCompare, today) === 0) {
       // It's today
       contextPhrase = "Today's";
     } else if (Temporal.PlainDate.compare(dateToCompare, today) > 0) {
       // Future date
-      contextPhrase = `On ${formattedOriginalDate},`;
+      contextPhrase = "On that day,";
     } else {
       // Past date
-      contextPhrase = `On ${formattedOriginalDate}, it was`;
+      contextPhrase = "On that day, it was";
     }
   }
 
-  // Build share text from parts
+  // Build share text from parts - always include date in brackets for reference
   const textParts = [
     contextPhrase,
     " ",
     event.label,
     " since ",
     label.trim() || "[your label]",
-    " - Calculated with Jublio at ",
+    " (",
+    formattedOriginalDate,
+    ") - Calculated with Jublio at ",
     ATTRIBUTION_URL,
   ];
 
@@ -84,9 +86,10 @@ export default function ShareModal({ isOpen, onClose, event, onShare, originalDa
   const currentTextLength = textParts.reduce((sum, part) => sum + part.length, 0);
 
   // Calculate max label length to ensure total text ≤ 280 chars
-  const fixedParts = [contextPhrase, " ", event.label, " since ", " - Calculated with Jublio at ", ATTRIBUTION_URL];
+  const fixedParts = [contextPhrase, " ", event.label, " since ", " (", formattedOriginalDate, ") - Calculated with Jublio at ", ATTRIBUTION_URL];
   const fixedPartLength = fixedParts.reduce((sum, part) => sum + part.length, 0);
   const maxLabelLength = Math.max(1, MAX_SHARE_TEXT_LENGTH - fixedPartLength);
+
 
   const isLabelValid = label.trim().length > 0 && currentTextLength <= MAX_SHARE_TEXT_LENGTH;
 
