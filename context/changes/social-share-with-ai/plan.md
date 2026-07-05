@@ -509,17 +509,17 @@ Not applicable - new feature with no data migration.
 
 #### Manual
 
-- [ ] 2.5 Open modal by directly rendering `<ShareModal isOpen={true} ... />` in dev
-- [ ] 2.6 Label input has autofocus, placeholder matches calendar export
-- [ ] 2.7 Live preview updates as user types, shows full text with attribution
-- [ ] 2.8 Character counter shows `X/280 characters`, updates on input
-- [ ] 2.9 Provider buttons disabled when label empty or text > 280 chars
-- [ ] 2.10 Provider buttons enable when valid label entered and text ≤ 280 chars
-- [ ] 2.11 ESC key closes modal
-- [ ] 2.12 Tab key cycles through focusable elements only (focus trap works)
-- [ ] 2.13 Modal closes on backdrop click or Cancel button
-- [ ] 2.14 Label clears when modal closes
-- [ ] 2.15 Modal does NOT close when provider button clicked
+- [x] 2.5 Open modal by directly rendering `<ShareModal isOpen={true} ... />` in dev — User tested
+- [x] 2.6 Label input has autofocus, placeholder matches calendar export — User tested
+- [x] 2.7 Live preview updates as user types, shows full text with attribution — User tested
+- [x] 2.8 Character counter shows `X/280 characters`, updates on input — User tested
+- [x] 2.9 Provider buttons disabled when label empty or text > 280 chars — User tested
+- [x] 2.10 Provider buttons enable when valid label entered and text ≤ 280 chars — User tested
+- [x] 2.11 ESC key closes modal — User tested
+- [x] 2.12 Tab key cycles through focusable elements only (focus trap works) — User tested
+- [x] 2.13 Modal closes on backdrop click or Cancel button — User tested
+- [x] 2.14 Label clears when modal closes — User tested
+- [x] 2.15 Modal does NOT close when provider button clicked — User tested
 
 ### Phase 3: Integration
 
@@ -532,19 +532,19 @@ Not applicable - new feature with no data migration.
 
 #### Manual
 
-- [ ] 3.5 🔗 share icon appears next to 📅 calendar icon on each milestone
-- [ ] 3.6 Clicking share icon opens ShareModal with correct milestone data
-- [ ] 3.7 Entering label and clicking Facebook → new window opens with pre-filled text on Facebook
-- [ ] 3.8 Entering label and clicking Twitter → new window opens with pre-filled tweet
-- [ ] 3.9 Entering label and clicking WhatsApp → WhatsApp web opens with pre-filled message
-- [ ] 3.10 Entering label and clicking SMS → SMS app opens (on mobile) or shows protocol handler prompt (on desktop)
-- [ ] 3.11 Entering label and clicking Messenger → Messenger app/web opens with pre-filled message
-- [ ] 3.12 Entering label and clicking LinkedIn → LinkedIn share dialog opens with pre-filled post
-- [ ] 3.13 Entering label and clicking Copy → toast shows "Copied to clipboard!" and text pastes correctly
-- [ ] 3.14 Popup blocker test: Block popups in browser settings → share click shows toast "Please allow popups..."
-- [ ] 3.15 Share one milestone to Facebook → modal stays open → click Twitter → second share works with same label
-- [ ] 3.16 Close modal → open again → label is cleared (fresh start)
-- [ ] 3.17 Toast shows success message after each share
-- [ ] 3.18 Share icon is keyboard accessible (Tab to icon, Enter/Space to open modal)
-- [ ] 3.19 Copy button works even if popups are blocked (clipboard API separate from window.open)
-- [ ] 3.20 No regressions: Calendar export still works, existing features unaffected
+- [x] 3.5 🔗 share icon appears next to 📅 calendar icon on each milestone — User tested
+- [x] 3.6 Clicking share icon opens ShareModal with correct milestone data — User tested
+- [x] 3.7 Entering label and clicking Facebook → new window opens with pre-filled text on Facebook — User tested (auto-copy + URL only)
+- [x] 3.8 Entering label and clicking Twitter → new window opens with pre-filled tweet — User tested
+- [x] 3.9 Entering label and clicking WhatsApp → WhatsApp web opens with pre-filled message — User tested
+- [x] 3.10 Entering label and clicking SMS → SMS app opens (on mobile) or shows protocol handler prompt (on desktop) — User tested
+- [x] 3.11 Entering label and clicking Messenger → Messenger app/web opens with pre-filled message — User tested (auto-copy + URL only)
+- [x] 3.12 Entering label and clicking LinkedIn → LinkedIn share dialog opens with pre-filled post — User tested (auto-copy + URL only)
+- [x] 3.13 Entering label and clicking Copy → toast shows "Copied to clipboard!" and text pastes correctly — User tested
+- [x] 3.14 Popup blocker test: Block popups in browser settings → share click shows toast "Please allow popups..." — User tested
+- [x] 3.15 Share one milestone to Facebook → modal stays open → click Twitter → second share works with same label — User tested
+- [x] 3.16 Close modal → open again → label is cleared (fresh start) — User tested
+- [x] 3.17 Toast shows success message after each share — User tested
+- [x] 3.18 Share icon is keyboard accessible (Tab to icon, Enter/Space to open modal) — User tested
+- [x] 3.19 Copy button works even if popups are blocked (clipboard API separate from window.open) — User tested
+- [x] 3.20 No regressions: Calendar export still works, existing features unaffected — User tested
