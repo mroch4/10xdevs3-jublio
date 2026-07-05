@@ -2,9 +2,10 @@
 change_id: custom-milestone-values
 roadmap_id: S-05
 title: Custom milestone values
-status: ready-for-review
-created: 2026-01-09
-planned_at: 2026-01-09
+status: complete
+created: 2026-07-04
+planned_at: 2026-07-04
+completed_at: 2026-07-05
 stream: B
 ---
 

@@ -17,16 +17,16 @@ top_blocker: none
 
 ## 📊 Status Summary (Updated 2026-07-05)
 
-**Progress:** 5 of 7 items complete (71%)
+**Progress:** 6 of 7 items complete (86%)
 
 - ✅ **Foundations complete** — Auth (F-01) + Firestore schema (F-02) both done
 - ✅ **Core calculation** — Milestone calculation with Temporal API (S-01) done
 - ✅ **Calendar export** — Google/Outlook/Apple export (S-03) done
 - ✅ **North Star COMPLETE** — S-02 (bookmark & portfolio) done 2026-07-05
-- 🟢 **Next feature READY** — S-05 (custom values) can start now
+- ✅ **Custom values COMPLETE** — S-05 (custom milestone values) done 2026-07-05
 - 🔴 **1 blocker** — S-04 (social share) needs AI model decision
 
-**Next recommended action:** Start planning S-05 (custom-milestone-values) — all prerequisites are met.
+**Next recommended action:** S-04 blocked on AI model spike. Consider polish/improvements or wait for AI decision.
 
 ## Vision recap
 
@@ -50,7 +50,7 @@ Users manually calculate milestone anniversaries in weird time units (10,000 day
 | S-02 | bookmark-and-manage        | bookmark dates and manage persistent portfolio   | F-01, F-02, S-01 | FR-010 to FR-014 | done     |
 | S-03 | export-to-calendar         | export a milestone to Google/Apple/Outlook       | S-01             | FR-015 to FR-018 | done     |
 | S-04 | social-share-with-ai       | share milestone on social media with AI image    | S-01             | FR-019 to FR-021 | blocked  |
-| S-05 | custom-milestone-values    | add custom milestone values (e.g., 420, 25,000)  | S-02             | FR-006           | ready    |
+| S-05 | custom-milestone-values    | add custom milestone values (e.g., 420, 25,000)  | S-01             | FR-006           | done     |
 
 ## Streams
 
@@ -206,7 +206,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-02       | bookmark-and-manage        | Bookmark dates, manage portfolio, real-time sync     | ✅ DONE               | Archived 2026-07-05 — North Star feature complete                      |
 | S-03       | export-to-calendar         | Export milestone to Google Calendar / Apple Calendar | ✅ DONE               | Archived 2026-07-03                                                    |
 | S-04       | social-share-with-ai       | Social share with AI-generated image                 | 🔴 NO                 | Blocked: AI model choice + latency validation. Run `/10x-frame` spike  |
-| S-05       | custom-milestone-values    | Custom milestone values per bookmarked date          | 🟢 YES                | **READY NOW** — S-02 complete; can start planning                      |
+| S-05       | custom-milestone-values    | Custom milestone values (session-only)               | ✅ DONE               | Archived 2026-07-05 — Session-only custom milestones complete          |
 
 ## Open Roadmap Questions
 
@@ -294,6 +294,24 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Commits:** 3f0eb32, bdb632f, 8a8f20d, 611acf7, abf4098, 7589152, 6c17e24, 55e17c2
 
 → `context/archive/2026-07-03-export-to-calendar/`
+
+### S-05: Custom milestone values
+
+- **Change ID:** `custom-milestone-values`
+- **Archived:** 2026-07-05
+- **Outcome:** User can add custom milestone values (e.g., 420 days, 25,000 hours) on-the-fly during calculation. Custom milestones are session-only (React state, not Firebase), appear sorted alongside default power-of-10 milestones, and support multi-unit selection via checkbox UI.
+- **Lesson:** Session-only state model simplifies implementation and proves feature value before adding persistence. Auto-calculation UX (removing manual Calculate button) required careful edge-case handling for initial load and bookmark autofill. Iterative UX refinement (single dropdown → multi-select checkboxes, result-side remove → modal management) improved usability without scope creep.
+- **Implementation notes:**
+  - 5-phase incremental delivery (state/type → modal → calculation merge → visual distinction → unit validation)
+  - Human lifetime validation (75-year limit) prevents unrealistic dates
+  - Dynamic unit filtering based on date vs. date+time input
+  - "Reset Custom Milestones" button in modal for bulk removal
+  - Auto-recalculation on input changes and custom milestone updates
+  - Preserved custom milestones on Now/Reset buttons
+- **Testing:** Manual testing confirmed session-only behavior, bookmark autofill edge cases, and button disabled states
+- **Commits:** c29892d, 6141fa9, 46a974f, 534790f, f71ea40, 6ee9706, be58e71
+
+→ `context/archive/2026-07-05-custom-milestone-values/`
 
 ---
 
