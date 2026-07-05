@@ -41,6 +41,10 @@ export default function MilestoneCalculator({ onSwitchToBookmarks, autofillDate,
       // Track whether time input is provided
       setHasTimeInput(time !== undefined);
 
+      // Update input state for recalculation dependencies
+      setInputDateStr(date.toString());
+      setInputTimeStr(time ? time.toString().slice(0, 5) : null);
+
       if (time) {
         // Time provided: use DateTimeCard for all milestone units
         const dateTime = date.toPlainDateTime(time);
@@ -163,10 +167,10 @@ export default function MilestoneCalculator({ onSwitchToBookmarks, autofillDate,
     setToastMessage(null);
   };
 
-  const handleValidationError = () => {
+  const handleValidationError = useCallback(() => {
     setEvents(null);
     setOriginalDate(null);
-  };
+  }, []);
 
   return (
     <div>
