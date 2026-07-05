@@ -41,15 +41,15 @@ export default class Milestone {
       return EventCategory.Today;
     }
 
-    const currentWeekStarts: Temporal.PlainDateTime = currentTime.subtract({ days: currentTime.dayOfWeek - 1 });
-    const currentWeekEnds: Temporal.PlainDateTime = currentWeekStarts.add({ days: 6 });
+    const currentWeekStarts: Temporal.PlainDateTime = currentTime.subtract({ days: currentTime.dayOfWeek - 1 }).with({ hour: 0, minute: 0, second: 0 });
+    const currentWeekEnds: Temporal.PlainDateTime = currentWeekStarts.add({ days: 6 }).with({ hour: 23, minute: 59, second: 59 });
 
     if (this.isThisWeek(currentWeekStarts, currentWeekEnds)) {
       return EventCategory.ThisWeek;
     }
 
     const nextWeekStarts: Temporal.PlainDateTime = currentWeekStarts.add({ days: 7 });
-    const nextWeekEnds: Temporal.PlainDateTime = currentWeekEnds.add({ days: 7 });
+    const nextWeekEnds: Temporal.PlainDateTime = nextWeekStarts.add({ days: 6 }).with({ hour: 23, minute: 59, second: 59 });
 
     if (this.isNextWeek(nextWeekStarts, nextWeekEnds)) {
       return EventCategory.NextWeek;
