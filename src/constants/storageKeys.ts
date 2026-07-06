@@ -6,4 +6,6 @@ export const STORAGE_KEYS = {
   DATETIME_INPUT_DATE: "datetimeInputDate",
   DATETIME_INPUT_TIME: "datetimeInputTime",
   BOOKMARKS_SORTING: "bookmarksSorting",
+  CUSTOM_MILESTONE_VALUE: "customMilestoneValue",
+  CUSTOM_MILESTONE_UNITS: "customMilestoneUnits",
 } as const;

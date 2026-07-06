@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import Bookmark from "../utils/classes/Bookmark";
 import BookmarkCard from "./BookmarkCard";
 import { COLLECTIONS } from "../utils/constants";
+import { STORAGE_KEYS } from "../constants/storageKeys";
 import Sorting from "../utils/enums/Sorting";
 import Toast from "./Toast";
 import { db } from "../firebase/config";
 import { useAuth } from "../hooks/useAuth";
-import { STORAGE_KEYS } from "../constants/storageKeys";
 
 interface BookmarksViewProps {
   onLoadBookmark: (date: string, title?: string) => void;
@@ -22,7 +22,7 @@ export default function BookmarksView({ onLoadBookmark, onSwitchToCalculator }: 
   const [error, setError] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<string>(() => {
-    if (typeof window === 'undefined') return Sorting.DateDescending;
+    if (typeof window === "undefined") return Sorting.DateDescending;
     const saved = localStorage.getItem(STORAGE_KEYS.BOOKMARKS_SORTING);
     return saved || Sorting.DateDescending;
   });
@@ -63,7 +63,7 @@ export default function BookmarksView({ onLoadBookmark, onSwitchToCalculator }: 
 
   // Save sorting preference to localStorage whenever it changes
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       localStorage.setItem(STORAGE_KEYS.BOOKMARKS_SORTING, sortBy);
     }
   }, [sortBy]);
@@ -142,8 +142,8 @@ export default function BookmarksView({ onLoadBookmark, onSwitchToCalculator }: 
 
   return (
     <div>
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h5 className="mb-0">Your Bookmarked Dates</h5>
+      <div className="d-flex justify-content-between align-items-center flex-wrap mb-3">
+        <h5>Your Bookmarked Dates</h5>
         <div className="w-auto">
           <label htmlFor="sortSelect" className="form-label mb-0 me-2" style={{ display: "inline-block" }}>
             Sort by:
