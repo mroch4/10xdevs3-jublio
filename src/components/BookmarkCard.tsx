@@ -6,7 +6,7 @@ import { DeleteConfirmationModal } from "./modals/DeleteConfirmationModal";
 
 interface BookmarkCardProps {
   bookmark: Bookmark;
-  onLoadBookmark: (date: string) => void;
+  onLoadBookmark: (date: string, title?: string) => void;
   onEditSuccess: () => void;
   onDeleteSuccess: () => void;
   userEmail: string;
@@ -59,11 +59,11 @@ export default function BookmarkCard({ bookmark, onLoadBookmark, onEditSuccess, 
         className="list-group-item list-group-item-action"
         role="button"
         tabIndex={0}
-        onClick={() => onLoadBookmark(bookmark.date)}
+        onClick={() => onLoadBookmark(bookmark.date, bookmark.title)}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            onLoadBookmark(bookmark.date);
+            onLoadBookmark(bookmark.date, bookmark.title);
           }
         }}
         style={{ cursor: "pointer" }}

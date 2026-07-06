@@ -18,9 +18,10 @@ interface MilestoneResultsProps {
   events: Milestone[];
   locale: string; // Used by parent to create Milestone objects with locale-aware formatting
   originalDate: Temporal.PlainDate | Temporal.PlainDateTime | null;
+  prefillTitle?: string | null;
 }
 
-export default function MilestoneResults({ events, locale, originalDate }: MilestoneResultsProps) {
+export default function MilestoneResults({ events, locale, originalDate, prefillTitle }: MilestoneResultsProps) {
   // Note: locale is used by parent to create Milestone objects with locale-formatted dateString
   const [exportModalOpen, setExportModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Milestone | null>(null);
@@ -230,6 +231,7 @@ export default function MilestoneResults({ events, locale, originalDate }: Miles
           onExport={handleExport}
           originalDate={originalDate}
           locale={locale}
+          prefillTitle={prefillTitle}
         />
       )}
 
@@ -241,6 +243,7 @@ export default function MilestoneResults({ events, locale, originalDate }: Miles
           onShare={handleShare}
           originalDate={originalDate}
           locale={locale}
+          prefillTitle={prefillTitle}
         />
       )}
 

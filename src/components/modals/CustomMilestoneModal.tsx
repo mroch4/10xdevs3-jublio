@@ -1,13 +1,14 @@
 import "../Animations.css";
 
-import type { FormEvent } from "react";
-import { useState, useCallback, useEffect } from "react";
-import { Temporal } from "@js-temporal/polyfill";
+import { MAX_CUSTOM_MILESTONE_VALUE, MIN_CUSTOM_MILESTONE_VALUE } from "../../utils/constants";
+import { useCallback, useEffect, useState } from "react";
+
+import type { CustomMilestone } from "../../types/CustomMilestone";
 import { DateTimeUnit } from "../../utils/enums/DateTimeUnit";
-import { MIN_CUSTOM_MILESTONE_VALUE, MAX_CUSTOM_MILESTONE_VALUE } from "../../utils/constants";
+import type { FormEvent } from "react";
+import { Temporal } from "@js-temporal/polyfill";
 import { useEscapeKey } from "../../hooks/useEscapeKey";
 import { useFocusTrap } from "../../hooks/useFocusTrap";
-import type { CustomMilestone } from "../../types/CustomMilestone";
 import { validateCustomMilestoneValue } from "../../utils/customMilestoneValidation";
 
 interface CustomMilestoneModalProps {
@@ -19,14 +20,7 @@ interface CustomMilestoneModalProps {
   originalDate: Temporal.PlainDate | Temporal.PlainDateTime | null;
 }
 
-export function CustomMilestoneModal({ 
-  isOpen, 
-  onClose, 
-  onUpdateCustomMilestones, 
-  existingCustomMilestones, 
-  hasTimeInput,
-  originalDate
-}: CustomMilestoneModalProps) {
+export function CustomMilestoneModal({ isOpen, onClose, onUpdateCustomMilestones, existingCustomMilestones, hasTimeInput, originalDate }: CustomMilestoneModalProps) {
   const [value, setValue] = useState("");
   const [selectedUnits, setSelectedUnits] = useState<Set<string>>(new Set());
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -39,11 +33,7 @@ export function CustomMilestoneModal({
       const firstValue = existingCustomMilestones[0].value;
 
       // Get all units from existing milestones with this value
-      const units = new Set(
-        existingCustomMilestones
-          .filter(cm => cm.value === firstValue)
-          .map(cm => cm.unit)
-      );
+      const units = new Set(existingCustomMilestones.filter((cm) => cm.value === firstValue).map((cm) => cm.unit));
 
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setValue(firstValue.toString());
@@ -66,16 +56,8 @@ export function CustomMilestoneModal({
 
   // Get available units based on input type (sorted shortest to longest)
   const availableUnits = hasTimeInput
-    ? [
-        DateTimeUnit.Seconds,
-        DateTimeUnit.Minutes,
-        DateTimeUnit.Hours,
-        DateTimeUnit.Days,
-        DateTimeUnit.Weeks,
-        DateTimeUnit.Months,
-        DateTimeUnit.Years,
-      ]
-    : [DateTimeUnit.Days, DateTimeUnit.Weeks, DateTimeUnit.Months, DateTimeUnit.Years];
+    ? [DateTimeUnit.Seconds, DateTimeUnit.Minutes, DateTimeUnit.Hours, DateTimeUnit.Days, DateTimeUnit.Weeks, DateTimeUnit.Months]
+    : [DateTimeUnit.Days, DateTimeUnit.Weeks, DateTimeUnit.Months];
 
   // Check if a unit would exceed 75-year limit for a given value
   const checkUnitExceedsLimit = (checkValue: string, checkUnit: string): boolean => {
@@ -112,11 +94,7 @@ export function CustomMilestoneModal({
   };
 
   const validateValue = (val: string): boolean => {
-    const result = validateCustomMilestoneValue(
-      val,
-      Array.from(selectedUnits),
-      originalDate
-    );
+    const result = validateCustomMilestoneValue(val, Array.from(selectedUnits), originalDate);
 
     setValidationError(result.error);
     setIsValueError(!result.isValid);
@@ -148,10 +126,10 @@ export function CustomMilestoneModal({
     const numValue = parseInt(value, 10);
 
     // Create new milestone list from selected units
-    const newMilestones: CustomMilestone[] = Array.from(selectedUnits).map(unit => ({
+    const newMilestones: CustomMilestone[] = Array.from(selectedUnits).map((unit) => ({
       id: `${numValue}-${unit}`,
       value: numValue,
-      unit
+      unit,
     }));
 
     onUpdateCustomMilestones(newMilestones);
@@ -202,99 +180,86 @@ export function CustomMilestoneModal({
 
       {/* Modal */}
       <div className="modal show fade-in" style={{ display: "block", zIndex: 1050 }} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="customMilestoneModalLabel">
-      <div className="modal-dialog modal-dialog-centered" role="document">
-        <div className="modal-content" ref={modalRef}>
-          <div className="modal-header">
-            <h5 className="modal-title" id="customMilestoneModalLabel">
-              Custom Milestones
-            </h5>
-            <button type="button" className="btn-close" onClick={handleClose} aria-label="Close"></button>
-          </div>
+        <div className="modal-dialog modal-dialog-centered" role="document">
+          <div className="modal-content" ref={modalRef}>
+            <div className="modal-header">
+              <h5 className="modal-title" id="customMilestoneModalLabel">
+                Custom Milestones
+              </h5>
+              <button type="button" className="btn-close" onClick={handleClose} aria-label="Close"></button>
+            </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className="modal-body">
-              {!originalDate && (
-                <div className="alert alert-info mb-3" role="alert">
-                  ℹ️ Calculate milestones first, then you can add custom values here
-                </div>
-              )}
+            <form onSubmit={handleSubmit}>
+              <div className="modal-body">
+                {!originalDate && (
+                  <div className="alert alert-info mb-3" role="alert">
+                    ℹ️ Calculate milestones first, then you can add custom values here
+                  </div>
+                )}
 
-              <div className="mb-3">
-                <label htmlFor="milestoneValue" className="form-label fw-bold">
-                  Value <span className="text-danger">*</span>
-                </label>
-                <input
-                  type="number"
-                  className={`form-control ${validationError && isValueError ? "is-invalid" : ""}`}
-                  id="milestoneValue"
-                  value={value}
-                  onChange={(e) => handleValueChange(e.target.value)}
-                  placeholder="e.g., 420, 25000"
-                  min={MIN_CUSTOM_MILESTONE_VALUE}
-                  max={MAX_CUSTOM_MILESTONE_VALUE}
-                  required
-                  autoFocus
-                />
-              </div>
+                <div className="mb-3">
+                  <label htmlFor="milestoneValue" className="form-label fw-bold">
+                    Value <span className="text-danger">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    className={`form-control ${validationError && isValueError ? "is-invalid" : ""}`}
+                    id="milestoneValue"
+                    value={value}
+                    onChange={(e) => handleValueChange(e.target.value)}
+                    placeholder="e.g., 420, 25000"
+                    min={MIN_CUSTOM_MILESTONE_VALUE}
+                    max={MAX_CUSTOM_MILESTONE_VALUE}
+                    required
+                    autoFocus
+                  />
+                </div>
 
-              <div className="mb-3">
-                <label className="form-label fw-bold">
-                  Time Units <span className="text-danger">*</span>
-                </label>
-                <div className="form-text mb-2">
-                  Select one or more time units to create multiple milestones at once
+                <div className="mb-3">
+                  <label className="form-label fw-bold">
+                    Time Units <span className="text-danger">*</span>
+                  </label>
+                  <div className="form-text mb-2">Select one or more time units to create multiple milestones at once</div>
+                  <div className="d-flex flex-column gap-2">
+                    {availableUnits.map((u) => {
+                      const isDisabled = value.trim().length > 0 && isUnitDisabled(u);
+                      const isChecked = selectedUnits.has(u);
+                      return (
+                        <div key={u} className="form-check">
+                          <input type="checkbox" className="form-check-input" id={`unit-${u}`} checked={isChecked} disabled={isDisabled} onChange={() => handleUnitToggle(u)} />
+                          <label className="form-check-label" htmlFor={`unit-${u}`}>
+                            {u}
+                            {isDisabled && <span className="text-muted ms-2">(exceeds human lifetime)</span>}
+                          </label>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  {!hasTimeInput && <div className="form-text mt-2">Time-based units (hours, minutes, seconds) require a time input</div>}
                 </div>
-                <div className="d-flex flex-column gap-2">
-                  {availableUnits.map((u) => {
-                    const isDisabled = value.trim().length > 0 && isUnitDisabled(u);
-                    const isChecked = selectedUnits.has(u);
-                    return (
-                      <div key={u} className="form-check">
-                        <input
-                          type="checkbox"
-                          className="form-check-input"
-                          id={`unit-${u}`}
-                          checked={isChecked}
-                          disabled={isDisabled}
-                          onChange={() => handleUnitToggle(u)}
-                        />
-                        <label className="form-check-label" htmlFor={`unit-${u}`}>
-                          {u}
-                          {isDisabled && <span className="text-muted ms-2">(exceeds human lifetime)</span>}
-                        </label>
-                      </div>
-                    );
-                  })}
-                </div>
-                {!hasTimeInput && (
-                  <div className="form-text mt-2">
-                    Time-based units (hours, minutes, seconds) require a time input
+
+                {validationError && (
+                  <div className="alert alert-danger mb-0" role="alert">
+                    {validationError}
                   </div>
                 )}
               </div>
 
-              {validationError && (
-                <div className="alert alert-danger mb-0" role="alert">
-                  {validationError}
-                </div>
-              )}
-            </div>
-
-            <div className="modal-footer">
-              <button type="button" className="btn btn-danger me-auto" onClick={handleResetCustomMilestones}>
-                Reset Custom Milestones
-              </button>
-              <button type="button" className="btn btn-secondary" onClick={handleClose}>
-                Cancel
-              </button>
-              <button type="submit" className="btn btn-primary" disabled={!!validationError || value.trim().length === 0 || selectedUnits.size === 0}>
-                Apply
-              </button>
-            </div>
-          </form>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-danger me-auto" onClick={handleResetCustomMilestones}>
+                  Reset Custom Milestones
+                </button>
+                <button type="button" className="btn btn-secondary" onClick={handleClose}>
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-primary" disabled={!!validationError || value.trim().length === 0 || selectedUnits.size === 0}>
+                  Apply
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
     </>
   );
 }

@@ -1,10 +1,9 @@
 import "./ShareModal.css";
 
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 
 import { SocialProvider } from "../../utils/enums/SocialProvider";
 import { EventCategory } from "../../utils/enums/EventCategory";
-import type { FormEvent } from "react";
 import { MAX_SHARE_TEXT_LENGTH, ATTRIBUTION_URL } from "../../utils/constants";
 import Milestone from "../../utils/classes/Milestone";
 import { Temporal } from "@js-temporal/polyfill";
@@ -18,12 +17,22 @@ interface ShareModalProps {
   onShare: (provider: SocialProvider, label: string) => void;
   originalDate: Temporal.PlainDate | Temporal.PlainDateTime | null;
   locale: string;
+  prefillTitle?: string | null;
 }
 
-export default function ShareModal({ isOpen, onClose, event, onShare, originalDate, locale }: ShareModalProps) {
-  const [label, setLabel] = useState("");
+export default function ShareModal({ isOpen, onClose, event, onShare, originalDate, locale, prefillTitle }: ShareModalProps) {
+  const [label, setLabel] = useState<string>("");
 
-  const handleSubmit = (e: FormEvent) => {
+  // Prefill label if coming from a bookmark
+  useEffect(() => {
+    if (isOpen && prefillTitle) {
+      queueMicrotask(() => {
+        setLabel(prefillTitle);
+      });
+    }
+  }, [isOpen, prefillTitle]);
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
   };
 

@@ -8,14 +8,17 @@ import { useState } from "react";
 function App() {
   const [activeTab, setActiveTab] = useState<Tab>(Tab.Calculator);
   const [autofillDate, setAutofillDate] = useState<string | null>(null);
+  const [autofillTitle, setAutofillTitle] = useState<string | null>(null);
 
-  const handleLoadBookmark = (date: string) => {
+  const handleLoadBookmark = (date: string, title?: string) => {
     setAutofillDate(date);
+    setAutofillTitle(title || null);
     setActiveTab(Tab.Calculator);
   };
 
   const handleAutofillConsumed = () => {
     setAutofillDate(null);
+    setAutofillTitle(null);
   };
 
   return (
@@ -59,7 +62,7 @@ function App() {
 
         {/* Tab Content */}
         <div className="tab-content border border-top-0 rounded-bottom p-4">
-          {activeTab === Tab.Calculator && <MilestoneCalculator onSwitchToBookmarks={() => setActiveTab(Tab.Bookmarks)} autofillDate={autofillDate} onAutofillConsumed={handleAutofillConsumed} />}
+          {activeTab === Tab.Calculator && <MilestoneCalculator onSwitchToBookmarks={() => setActiveTab(Tab.Bookmarks)} autofillDate={autofillDate} autofillTitle={autofillTitle} onAutofillConsumed={handleAutofillConsumed} />}
           {activeTab === Tab.Bookmarks && <BookmarksView onLoadBookmark={handleLoadBookmark} onSwitchToCalculator={() => setActiveTab(Tab.Calculator)} />}
         </div>
       </div>

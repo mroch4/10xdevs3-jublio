@@ -1,9 +1,8 @@
 import "./CalendarExportModal.css";
 
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 
 import { CalendarProvider } from "../../utils/enums/CalendarProvider";
-import type { FormEvent } from "react";
 import { MAX_EVENT_TITLE_LENGTH } from "../../utils/constants";
 import Milestone from "../../utils/classes/Milestone";
 import { Temporal } from "@js-temporal/polyfill";
@@ -17,12 +16,22 @@ interface CalendarExportModalProps {
   onExport: (provider: CalendarProvider, label: string) => void;
   originalDate: Temporal.PlainDate | Temporal.PlainDateTime | null;
   locale: string;
+  prefillTitle?: string | null;
 }
 
-export default function CalendarExportModal({ isOpen, onClose, event, onExport, originalDate, locale }: CalendarExportModalProps) {
-  const [label, setLabel] = useState("");
+export default function CalendarExportModal({ isOpen, onClose, event, onExport, originalDate, locale, prefillTitle }: CalendarExportModalProps) {
+  const [label, setLabel] = useState<string>("");
 
-  const handleSubmit = (e: FormEvent) => {
+  // Prefill label if coming from a bookmark
+  useEffect(() => {
+    if (isOpen && prefillTitle) {
+      queueMicrotask(() => {
+        setLabel(prefillTitle);
+      });
+    }
+  }, [isOpen, prefillTitle]);
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
   };
 

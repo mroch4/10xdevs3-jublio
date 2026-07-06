@@ -12,7 +12,9 @@ service cloud.firestore {
         && request.resource.data.date is string
         && (request.resource.data.date.size() == 10 || request.resource.data.date.size() == 19)
         && request.resource.data.createdAt is number
-        && request.resource.data.updatedAt is number;
+        && request.resource.data.createdAt > 1782864000 // Wed Jul 01 2026 00:00:00 GMT+0000
+        && request.resource.data.updatedAt is number
+        && request.resource.data.updatedAt > 1782864000;
       allow update: if request.auth != null 
         && request.auth.token.email == email
         && request.resource.data.title is string
@@ -21,7 +23,8 @@ service cloud.firestore {
         && request.resource.data.date is string
         && (request.resource.data.date.size() == 10 || request.resource.data.date.size() == 19)
         && request.resource.data.createdAt == resource.data.createdAt  // Cannot modify createdAt
-        && request.resource.data.updatedAt is number;
+        && request.resource.data.updatedAt is number
+        && request.resource.data.updatedAt > 1782864000;
     }
   }
 }

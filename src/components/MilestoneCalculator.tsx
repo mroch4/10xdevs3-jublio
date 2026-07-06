@@ -14,14 +14,16 @@ import { type CustomMilestone } from "../types/CustomMilestone";
 interface MilestoneCalculatorProps {
   onSwitchToBookmarks?: () => void;
   autofillDate?: string | null;
+  autofillTitle?: string | null;
   onAutofillConsumed?: () => void;
 }
 
-export default function MilestoneCalculator({ onSwitchToBookmarks, autofillDate, onAutofillConsumed }: MilestoneCalculatorProps) {
+export default function MilestoneCalculator({ onSwitchToBookmarks, autofillDate, autofillTitle, onAutofillConsumed }: MilestoneCalculatorProps) {
   const [events, setEvents] = useState<Milestone[] | null>(null);
   const [originalDate, setOriginalDate] = useState<Temporal.PlainDate | Temporal.PlainDateTime | null>(null);
   const [inputDateStr, setInputDateStr] = useState<string | null>(null);
   const [inputTimeStr, setInputTimeStr] = useState<string | null>(null);
+  const [bookmarkTitle, setBookmarkTitle] = useState<string | null>(null);
   const locale = navigator.language;
 
   const { user } = useAuth();
@@ -68,6 +70,13 @@ export default function MilestoneCalculator({ onSwitchToBookmarks, autofillDate,
   useEffect(() => {
     if (!autofillDate || !onAutofillConsumed) return;
 
+    // Set bookmark title if provided
+    if (autofillTitle) {
+      queueMicrotask(() => {
+        setBookmarkTitle(autofillTitle);
+      });
+    }
+
     try {
       // Parse the date string
       let date: Temporal.PlainDate;
@@ -99,7 +108,7 @@ export default function MilestoneCalculator({ onSwitchToBookmarks, autofillDate,
     }
 
     onAutofillConsumed();
-  }, [autofillDate, onAutofillConsumed, handleCalculate]);
+  }, [autofillDate, autofillTitle, onAutofillConsumed, handleCalculate]);
 
   // Recalculate when custom milestones change (after initial calculation)
   useEffect(() => {
@@ -188,11 +197,11 @@ export default function MilestoneCalculator({ onSwitchToBookmarks, autofillDate,
         />
       </div>
 
-      <MilestoneResults events={events || []} locale={locale} originalDate={originalDate} />
+      <MilestoneResults events={events || []} locale={locale} originalDate={originalDate} prefillTitle={bookmarkTitle} />
 
       {/* BookmarkModal */}
       {user && originalDate && (
-        <BookmarkModal isOpen={bookmarkModalOpen} onClose={() => setBookmarkModalOpen(false)} onSuccess={handleBookmarkSuccess} inputDate={originalDate} userEmail={user.email || ""} />
+        <BookmarkModal isOpen={bookmarkModalOpen} onClose={() => setBookmarkModalOpen(false)} onSuccess={handleBookmarkSuccess} inputDate={originalDate} userEmail={user.email || ""} prefillTitle={bookmarkTitle} />
       )}
 
       {/* CustomMilestoneModal */}

@@ -4,21 +4,28 @@ import { useEffect, useState } from "react";
 import Bookmark from "../utils/classes/Bookmark";
 import BookmarkCard from "./BookmarkCard";
 import { COLLECTIONS } from "../utils/constants";
+import Sorting from "../utils/enums/Sorting";
 import Toast from "./Toast";
 import { db } from "../firebase/config";
 import { useAuth } from "../hooks/useAuth";
+import { STORAGE_KEYS } from "../constants/storageKeys";
 
 interface BookmarksViewProps {
-  onLoadBookmark: (date: string) => void;
+  onLoadBookmark: (date: string, title?: string) => void;
   onSwitchToCalculator: () => void;
 }
 
 export default function BookmarksView({ onLoadBookmark, onSwitchToCalculator }: BookmarksViewProps) {
   const { user } = useAuth();
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
-  const [loading, setLoading] = useState(!!user?.email); // Only show loading if user is logged in
+  const [loading, setLoading] = useState(!!user?.email);
   const [error, setError] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<string>(() => {
+    if (typeof window === 'undefined') return Sorting.DateDescending;
+    const saved = localStorage.getItem(STORAGE_KEYS.BOOKMARKS_SORTING);
+    return saved || Sorting.DateDescending;
+  });
 
   useEffect(() => {
     if (!user?.email) {
@@ -54,6 +61,13 @@ export default function BookmarksView({ onLoadBookmark, onSwitchToCalculator }: 
     return () => unsubscribe();
   }, [user?.email]);
 
+  // Save sorting preference to localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(STORAGE_KEYS.BOOKMARKS_SORTING, sortBy);
+    }
+  }, [sortBy]);
+
   const handleEditSuccess = () => {
     setToastMessage("Bookmark updated successfully!");
   };
@@ -64,6 +78,27 @@ export default function BookmarksView({ onLoadBookmark, onSwitchToCalculator }: 
 
   const handleCloseToast = () => {
     setToastMessage(null);
+  };
+
+  const getSortedBookmarks = (bookmarksToSort: Bookmark[]): Bookmark[] => {
+    const sorted = [...bookmarksToSort];
+
+    switch (sortBy) {
+      case Sorting.TitleAscending:
+        return sorted.sort((a, b) => a.title.localeCompare(b.title));
+      case Sorting.TitleDescending:
+        return sorted.sort((a, b) => b.title.localeCompare(a.title));
+      case Sorting.DateAscending:
+        return sorted.sort((a, b) => a.date.localeCompare(b.date));
+      case Sorting.DateDescending:
+        return sorted.sort((a, b) => b.date.localeCompare(a.date));
+      case Sorting.CreatedDateAscending:
+        return sorted.sort((a, b) => a.createdAt - b.createdAt);
+      case Sorting.CreatedDateDescending:
+        return sorted.sort((a, b) => b.createdAt - a.createdAt);
+      default:
+        return sorted;
+    }
   };
 
   if (!user) {
@@ -107,9 +142,24 @@ export default function BookmarksView({ onLoadBookmark, onSwitchToCalculator }: 
 
   return (
     <div>
-      <h5 className="mb-3">Your Bookmarked Dates</h5>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h5 className="mb-0">Your Bookmarked Dates</h5>
+        <div className="w-auto">
+          <label htmlFor="sortSelect" className="form-label mb-0 me-2" style={{ display: "inline-block" }}>
+            Sort by:
+          </label>
+          <select id="sortSelect" className="form-select" style={{ display: "inline-block", width: "auto" }} value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+            <option value={Sorting.TitleAscending}>{Sorting.TitleAscending}</option>
+            <option value={Sorting.TitleDescending}>{Sorting.TitleDescending}</option>
+            <option value={Sorting.DateAscending}>{Sorting.DateAscending}</option>
+            <option value={Sorting.DateDescending}>{Sorting.DateDescending}</option>
+            <option value={Sorting.CreatedDateAscending}>{Sorting.CreatedDateAscending}</option>
+            <option value={Sorting.CreatedDateDescending}>{Sorting.CreatedDateDescending}</option>
+          </select>
+        </div>
+      </div>
       <div className="list-group">
-        {bookmarks.map((bookmark) => (
+        {getSortedBookmarks(bookmarks).map((bookmark) => (
           <BookmarkCard
             key={bookmark.createdAt}
             bookmark={bookmark}

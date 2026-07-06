@@ -1,7 +1,7 @@
 import "../Animations.css";
 
 import type { FormEvent } from "react";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Temporal } from "@js-temporal/polyfill";
 import Bookmark from "../../utils/classes/Bookmark";
 import { addBookmark, checkTitleUniqueness } from "../../firebase/firestoreService";
@@ -15,13 +15,23 @@ interface BookmarkModalProps {
   onSuccess: () => void;
   inputDate: Temporal.PlainDate | Temporal.PlainDateTime;
   userEmail: string;
+  prefillTitle?: string | null;
 }
 
-export function BookmarkModal({ isOpen, onClose, onSuccess, inputDate, userEmail }: BookmarkModalProps) {
-  const [label, setLabel] = useState("");
+export function BookmarkModal({ isOpen, onClose, onSuccess, inputDate, userEmail, prefillTitle }: BookmarkModalProps) {
+  const [label, setLabel] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [validationError, setValidationError] = useState<string | null>(null);
+
+  // Prefill label if coming from a bookmark
+  useEffect(() => {
+    if (isOpen && prefillTitle) {
+      queueMicrotask(() => {
+        setLabel(prefillTitle);
+      });
+    }
+  }, [isOpen, prefillTitle]);
 
   const handleClose = useCallback(() => {
     setLabel("");

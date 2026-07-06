@@ -5,7 +5,9 @@ import { useEffect, useState } from "react";
 import { AuthModal } from "./modals/AuthModal";
 import { Temporal } from "@js-temporal/polyfill";
 import { useAuth } from "../hooks/useAuth";
+import { useLocalStorage } from "../hooks/useLocalStorage";
 import { validateDateTime } from "../utils/validation";
+import { STORAGE_KEYS } from "../constants/storageKeys";
 
 interface DateTimeInputProps {
   onCalculate: (date: Temporal.PlainDate, time?: Temporal.PlainTime) => void;
@@ -30,8 +32,15 @@ const getCurrentDateTime = () => {
 
 export default function DateTimeInput({ onCalculate, onReset, onSetToNow, onPinClick, onCustomMilestonesClick, onValidationError, autofillDate, autofillTime, hasCalculation }: DateTimeInputProps) {
   const { user } = useAuth();
-  const [dateValue, setDateValue] = useState<string>(() => getCurrentDateTime().date);
-  const [timeValue, setTimeValue] = useState<string>(() => getCurrentDateTime().time);
+  // If autofillDate is provided, use it as initial value, otherwise use localStorage
+  const [dateValue, setDateValue] = useLocalStorage<string>(
+    STORAGE_KEYS.DATETIME_INPUT_DATE,
+    autofillDate || getCurrentDateTime().date
+  );
+  const [timeValue, setTimeValue] = useLocalStorage<string>(
+    STORAGE_KEYS.DATETIME_INPUT_TIME,
+    autofillTime || getCurrentDateTime().time
+  );
   const [error, setError] = useState<string>("");
   const [showAuthModal, setShowAuthModal] = useState(false);
 
@@ -61,6 +70,7 @@ export default function DateTimeInput({ onCalculate, onReset, onSetToNow, onPinC
   }, [dateValue, timeValue, onCalculate, onValidationError]);
 
   // Handle autofill from portfolio using scheduled state update
+  // Autofill takes priority over localStorage on load
   useEffect(() => {
     if (autofillDate) {
       queueMicrotask(() => {
@@ -74,7 +84,7 @@ export default function DateTimeInput({ onCalculate, onReset, onSetToNow, onPinC
         });
       }
     }
-  }, [autofillDate, autofillTime]);
+  }, [autofillDate, autofillTime, setDateValue, setTimeValue]);
 
   const handleSetToNow = () => {
     const now = Temporal.Now.plainDateTimeISO();
@@ -90,7 +100,7 @@ export default function DateTimeInput({ onCalculate, onReset, onSetToNow, onPinC
   };
 
   const handleReset = () => {
-    // Clear inputs completely
+    // Clear inputs and remove from localStorage
     setDateValue("");
     setTimeValue("");
     setError("");
